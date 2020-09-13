@@ -1,6 +1,6 @@
-# demo
+# KCC-Portal
 
-A new Flutter project.
+Flutter mini project for KCC Institute of Technlogy and Management
 
 ## Getting Started
 
