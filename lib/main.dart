@@ -2,37 +2,26 @@ import 'package:flutter/material.dart';
 
 void main() {
   runApp(MaterialApp(
-    home: Quotelist(),
+    home: Home(),
   ));
 }
 
-class Quotelist extends StatefulWidget {
+class Home extends StatefulWidget {
   @override
-  _QuotelistState createState() => _QuotelistState();
+  _HomeState createState() => _HomeState();
 }
 
-class _QuotelistState extends State<Quotelist> {
-
-  List<String> quotes = [
-    'My name is adnan'
-    'my name is kaif'
-    'my name is karim'
-  ];
-
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: Text('Awesome quotes!'),
+        title: Text('Demo'),
         centerTitle: true,
         backgroundColor: Colors.redAccent,
       ),
-      body: Column(
-        children: quotes.map((quote) => Text(quote)).toList(),
-      )
+      body: Column()
     );
-
-    
   }
 }
