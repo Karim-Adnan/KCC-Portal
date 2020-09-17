@@ -25,18 +25,18 @@ class Home extends StatelessWidget {
               margin: EdgeInsets.all(15.0),
               padding: EdgeInsets.all(20.0),
               decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey,
-                    blurRadius: 25.0, // soften the shadow
-                    spreadRadius: 1.0, //extend the shadow
-                    offset: Offset(
-                      5.0, // Move to right 10  horizontally
-                      5.0, // Move to bottom 10 Vertically
-                    ),
-                  )
-                ],
-                color: Colors.white,
+                color: Colors.transparent,
+                // boxShadow: [
+                //   BoxShadow(
+                //     color: Colors.grey,
+                //     blurRadius: 25.0, // soften the shadow
+                //     spreadRadius: 1.0, //extend the shadow
+                //     offset: Offset(
+                //       5.0, // Move to right 10  horizontally
+                //       5.0, // Move to bottom 10 Vertically
+                //     ),
+                //   )
+                // ],
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
@@ -44,35 +44,39 @@ class Home extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Container(
-                        decoration: BoxDecoration(shape: BoxShape.circle),
-                        child: IconButton(
-                          icon: Image.asset('assets/icons/clock.png'),
-                          iconSize: 50,
-                          onPressed: () {},
-                          splashRadius: 100.0,
-                        ),
+                      Column(
+                        children: [
+                          IconButton(
+                            icon: Image.asset('assets/icons/clock.png'),
+                            iconSize: 50,
+                            onPressed: () {},
+                            splashRadius: 40.0,
+                          ),
+                          Text('CLOCK'),
+                        ],
                       ),
-                      IconButton(
-                        icon: Image.asset('assets/icons/world.png'),
-                          iconSize: 50,
-                          onPressed: () {},
-                          splashRadius: 40.0,
+                      Column(
+                        children: [
+                          IconButton(
+                            icon: Image.asset('assets/icons/world.png'),
+                            iconSize: 50,
+                            onPressed: () {},
+                            splashRadius: 40.0,
+                          ),
+                          Text('WORLD'),
+                        ],
                       ),
-                      IconButton(
-                        icon: Image.asset('assets/icons/folder.png'),
-                          iconSize: 50,
-                          onPressed: () {},
-                          splashRadius: 40.0,
-                      )
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text('CLOCK'),
-                      Text('WORLD'),
-                      Text('FOLDER'),
+                      Column(
+                        children: [
+                          IconButton(
+                            icon: Image.asset('assets/icons/folder.png'),
+                            iconSize: 50,
+                            onPressed: () {},
+                            splashRadius: 40.0,
+                          ),
+                          Text('FOLDER'),
+                        ],
+                      ),
                     ],
                   ),
                   SizedBox(
@@ -81,32 +85,39 @@ class Home extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      IconButton(
-                        icon: Image.asset('assets/icons/power.png'),
-                          iconSize: 50,
-                          onPressed: () {},
-                          splashRadius: 40.0,
+                      Column(
+                        children: [
+                          IconButton(
+                            icon: Image.asset('assets/icons/power.png'),
+                              iconSize: 50,
+                              onPressed: () {},
+                              splashRadius: 40.0,
+                          ),
+                          Text('POWER'),
+                        ],
                       ),
-                      IconButton(
-                        icon: Image.asset('assets/icons/plane.png'),
-                          iconSize: 50,
-                          onPressed: () {},
-                        splashRadius: 40.0,
+                      Column(
+                        children: [
+                          IconButton(
+                            icon: Image.asset('assets/icons/plane.png'),
+                              iconSize: 50,
+                              onPressed: () {},
+                            splashRadius: 40.0,
+                          ),
+                          Text('PLANE'),
+                        ],
                       ),
-                      IconButton(
-                        icon: Image.asset('assets/icons/message.png'),
-                          iconSize: 50,
-                          onPressed: () {},
-                          splashRadius: 40.0,
+                      Column(
+                        children: [
+                          IconButton(
+                            icon: Image.asset('assets/icons/message.png'),
+                              iconSize: 50,
+                              onPressed: () {},
+                              splashRadius: 40.0,
+                          ),
+                          Text('MESSAGE'),
+                        ],
                       ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text('POWER'),
-                      Text('PLANE'),
-                      Text('MESSAGE'),
                     ],
                   ),
                 ],
