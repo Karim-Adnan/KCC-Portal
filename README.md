@@ -1,3 +1,3 @@
 # KCC-Portal
 
-Flutter mini project for KCC Institute of Technlogy and Management
+Flutter mini project for 5th Semester - KCC Institute of Technlogy and Management
