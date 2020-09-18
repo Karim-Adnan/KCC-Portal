@@ -1,19 +1,88 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:demo/app_drawer.dart';
+import 'package:demo/reusable_cards.dart';
+import 'package:demo/round_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import 'my_clipper.dart';
 
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: AppDrawer(),
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Color(0xff1dc4d8),
-        title: Text("Home"),
-      ),
-      body: Container(
+      // appBar: PreferredSize(
+      //   preferredSize: Size.fromHeight(100.0),
+      //   child: AppBar(
+      //     iconTheme: IconThemeData(color: Colors.black),
+      //     backgroundColor: Color(0xffffffff),
+      //     title: Column(
+      //       children: [
+      //         Text(
+      //           "Welcome,",
+      //           style: TextStyle(
+      //             color: Colors.black,
+      //           ),
+      //         ),
+      //         Text(
+      //           "Kunal",
+      //           style: TextStyle(
+      //             color: Colors.black,
+      //           ),
+      //         ),
+      //       ],
+      //     ),
+      //     actions: [
+      //       Padding(
+      //         padding: const EdgeInsets.all(10.0),
+      //         child: CircleAvatar(
+      //           radius: 50.0,
+      //         ),
+      //       ),
+      //     ],
+      //     elevation: 0.0,
+      //   ),
+      // ),
+      body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            ClipPath(
+              clipper: MyClipper(),
+              child: Container(
+                height: 300,
+                decoration: BoxDecoration(
+                  color: Color(0xff1dc4d8),
+                ),
+                child: Column(
+                  children: [
+                    SafeArea(
+                      child: Align(
+                          alignment: Alignment.topLeft,
+                        child: IconButton(
+                          icon: Icon(Icons.menu),
+                          color: Colors.white,
+                          iconSize: 40.0,
+                          // onPressed: () => Scaffold.of(context).openDrawer(),
+                          onPressed: () { print("pressed"); },
+                        ),
+                      ),
+                    ),
+                    Text(
+                      "Welcome, \nKunal",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 45.0,
+                      )
+                    ),
+                  ],
+                ),
+              ),
+            ),
             CarouselSlider(
               options: CarouselOptions(
                 // autoPlay: true,
@@ -46,35 +115,25 @@ class Home extends StatelessWidget {
                     children: [
                       Column(
                         children: [
-                          IconButton(
-                            icon: Image.asset('assets/icons/clock.png'),
-                            iconSize: 50,
-                            onPressed: () {},
-                            splashRadius: 40.0,
+                          RoundIcon(colour: Color(0xff1dc4d8), iconData: FontAwesomeIcons.table),
+                          SizedBox(height: 10.0),
+                          Text(
+                              "Time Table",
                           ),
-                          Text('CLOCK'),
                         ],
                       ),
                       Column(
                         children: [
-                          IconButton(
-                            icon: Image.asset('assets/icons/world.png'),
-                            iconSize: 50,
-                            onPressed: () {},
-                            splashRadius: 40.0,
-                          ),
-                          Text('WORLD'),
+                          RoundIcon(colour: Color(0xff1dc4d8), iconData: Icons.video_call),
+                          SizedBox(height: 10.0),
+                          Text("Class Schedule"),
                         ],
                       ),
                       Column(
                         children: [
-                          IconButton(
-                            icon: Image.asset('assets/icons/folder.png'),
-                            iconSize: 50,
-                            onPressed: () {},
-                            splashRadius: 40.0,
-                          ),
-                          Text('FOLDER'),
+                          RoundIcon(colour: Color(0xff1dc4d8), iconData: Icons.home),
+                          SizedBox(height: 10.0),
+                          Text("Time Table"),
                         ],
                       ),
                     ],
@@ -87,35 +146,23 @@ class Home extends StatelessWidget {
                     children: [
                       Column(
                         children: [
-                          IconButton(
-                            icon: Image.asset('assets/icons/power.png'),
-                              iconSize: 50,
-                              onPressed: () {},
-                              splashRadius: 40.0,
-                          ),
-                          Text('POWER'),
+                          RoundIcon(colour: Color(0xff1dc4d8), iconData: FontAwesomeIcons.table),
+                          SizedBox(height: 10.0),
+                          Text("Time Table"),
                         ],
                       ),
                       Column(
                         children: [
-                          IconButton(
-                            icon: Image.asset('assets/icons/plane.png'),
-                              iconSize: 50,
-                              onPressed: () {},
-                            splashRadius: 40.0,
-                          ),
-                          Text('PLANE'),
+                          RoundIcon(colour: Color(0xff1dc4d8), iconData: FontAwesomeIcons.table),
+                          SizedBox(height: 10.0),
+                          Text("Time Table"),
                         ],
                       ),
                       Column(
                         children: [
-                          IconButton(
-                            icon: Image.asset('assets/icons/message.png'),
-                              iconSize: 50,
-                              onPressed: () {},
-                              splashRadius: 40.0,
-                          ),
-                          Text('MESSAGE'),
+                          RoundIcon(colour: Color(0xff1dc4d8), iconData: FontAwesomeIcons.table),
+                          SizedBox(height: 10.0),
+                          Text("Time Table"),
                         ],
                       ),
                     ],
@@ -123,12 +170,30 @@ class Home extends StatelessWidget {
                 ],
               ),
             ),
+            ReusableCard(
+              colour: Colors.grey[400],
+              height: 120.0,
+            ),
+            ReusableCard(
+              colour: Colors.grey[400],
+              height: 120.0,
+            ),
+            ReusableCard(
+              colour: Colors.grey[400],
+              height: 120.0,
+            ),
+            ReusableCard(
+              colour: Colors.grey[400],
+              height: 120.0,
+            ),
           ]
         ),
       ),
     );
   }
 }
+
+
 
 final List<String> imgList = [
   'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
@@ -178,3 +243,4 @@ final List<Widget> imageSliders = imgList.map((item) => Container(
     ),
   ),
 )).toList();
+
