@@ -15,6 +15,7 @@ dependencies:
   carousel_slider: ^2.2.1
   font_awesome_flutter: ^8.8.1
   google_fonts: ^1.1.0
+  webview_flutter: ^0.3.24
 
 dev_dependencies:
   flutter_test:
@@ -23,7 +24,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/icons/
     - assets/images/
 
   # fonts:

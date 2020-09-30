@@ -12,12 +12,11 @@ class AppDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           _createHeader(),
-          _createDrawerItem(
-              icon: Icons.home,
-              text: 'Home',
+          _createDrawerItem(icon: Icons.home, text: 'Home',
               onTap: () =>
                   Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => Home()))
+                      context, MaterialPageRoute(builder: (context) => Home()
+                  ))
           ),
           _createDrawerItem(icon: Icons.event, text: 'Events',),
           _createDrawerItem(icon: Icons.note, text: 'Notes',),
@@ -44,17 +43,17 @@ class AppDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         decoration: BoxDecoration(
             image: DecorationImage(
-                fit: BoxFit.fill,
-                image: AssetImage('path/to/header_background.png'))),
+                fit: BoxFit.fitHeight,
+                image: AssetImage('assets/images/drawerImage.jpg'))),
         child: Stack(children: <Widget>[
           Positioned(
               bottom: 12.0,
               left: 16.0,
-              child: Text("Flutter Step-by-Step",
+              child: Text("User_Name",
                   style: TextStyle(
                       color: Colors.white,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.w500))),
+                      fontSize: 25.0,
+                      fontWeight: FontWeight.w600))),
         ]));
   }
 
