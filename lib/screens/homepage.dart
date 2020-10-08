@@ -1,8 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:demo/components/reusable_cards.dart';
+import 'package:demo/components/round_icon.dart';
 import 'package:demo/constants.dart';
 import 'package:demo/screens/time_table.dart';
-import 'file:///C:/Users/delhi/Desktop/KCC-Portal/lib/components/reusable_cards.dart';
-import 'file:///C:/Users/delhi/Desktop/KCC-Portal/lib/components/round_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -10,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../components/my_clipper.dart';
 import 'webview.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:demo/custom_drawer/drawer_user_controller.dart';
 
 
 
@@ -19,25 +20,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
-  double xOffset=0;
-  double yOffset=0;
-  double scaleFactor=1;
-  bool isDrawerOpen=false;
-
-
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: AnimatedContainer(
-        transform: Matrix4.translationValues(xOffset, yOffset, 0)..scale(scaleFactor)..rotateY(isDrawerOpen?-0.5:0.0),
-        duration: Duration(milliseconds: 400),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(isDrawerOpen ? 0.0 : 0.0),
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0.0,
         ),
-          child: Column(
+          body: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
@@ -53,40 +43,8 @@ class _HomeState extends State<Home> {
                                 Color(0xff1dc4d8),
                               ]),
                         ),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: isDrawerOpen ? IconButton(
-                            icon: Icon(
-                              Icons.arrow_back_ios,
-                              size: 35.0,
-                              color: Colors.white,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                xOffset=0;
-                                yOffset=0;
-                                scaleFactor=1;
-                                isDrawerOpen=false;
-                              });
-                            },
-                          )
-                              : IconButton(
-                            icon: Icon(
-                              Icons.menu,
-                              size: 35.0,
-                              color: Colors.white,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                xOffset=230;
-                                yOffset=100;
-                                scaleFactor=0.8;
-                                isDrawerOpen=true;
-                              });
-                            },
-                          ),
                         ),
-                      ),
+
                       ClipPath(
                         clipper: MyClipper(),
                         child: Container(

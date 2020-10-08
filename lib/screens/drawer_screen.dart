@@ -1,6 +1,5 @@
 import 'package:demo/constants.dart';
 import 'package:demo/util/drawer_data.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -83,7 +82,6 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Text("Logout", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18.0),),
               ),
-
             ],
           )
         ],
