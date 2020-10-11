@@ -1,4 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo/app_theme.dart';
+import 'package:demo/constants.dart';
+import 'package:demo/databse.dart';
+import 'package:demo/models/user_details.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomeDrawer extends StatefulWidget {
@@ -13,11 +18,23 @@ class HomeDrawer extends StatefulWidget {
 }
 
 class _HomeDrawerState extends State<HomeDrawer> {
+  String userName;
   List<DrawerList> drawerList;
   @override
   void initState() {
     setDrawerListArray();
     super.initState();
+    getUserData();
+  }
+
+  getUserData() async{
+    var firebaseUser = await FirebaseAuth.instance.currentUser;
+
+    DocumentSnapshot userDocument = await userCollection.doc(firebaseUser.email).get();
+
+    setState(() {
+      userName = userDocument.data()['first name'].toString();
+    });
   }
 
   void setDrawerListArray() {
@@ -30,8 +47,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
       DrawerList(
         index: DrawerIndex.Help,
         labelName: 'Help',
-        isAssetsImage: true,
-        imageName: 'assets/images/supportIcon.png',
+        icon: Icon(Icons.help),
       ),
       DrawerList(
         index: DrawerIndex.FeedBack,
@@ -54,6 +70,39 @@ class _HomeDrawerState extends State<HomeDrawer> {
         icon: Icon(Icons.info),
       ),
     ];
+  }
+
+  signOut(){
+    print("signOut");
+    return showDialog(
+        context: context,
+        builder: (context){
+          return AlertDialog(
+            content: Text("Do you really want to logout", style: TextStyle(fontSize: 20, color: kPrimaryColor)),
+            actions: [
+              FlatButton(
+                color: Colors.red,
+                onPressed: () {
+                  FirebaseAuth.instance.signOut();
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  "Yes",
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                ),
+              ),
+              FlatButton(
+                color: Colors.lightBlue,
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  "No",
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                ),
+              ),
+            ],
+          );
+        }
+    );
   }
 
   @override
@@ -94,7 +143,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                             ),
                             child: ClipRRect(
                               borderRadius: const BorderRadius.all(Radius.circular(60.0)),
-                              child: Image.asset('assets/images/userImage.png'),
+                              child: Image.asset('assets/images/teacher.png'),
                             ),
                           ),
                         ),
@@ -104,7 +153,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   Padding(
                     padding: const EdgeInsets.only(top: 8, left: 4),
                     child: Text(
-                      'Chris Hemsworth',
+                      userName,
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: AppTheme.grey,
@@ -154,7 +203,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   Icons.power_settings_new,
                   color: Colors.red,
                 ),
-                onTap: () {},
+                onTap: () => signOut(),
               ),
               SizedBox(
                 height: MediaQuery.of(context).padding.bottom,
