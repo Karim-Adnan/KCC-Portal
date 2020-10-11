@@ -155,6 +155,8 @@ class _DrawerUserControllerState extends State<DrawerUserController> with Ticker
                                 child: widget.menuView != null
                                     ? widget.menuView
                                     : AnimatedIcon(
+                                        size: 32,
+                                        color: Colors.white,
                                         icon: widget.animatedIconData != null ? widget.animatedIconData : AnimatedIcons.arrow_menu,
                                         progress: iconAnimationController),
                               ),
