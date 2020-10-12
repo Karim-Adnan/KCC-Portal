@@ -38,8 +38,8 @@ class _CompleteProfileState extends State<CompleteProfile> {
 
     try{
       var firebaseUser = await FirebaseAuth.instance.currentUser;
-      await widget.role == "student"
-          ? UserDetails(
+       widget.role == "student"
+          ? await UserDetails(
           email: firebaseUser.email,
           password: widget.currentUserPassword,
           firstName: firstNameController.text,
@@ -51,7 +51,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
           year: year,
           semester: sem
       ).storeUser()
-      : UserDetails(
+      : await UserDetails(
           email: firebaseUser.email,
           password: widget.currentUserPassword,
           firstName: firstNameController.text,
@@ -64,16 +64,18 @@ class _CompleteProfileState extends State<CompleteProfile> {
       Navigator.pop(context);
       Navigator.pop(context);
       Navigator.pop(context);
+
       setState(() {
         showSpinner=false;
       });
     }catch(e){
       SnackBar snackbar = SnackBar(content: Text(e.toString()));
       scaffoldKey.currentState.showSnackBar(snackbar);
+      setState(() {
+        showSpinner=false;
+      });
     }
-    setState(() {
-      showSpinner=false;
-    });
+
   }
 
 

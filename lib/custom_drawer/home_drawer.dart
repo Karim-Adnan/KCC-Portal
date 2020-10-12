@@ -18,24 +18,25 @@ class HomeDrawer extends StatefulWidget {
 }
 
 class _HomeDrawerState extends State<HomeDrawer> {
-  String userName;
+
   List<DrawerList> drawerList;
+  Stream myStream;
+
+  getStream() async{
+    var firebaseUser = await FirebaseAuth.instance.currentUser;
+    setState(() {
+      myStream = userCollection
+          .doc(firebaseUser.email).snapshots();
+    });
+  }
+
   @override
   void initState() {
     setDrawerListArray();
     super.initState();
-    getUserData();
+    getStream();
   }
 
-  getUserData() async{
-    var firebaseUser = await FirebaseAuth.instance.currentUser;
-
-    DocumentSnapshot userDocument = await userCollection.doc(firebaseUser.email).get();
-
-    setState(() {
-      userName = userDocument.data()['first name'].toString();
-    });
-  }
 
   void setDrawerListArray() {
     drawerList = <DrawerList>[
@@ -150,16 +151,24 @@ class _HomeDrawerState extends State<HomeDrawer> {
                       );
                     },
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8, left: 4),
-                    child: Text(
-                      userName,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: AppTheme.grey,
-                        fontSize: 18,
-                      ),
-                    ),
+                  StreamBuilder(
+                    stream: myStream,
+                    builder: (context, snapshot) {
+                      if(!snapshot.hasData){
+                        return CircularProgressIndicator();
+                      }
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 8, left: 4),
+                        child: Text(
+                          snapshot.data['first name'],
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: AppTheme.grey,
+                            fontSize: 18,
+                          ),
+                        ),
+                      );
+                    }
                   ),
                 ],
               ),

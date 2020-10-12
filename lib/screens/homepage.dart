@@ -4,6 +4,7 @@ import 'package:demo/components/reusable_cards.dart';
 import 'package:demo/components/round_icon.dart';
 import 'package:demo/constants.dart';
 import 'package:demo/databse.dart';
+import 'package:demo/models/user_details.dart';
 import 'package:demo/screens/time_table.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,22 +23,21 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
-  String userName;
+  Stream myStream;
 
-  getUserData() async{
+  getStream() async{
     var firebaseUser = await FirebaseAuth.instance.currentUser;
-
-    DocumentSnapshot userDocument = await userCollection.doc(firebaseUser.email).get();
-
     setState(() {
-      userName = userDocument.data()['first name'].toString();
+      myStream = userCollection
+          .doc(firebaseUser.email).snapshots();
     });
   }
+
 
   @override
   void initState(){
     super.initState();
-    getUserData();
+    getStream();
   }
 
 
@@ -59,48 +59,56 @@ class _HomeState extends State<Home> {
                     //       color: Colors.white,
                     //       fontSize: 16.0,
                     //     )),
-                    background: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                            colors: <Color>[
-                              Color(0xFF2081F7),
-                              Color(0xff1dc4d8),
-                            ]),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                    background: StreamBuilder(
+                      stream: myStream,
+                      builder: (context, snapshot) {
+                        if(!snapshot.hasData){
+                          return CircularProgressIndicator();
+                        }
+                        return Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                                colors: <Color>[
+                                  Color(0xFF2081F7),
+                                  Color(0xff1dc4d8),
+                                ]),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Text(
-                                "Welcome,",
-                                style: GoogleFonts.montserrat(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: MediaQuery.of(context).size.width * .08,
-                                ),
-                              ),
-                              TypewriterAnimatedTextKit(
-                                speed: Duration(milliseconds: 500),
-                                totalRepeatCount: 1,
-                                text: [
-                                  userName,
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Welcome,",
+                                    style: GoogleFonts.montserrat(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: MediaQuery.of(context).size.width * .08,
+                                    ),
+                                  ),
+                                  TypewriterAnimatedTextKit(
+                                    speed: Duration(milliseconds: 500),
+                                    totalRepeatCount: 1,
+                                    text: [
+                                      snapshot.data['first name'],
+                                    ],
+                                    textStyle: GoogleFonts.montserrat(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: MediaQuery.of(context).size.width * .05,
+                                    ),
+                                  ),
                                 ],
-                                textStyle: GoogleFonts.montserrat(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: MediaQuery.of(context).size.width * .05,
-                                ),
                               ),
+                              CircleAvatar(
+                                radius: 28.0,),
                             ],
                           ),
-                          CircleAvatar(
-                            radius: 28.0,),
-                        ],
-                      ),
+                        );
+                      }
                     ),
                 ),
               ),
