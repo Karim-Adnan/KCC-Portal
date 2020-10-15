@@ -40,11 +40,12 @@ class _HomeState extends State<Home> {
         body: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
+              // Top Bar
               SliverAppBar(
                 backgroundColor: Colors.transparent,
                 expandedHeight: 200.0,
-                floating: false,
-                pinned: true,
+                floating: true,
+                pinned: false,
                 flexibleSpace: FlexibleSpaceBar(
                     centerTitle: true,
                     background: StreamBuilder(
@@ -61,7 +62,7 @@ class _HomeState extends State<Home> {
                                   begin: Alignment.centerLeft,
                                   end: Alignment.centerRight,
                                   colors: <Color>[
-                                    Color(0xFF2081F7),
+                                    Color(0xff2081F7),
                                     Color(0xff1dc4d8),
                                   ]),
                             ),
@@ -113,6 +114,7 @@ class _HomeState extends State<Home> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 SizedBox(height: 20.0),
+                // Top Slider
                 Expanded(
                   child: ListView(
                     children: [
@@ -140,8 +142,8 @@ class _HomeState extends State<Home> {
                         ],
                       ),
 
+                      // Navigation Buttons
                       Container(
-                        margin: EdgeInsets.all(15.0),
                         padding: EdgeInsets.all(20.0),
                         decoration: BoxDecoration(
                           color: Colors.transparent,
@@ -207,6 +209,7 @@ class _HomeState extends State<Home> {
                         ),
                       ),
 
+                     // Cards
                       ReusableCard(
                         colour: Colors.grey[400],
                         height: 150.0,
@@ -229,6 +232,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
-
-
