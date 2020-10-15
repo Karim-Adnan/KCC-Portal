@@ -1,10 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TimeTableHeader extends StatelessWidget {
-  const TimeTableHeader({
-    Key key,
-  }) : super(key: key);
+  TimeTableHeader({Key key,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,8 +9,7 @@ class TimeTableHeader extends StatelessWidget {
       children: [
         Row(
           children: [
-            Text(
-              "Time",
+            Text("Time",
               style: TextStyle(
                 fontSize: 40.0,
                 fontWeight: FontWeight.bold,
@@ -21,8 +17,7 @@ class TimeTableHeader extends StatelessWidget {
               ),
             ),
             SizedBox(width: 8.0,),
-            Text(
-              "Table",
+            Text("Table",
               style: TextStyle(
                 fontSize: 32.0,
                 fontWeight: FontWeight.bold,

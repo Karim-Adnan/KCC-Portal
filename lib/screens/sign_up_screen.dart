@@ -3,7 +3,6 @@ import 'package:demo/components/rounded_button.dart';
 import 'package:demo/components/rounded_input_field.dart';
 import 'package:demo/components/rounded_password_field.dart';
 import 'package:demo/screens/role_selection_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -20,13 +19,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   var passwordController = TextEditingController();
   var confirmPasswordController = TextEditingController();
   bool showSpinner= false;
-
-
   registerUser() async{
     setState(() {
       showSpinner=true;
     });
-
     try{
       print("email and password=${emailController.text.trim()} and ${passwordController.text.trim()}");
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -36,7 +32,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       setState(() {
         showSpinner=false;
       });
-    }catch(e){
+    } catch (e) {
       if (e.code == 'weak-password') {
         SnackBar snackbar = SnackBar(content: Text("The password provided is too weak."));
         scaffoldKey.currentState.showSnackBar(snackbar);
@@ -49,17 +45,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
         setState(() {
           showSpinner=false;
         });
-      }else{
+      } else {
         SnackBar snackbar = SnackBar(content: Text(e.toString()));
         scaffoldKey.currentState.showSnackBar(snackbar);
-        setState(() {
-          showSpinner=false;
-        });
+        setState(()
+            {showSpinner=false;}
+            );
       }
     }
   }
-
-
     @override
     Widget build(BuildContext context) {
       Size size = MediaQuery.of(context).size;
@@ -123,19 +117,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     RoundedButton(
                       text: "SIGNUP",
                       press: () {
-                        if(emailController.text.isEmpty){
+                        if (emailController.text.isEmpty){
                           SnackBar snackbar = SnackBar(content: Text("Email cannot be empty"));
                           scaffoldKey.currentState.showSnackBar(snackbar);
-                        }else if(passwordController.text != confirmPasswordController.text){
+                        } else if (passwordController.text != confirmPasswordController.text){
                           SnackBar snackbar = SnackBar(content: Text("Both passwords should match"));
                           scaffoldKey.currentState.showSnackBar(snackbar);
-                        }else if(passwordController.text.isEmpty || confirmPasswordController.text.isEmpty){
+                        } else if (passwordController.text.isEmpty || confirmPasswordController.text.isEmpty){
                           SnackBar snackbar = SnackBar(content: Text("The password cannot be empty"));
                           scaffoldKey.currentState.showSnackBar(snackbar);
-                        }else if(passwordController.text.length<6){
-                          SnackBar snackbar = SnackBar(content: Text("The password should atleast be of 6 characters"));
+                        } else if (passwordController.text.length<6){
+                          SnackBar snackbar = SnackBar(content: Text("The password should at least be of 6 characters"));
                           scaffoldKey.currentState.showSnackBar(snackbar);
-                        }else{
+                        } else {
                           registerUser();
                         }
                       },
@@ -144,22 +138,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     AlreadyHaveAnAccountCheck(
                       login: false,
                       press: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return LoginScreen();
-                            },
-                          ),
-                        );
-                      },
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen(),),);
+                        },
                     ),
                   ],
                 ),
               ),
             ],
+          ),
         ),
-     ),
       ),
     );
   }

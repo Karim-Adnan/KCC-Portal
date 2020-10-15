@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
-
-import '../constants.dart';
+import 'package:demo/constants.dart';
+import 'package:flutter/material.dart';
 
 class AlreadyHaveAnAccountCheck extends StatelessWidget {
   final bool login;

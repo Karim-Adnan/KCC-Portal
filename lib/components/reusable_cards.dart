@@ -1,13 +1,11 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class ReusableCard extends StatelessWidget {
-
-  ReusableCard({@required this.colour, this.cardChild, this.onPress, this.height});
-
   final Color colour;
   final Widget cardChild;
   final Function onPress;
   final double height;
+  ReusableCard({@required this.colour, this.cardChild, this.onPress, this.height});
 
   @override
   Widget build(BuildContext context) {

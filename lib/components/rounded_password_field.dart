@@ -1,19 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../constants.dart';
+import 'package:demo/constants.dart';
 
 class RoundedPasswordField extends StatefulWidget {
   final ValueChanged<String> onChanged;
   final TextEditingController controller;
   final String hintText;
-  const RoundedPasswordField({
-    Key key,
-    this.onChanged,
-    this.controller,
-    this.hintText
-  }) : super(key: key);
-
+  RoundedPasswordField({Key key, this.onChanged, this.controller, this.hintText}) : super(key: key);
   @override
   _RoundedPasswordFieldState createState() => _RoundedPasswordFieldState();
 }

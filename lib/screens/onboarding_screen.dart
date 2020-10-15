@@ -1,10 +1,8 @@
-import 'package:demo/constants.dart';
 import 'package:demo/screens/navigation_screen.dart';
 import 'package:fancy_on_boarding/fancy_on_boarding.dart';
 import 'package:flutter/material.dart';
 
 class OnBoardingScreen extends StatelessWidget{
-
   final pageList = [
     PageModel(
         color: const Color(0xFF678FB4),

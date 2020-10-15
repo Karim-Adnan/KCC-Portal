@@ -3,11 +3,9 @@ import 'package:demo/components/rounded_button.dart';
 import 'package:demo/components/rounded_input_field.dart';
 import 'package:demo/components/rounded_password_field.dart';
 import 'package:demo/screens/sign_up_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -28,9 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: usernameController.text.trim(),
           password: passwordController.text.trim());
-
       Navigator.pop(context);
-
       setState(() {
         showSpinner=false;
       });

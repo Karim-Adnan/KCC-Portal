@@ -1,42 +1,34 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo/app_theme.dart';
 import 'package:demo/constants.dart';
-import 'package:demo/databse.dart';
-import 'package:demo/models/user_details.dart';
+import 'package:demo/database.dart';
+import 'package:demo/screens/user_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomeDrawer extends StatefulWidget {
   const HomeDrawer({Key key, this.screenIndex, this.iconAnimationController, this.callBackIndex}) : super(key: key);
-
   final AnimationController iconAnimationController;
   final DrawerIndex screenIndex;
   final Function(DrawerIndex) callBackIndex;
-
   @override
   _HomeDrawerState createState() => _HomeDrawerState();
 }
 
 class _HomeDrawerState extends State<HomeDrawer> {
-
   List<DrawerList> drawerList;
   Stream myStream;
-
   getStream() async{
     var firebaseUser = await FirebaseAuth.instance.currentUser;
     setState(() {
-      myStream = userCollection
-          .doc(firebaseUser.email).snapshots();
+      myStream = userCollection.doc(firebaseUser.email).snapshots();
     });
   }
-
   @override
   void initState() {
     setDrawerListArray();
     super.initState();
     getStream();
   }
-
 
   void setDrawerListArray() {
     drawerList = <DrawerList>[
@@ -72,7 +64,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
       ),
     ];
   }
-
   signOut(){
     print("signOut");
     return showDialog(
@@ -114,63 +105,69 @@ class _HomeDrawerState extends State<HomeDrawer> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.only(top: 40.0),
+          InkWell(
+            onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>UserProfilePage()),),
             child: Container(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  AnimatedBuilder(
-                    animation: widget.iconAnimationController,
-                    builder: (BuildContext context, Widget child) {
-                      return ScaleTransition(
-                        scale: AlwaysStoppedAnimation<double>(1.0 - (widget.iconAnimationController.value) * 0.2),
-                        child: RotationTransition(
-                          turns: AlwaysStoppedAnimation<double>(Tween<double>(begin: 0.0, end: 24.0)
-                                  .animate(CurvedAnimation(parent: widget.iconAnimationController, curve: Curves.fastOutSlowIn))
-                                  .value /
-                              360),
-                          child: Container(
-                            height: 120,
-                            width: 120,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: <BoxShadow>[
-                                BoxShadow(color: AppTheme.grey.withOpacity(0.6), offset: const Offset(2.0, 4.0), blurRadius: 8),
-                              ],
-                            ),
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.all(Radius.circular(60.0)),
-                              child: Image.asset('assets/images/teacher.png'),
+              width: double.infinity,
+              padding: const EdgeInsets.only(top: 40.0),
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    AnimatedBuilder(
+                      animation: widget.iconAnimationController,
+                      builder: (BuildContext context, Widget child) {
+                        return ScaleTransition(
+                          scale: AlwaysStoppedAnimation<double>(1.0 - (widget.iconAnimationController.value) * 0.2),
+                          child: RotationTransition(
+                            turns: AlwaysStoppedAnimation<double>(Tween<double>(begin: 0.0, end: 24.0)
+                                    .animate(CurvedAnimation(parent: widget.iconAnimationController, curve: Curves.fastOutSlowIn))
+                                    .value /
+                                360),
+                            child: Container(
+                              height: 120,
+                              width: 120,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                boxShadow: <BoxShadow>[
+                                  BoxShadow(color: AppTheme.grey.withOpacity(0.6), offset: const Offset(2.0, 4.0), blurRadius: 8),
+                                ],
+                              ),
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.all(Radius.circular(60.0)),
+                                child: CircleAvatar(
+                                    child: Image.asset('assets/images/teacher.png'),
+                                  backgroundColor: Colors.white,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
-                  ),
-                  StreamBuilder(
-                    stream: myStream,
-                    builder: (context, snapshot) {
-                      if(!snapshot.hasData){
-                        return CircularProgressIndicator();
+                        );
+                      },
+                    ),
+                    StreamBuilder(
+                      stream: myStream,
+                      builder: (context, snapshot) {
+                        if(!snapshot.hasData){
+                          return CircularProgressIndicator();
+                        }
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 8, left: 4),
+                          child: Text(
+                            snapshot.data['first name'],
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: AppTheme.grey,
+                              fontSize: 18,
+                            ),
+                          ),
+                        );
                       }
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 8, left: 4),
-                        child: Text(
-                          snapshot.data['first name'],
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            color: AppTheme.grey,
-                            fontSize: 18,
-                          ),
-                        ),
-                      );
-                    }
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -242,17 +239,17 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   Container(
                     width: 6.0,
                     height: 46.0,
-                    // decoration: BoxDecoration(
-                    //   color: widget.screenIndex == listData.index
-                    //       ? Colors.blue
-                    //       : Colors.transparent,
-                    //   borderRadius: new BorderRadius.only(
-                    //     topLeft: Radius.circular(0),
-                    //     topRight: Radius.circular(16),
-                    //     bottomLeft: Radius.circular(0),
-                    //     bottomRight: Radius.circular(16),
-                    //   ),
-                    // ),
+                    decoration: BoxDecoration(
+                      color: widget.screenIndex == listData.index
+                          ? Colors.blue
+                          : Colors.transparent,
+                      borderRadius: new BorderRadius.only(
+                        topLeft: Radius.circular(0),
+                        topRight: Radius.circular(16),
+                        bottomLeft: Radius.circular(0),
+                        bottomRight: Radius.circular(16),
+                      ),
+                    ),
                   ),
                   const Padding(
                     padding: EdgeInsets.all(4.0),

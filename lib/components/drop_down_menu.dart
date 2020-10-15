@@ -1,13 +1,10 @@
 import 'package:demo/constants.dart';
 import 'package:demo/models/list_item.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class DropDownMenu extends StatefulWidget {
-
   final List<ListItem> dropdownItems;
   final Function onChanged;
-
   DropDownMenu({this.dropdownItems, this.onChanged});
 
   @override
@@ -15,10 +12,8 @@ class DropDownMenu extends StatefulWidget {
 }
 
 class _DropDownMenuState extends State<DropDownMenu> {
-
   List<DropdownMenuItem<ListItem>> _dropdownMenuItems;
   ListItem _selectedItem;
-
 
   List<DropdownMenuItem<ListItem>> buildDropDownMenuItems(List listItems) {
     List<DropdownMenuItem<ListItem>> items = List();
@@ -62,8 +57,8 @@ class _DropDownMenuState extends State<DropDownMenu> {
                     _selectedItem = value;
                     widget.onChanged(value);
                   });
-                }
-               ),
+              }
+              ),
           ),
         ),
     );

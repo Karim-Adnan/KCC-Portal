@@ -4,7 +4,6 @@ import 'package:demo/components/rounded_input_field.dart';
 import 'package:demo/models/list_item.dart';
 import 'package:demo/models/user_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 

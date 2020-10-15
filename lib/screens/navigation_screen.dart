@@ -1,9 +1,8 @@
 import 'package:demo/screens/sign_up_screen.dart';
-
-import '../constants.dart';
-import 'file:///D:/AndroidProjects/KCC-Portal/lib/screens/navigation_home_screen.dart';
+import 'package:demo/screens/navigation_home_screen.dart';
 import 'package:demo/components/rounded_button.dart';
 import 'package:flutter/material.dart';
+import 'package:demo/constants.dart';
 import 'login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 
@@ -14,7 +13,6 @@ class NavigationScreen extends StatefulWidget {
 
 class _NavigationScreenState extends State<NavigationScreen> {
   bool isSigned = false;
-
   @override
   void initState() {
     super.initState();
@@ -33,9 +31,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
       }
     });
   }
-
-
-
   @override
   Widget build(BuildContext context) {
     print(isSigned);
@@ -45,9 +40,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
   }
 }
 
-
 class WelcomeScreen extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
