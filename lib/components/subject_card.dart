@@ -1,20 +1,15 @@
 import 'package:demo/util/time_table_data.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'line_gen.dart';
 
 
 class SubjectCard extends StatelessWidget {
-
   final index;
   final daySelected;
-
-  SubjectCard({this.index, this.daySelected});
-
   bool isWeekend(){
     return (daySelected==5 || daySelected==6);
   }
+  SubjectCard({this.index, this.daySelected});
 
   @override
   Widget build(BuildContext context) {

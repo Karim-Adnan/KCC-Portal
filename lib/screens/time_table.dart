@@ -1,6 +1,6 @@
 import 'package:demo/components/subject_card.dart';
+import 'package:demo/components/time_table_data.dart';
 import 'package:demo/components/time_table_header.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TimeTable extends StatefulWidget {
@@ -9,9 +9,7 @@ class TimeTable extends StatefulWidget {
 }
 
 class _TimeTableState extends State<TimeTable> {
-
   int daySelected=0;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,82 +32,21 @@ class _TimeTableState extends State<TimeTable> {
                         DateWidget(
                             index: index,
                             selectedCallback: (selectedDay) => setState(() => daySelected=selectedDay),
-                            daySelected: daySelected
-                      ),
-                    ),
+                            daySelected: daySelected,
+                        ),
                     ),
                   ),
+                ),
               ],
             ),
           ),
-
           Expanded(
             child: ListView(
-              children: List.generate(8, (index) => SubjectCard(index: index, daySelected: daySelected,)),
+              children: List.generate(8, (index) =>
+                  SubjectCard(index: index, daySelected: daySelected,)),
             ),
           )
         ],
-      ),
-    );
-  }
-}
-
-
-
-
-
-
-class DateWidget extends StatelessWidget {
-
-  final index;
-  final selectedCallback;
-  final daySelected;
-
-  DateWidget({this.index, this.selectedCallback, this.daySelected});
-
-  final  dayList=["Mo", "Tu", "We", "Th", "Fr", "Sat", "Sun",];
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        selectedCallback(index);
-      },
-      child: Container(
-        padding: EdgeInsets.all(8.0),
-        decoration: daySelected!=index
-            ? null
-        : BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Column(
-          children: [
-
-            Text(
-              dayList[index],
-              style: TextStyle(
-                color: daySelected!=index ? Colors.lightBlue[100] : Color(0xff1dc4d8) ,
-                fontWeight: daySelected!=index ? FontWeight.normal : FontWeight.bold,
-              ),
-            ),
-            Text(
-              "${index + 1}",
-              style: TextStyle(
-                color: daySelected!=index ? Colors.lightBlue[100] : Color(0xff1dc4d8) ,
-                fontWeight: daySelected!=index ? FontWeight.normal : FontWeight.bold,
-              ),
-            ),
-            Container(
-              width: 4.0,
-              height: 4.0,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: daySelected!=index ? Colors.lightBlue[100] : Color(0xff1dc4d8) ,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

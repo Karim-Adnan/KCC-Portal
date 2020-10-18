@@ -1,13 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class RoundIcon extends StatelessWidget {
-
-  RoundIcon({this.colour, this.iconData, this.onPressed});
-
   final Color colour;
   final IconData iconData;
   final Function onPressed;
+  RoundIcon({this.colour, this.iconData, this.onPressed});
 
   @override
   Widget build(BuildContext context) {

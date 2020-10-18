@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class LineGen extends StatelessWidget {
-
   final lines;
-
   LineGen({this.lines});
 
   @override

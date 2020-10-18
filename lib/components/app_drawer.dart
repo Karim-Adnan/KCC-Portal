@@ -1,8 +1,5 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../screens/homepage.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class AppDrawer extends StatelessWidget {
   @override

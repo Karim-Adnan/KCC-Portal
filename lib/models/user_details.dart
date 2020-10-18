@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../databse.dart';
+import '../database.dart';
 
 class UserDetails{
 
@@ -19,10 +19,10 @@ class UserDetails{
   UserDetails({this.email, this.password, this.firstName, this.lastName, this.role, this.rollNo,this.mobile,this.department,this.year,this.semester});
 
 
-  void storeUser() {
+  Future storeUser() async{
 
     role == 'student'
-       ? userCollection.doc(email).set({
+       ? await userCollection.doc(email).set({
       'email': email,
       'password': password,
       'first name': firstName,
@@ -34,7 +34,7 @@ class UserDetails{
       'year': year,
       'semester': semester
     })
-    : userCollection.doc(email).set({
+    : await userCollection.doc(email).set({
       'email': email,
       'password': password,
       'first name': firstName,
@@ -45,6 +45,7 @@ class UserDetails{
     });
 
   }
+
 
 
 }

@@ -12,13 +12,13 @@ void main() async{
   SharedPreferences prefs = await SharedPreferences.getInstance();
   initScreen = await prefs.getInt("initScreen");
   await prefs.setInt("initScreen", 1);
-  print('initScreen ${initScreen}');
+  print('initScreen $initScreen');
   // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
   //   statusBarColor: kPrimaryColor,
   // ));
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     home: initScreen == 0 || initScreen == null ? OnBoardingScreen() : NavigationScreen(),
-  )
+    )
   );
 }

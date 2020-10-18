@@ -1,22 +1,12 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../constants.dart';
+import 'package:demo/constants.dart';
 
 class RoleSelectionCard extends StatelessWidget {
-  const RoleSelectionCard({
-    Key key,
-    @required this.size,
-    this.label,
-    this.image,
-    this.onTap
-  }) : super(key: key);
-
   final Size size;
   final String label;
   final String image;
   final Function onTap;
+  RoleSelectionCard({Key key, @required this.size, this.label, this.image, this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
