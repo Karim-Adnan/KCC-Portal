@@ -194,7 +194,16 @@ class ProfileCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(width: MediaQuery.of(context).size.width * 0.15, child: Icon(icon)),
-            Container( child: Text(title ,style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.05,),)),
+            Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    title ,
+                    maxLines: 2,
+                    style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.05,),
+                  ),
+                )
+            ),
           ],
         ),
         color: Colors.white,
