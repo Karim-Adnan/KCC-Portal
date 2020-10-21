@@ -1,5 +1,6 @@
 import 'package:demo/screens/webview.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
 class SliderItem extends StatelessWidget {
   final String url;
@@ -11,9 +12,9 @@ class SliderItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(
-            builder: (context) => WebViewContainer(url, linkTitle)
-        ));
+        Navigator.push(context, PageTransition(type: PageTransitionType.fade,duration: Duration(milliseconds: 300), child: WebViewContainer(url, linkTitle)),
+            // MaterialPageRoute(builder: (context) => WebViewContainer(url, linkTitle))
+        );
       },
       child: Container(
         decoration: BoxDecoration(

@@ -7,13 +7,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
-
 class CompleteProfile extends StatefulWidget {
-
   final String role;
   final String currentUserPassword;
-
-  const CompleteProfile({Key key, this.role, this.currentUserPassword}) : super(key: key);
+  CompleteProfile({Key key,@required this.role,@required this.currentUserPassword}) : super(key: key);
 
   @override
   _CompleteProfileState createState() => _CompleteProfileState();

@@ -1,10 +1,12 @@
 import 'dart:ui';
+import 'package:demo/constants.dart';
 import 'package:demo/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class UserProfilePage extends StatefulWidget {
   @override
@@ -43,7 +45,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                       height: MediaQuery.of(context).size.height * 0.4,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage('assets/images/pic.jpg'),
+                          image: AssetImage('assets/images/placeholder_avatar.png'),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -152,12 +154,36 @@ class _UserProfilePageState extends State<UserProfilePage> {
                               spreadRadius: 1.0),
                         ],
                       ),
-                      child: ClipOval(
-                          child: Image.asset('assets/images/pic.jpg',
-                            fit: BoxFit.cover,
-                            width: MediaQuery.of(context).size.width * 0.35,
-                            height: MediaQuery.of(context).size.width * 0.35,
-                          )
+                      child: Container(
+                        height: MediaQuery.of(context).size.width * 0.35,
+                        width: MediaQuery.of(context).size.width * 0.35,
+                        child: Stack(
+                          children: [
+                            ClipOval(
+                                child: Image.asset(
+                                  'assets/images/placeholder_avatar.png',
+                                  fit: BoxFit.cover,
+                                ),
+                            ),
+                            GestureDetector(
+                              onTap: (){
+
+                              },
+                              child: Align(
+                                alignment: Alignment.bottomRight,
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.blueGrey[600],
+                                  radius: MediaQuery.of(context).size.width * 0.05,
+                                  child: Icon(
+                                    CupertinoIcons.pen,
+                                    color: Colors.white,
+                                    size: MediaQuery.of(context).size.width * 0.05,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       )
                     ),
                   ),

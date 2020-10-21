@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:page_transition/page_transition.dart';
 
 class AboutScreen extends StatefulWidget {
   @override
@@ -20,7 +21,7 @@ class _AboutScreenState extends State<AboutScreen> {
     }
   }
 
-  static Future<void> openMap(double latitude, double longitude) async {
+  Future<void> openMap(double latitude, double longitude) async {
     String googleUrl = 'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
     if (await canLaunch(googleUrl)) {
       await launch(googleUrl);
@@ -42,7 +43,7 @@ class _AboutScreenState extends State<AboutScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: kPrimaryColor,
+      backgroundColor: kPrimaryDarkColor,
       body: Stack(
         children: [
           Align(
@@ -52,19 +53,13 @@ class _AboutScreenState extends State<AboutScreen> {
               child: Align(
                   alignment: Alignment.bottomCenter,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        height: size.height * .25,
-                        width: size.width * .25,
-                        child: Image.asset('assets/images/college_logo.png'),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "KCC Institute of Technology and Management",
-                          style: TextStyle(color: Colors.white, fontSize: 25.0),
-                          textAlign: TextAlign.center,
+                      Expanded(
+                        child: Container(
+                          height: size.height * 0.4,
+                          width: size.width * 1,
+                          child: Image.asset('assets/illustrations/about_us.png'),
                         ),
                       ),
                     ],
@@ -84,29 +79,40 @@ class _AboutScreenState extends State<AboutScreen> {
                 children: [
                   AboutCard(
                     iconData: Icons.location_on,
-                    title: "2B-2C, Knowledge Park-III, Greater Noida, Uttar Pradesh 201306 · ~24.1 km",
-                    head: "Visit us at",
+                    title: "2B-2C, Knowledge Park-III, Greater Noida, Uttar Pradesh 201306",
+                    head: "Visit us at:",
                     onTap: () => openMap(28.469929,77.493657),
                   ),
                   SizedBox(height: 5.0,),
                   AboutCard(iconData: Icons.phone,
-                    title: "092100 65555",
-                    head: "Contact us at",
+                    title: "+91 92100 65555",
+                    head: "Contact us at:",
                     onTap: () =>  _makePhoneCall('tel:092100 65555'),
                   ),
                   SizedBox(height: 5.0,),
                   AboutCard(iconData: FontAwesomeIcons.globe,
-                    title: "https://www.kccitm.edu.in/",
-                    head: "Know us more",
-                    onTap: () => Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => WebViewContainer("https://www.kccitm.edu.in/", "KCCITM")
-                    )),
+                    title: "kccitm.edu.in",
+                    head: "Know us more:",
+                    onTap: () => Navigator.push(context,
+                      PageTransition(
+                        type: PageTransitionType.fade,
+                        child: WebViewContainer("https://www.kccitm.edu.in/", "KCCITM"),
+                      ),
+                    ),
                   ),
                   SizedBox(height: 5.0,),
                   AboutCard(iconData: Icons.mail,
                     head: "Mail us at",
-                    title: " admissions@kccitm.edu.in",
+                    title: "admissions@kccitm.edu.in",
                     onTap: () => mail(),
+                  ),
+
+                  Divider(
+                    height: 20.0,
+                    thickness: 0.8,
+                    color: Colors.grey[500],
+                    indent: 25.0,
+                    endIndent: 25.0,
                   ),
 
                   Align(
@@ -128,22 +134,17 @@ class _AboutScreenState extends State<AboutScreen> {
               ),
             ),
           ),
-
-
         ],
-
       ),
     );
   }
 }
 
 class AboutIcon extends StatelessWidget {
-
   final IconData iconData;
   final String url;
   final String linkTitle;
-
-  const AboutIcon({
+  AboutIcon({
     Key key,
     this.iconData,
     this.url,
@@ -153,30 +154,28 @@ class AboutIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Navigator.push(context, MaterialPageRoute(
+      onTap: () => Navigator.push(context, CupertinoPageRoute(
           builder: (context) => WebViewContainer(url, linkTitle)
       )),
       child: CircleAvatar(
-        child: Icon(iconData, size: 25.0, color: Colors.white),
-        backgroundColor: kPrimaryColor,
-        radius: 25.0,),
+        child: Icon(iconData, size: kAboutIconSize, color: Colors.white),
+        backgroundColor: kPrimaryDarkColor,
+        radius: kAboutIconSize,),
     );
   }
 }
 
 class AboutCard extends StatelessWidget {
-
   final IconData iconData;
   final String title;
   final Function onTap;
   final String head;
-
-  const AboutCard({
+  AboutCard({
     Key key,
-    this.iconData,
-    this.title,
-    this.onTap,
-    this.head
+    @required this.iconData,
+    @required this.title,
+    @required this.onTap,
+    @required this.head
   }) : super(key: key);
 
   @override
@@ -198,13 +197,20 @@ class AboutCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(iconData, color: kPrimaryColor, size: 32.0,),
-                SizedBox(width: 20.0,),
+                Icon(iconData, color: kPrimaryDarkColor, size: 32.0,),
+                SizedBox(width: 5.0,),
                 Expanded(
-                  child: Text(
-                    title,
-                    maxLines: 3,
-                    style: TextStyle(fontSize: 20.0, color: kPrimaryColor),
+                  child: Card(
+                    shadowColor: Colors.black,
+                    elevation: 0.0,
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Text(
+                        title,
+                        maxLines: 3,
+                        style: TextStyle(fontSize: 20.0, color: kPrimaryColor),
+                      ),
+                    ),
                   ),
                 )
               ],
@@ -214,4 +220,27 @@ class AboutCard extends StatelessWidget {
       ),
     );
   }
+}
+
+class FadeRoute extends PageRouteBuilder {
+  final Widget page;
+  FadeRoute({this.page})
+      : super(
+    pageBuilder: (
+        BuildContext context,
+        Animation<double> animation,
+        Animation<double> secondaryAnimation,
+        ) =>
+    page,
+    transitionsBuilder: (
+        BuildContext context,
+        Animation<double> animation,
+        Animation<double> secondaryAnimation,
+        Widget child,
+        ) =>
+        FadeTransition(
+          opacity: animation,
+          child: child,
+        ),
+  );
 }
