@@ -4,6 +4,7 @@ import 'package:demo/database.dart';
 import 'package:demo/screens/user_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
 class HomeDrawer extends StatefulWidget {
   const HomeDrawer({Key key, this.screenIndex, this.iconAnimationController, this.callBackIndex}) : super(key: key);
@@ -99,19 +100,17 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.notWhite.withOpacity(0.5),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          InkWell(
-            onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>UserProfilePage()),),
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.only(top: 40.0),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Color(0X4Cc3fdff),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            GestureDetector(
+              onTap: ()=>Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: UserProfilePage(),),),
               child: Container(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -123,25 +122,37 @@ class _HomeDrawerState extends State<HomeDrawer> {
                           scale: AlwaysStoppedAnimation<double>(1.0 - (widget.iconAnimationController.value) * 0.2),
                           child: RotationTransition(
                             turns: AlwaysStoppedAnimation<double>(Tween<double>(begin: 0.0, end: 24.0)
-                                    .animate(CurvedAnimation(parent: widget.iconAnimationController, curve: Curves.fastOutSlowIn))
-                                    .value /
-                                360),
-                            child: Container(
-                              height: 120,
-                              width: 120,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                boxShadow: <BoxShadow>[
-                                  BoxShadow(color: AppTheme.grey.withOpacity(0.6), offset: const Offset(2.0, 4.0), blurRadius: 8),
-                                ],
-                              ),
-                              child: ClipRRect(
-                                borderRadius: const BorderRadius.all(Radius.circular(60.0)),
-                                child: CircleAvatar(
-                                    child: Image.asset('assets/images/teacher.png'),
-                                  backgroundColor: Colors.white,
-                                ),
-                              ),
+                                    .animate(CurvedAnimation(parent: widget.iconAnimationController, curve: Curves.fastOutSlowIn)).value / 360),
+                            child: StreamBuilder(
+                              stream: myStream,
+                              builder: (context, snapshot) {
+                                if(!snapshot.hasData){
+                                  return CircularProgressIndicator();
+                                }
+                                return Container(
+                                  height: MediaQuery.of(context).size.height * 0.15,
+                                  width: MediaQuery.of(context).size.width * 0.3,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    boxShadow: <BoxShadow>[
+                                      BoxShadow(
+                                          color: AppTheme.grey.withOpacity(0.6),
+                                          offset: const Offset(2.0, 4.0),
+                                          blurRadius: 8,
+                                          spreadRadius: 1,
+                                      ),
+                                    ],
+                                  ),
+                                  child: ClipOval(
+                                    child: Image.network(
+                                     snapshot.data['profilePic'],
+                                      height: MediaQuery.of(context).size.width * 0.35,
+                                      width: MediaQuery.of(context).size.width * 0.35,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                );
+                              }
                             ),
                           ),
                         );
@@ -154,13 +165,13 @@ class _HomeDrawerState extends State<HomeDrawer> {
                           return CircularProgressIndicator();
                         }
                         return Padding(
-                          padding: const EdgeInsets.only(top: 8, left: 4),
-                          child: Text(
-                            snapshot.data['first name'],
+                          padding: EdgeInsets.only(top: 15,),
+                          child: Text('${snapshot.data['first name']} ${snapshot.data['last name']}',
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               color: AppTheme.grey,
-                              fontSize: 18,
+                              fontSize: MediaQuery.of(context).size.height * 0.025,
+                              letterSpacing: 2,
                             ),
                           ),
                         );
@@ -170,53 +181,50 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 ),
               ),
             ),
-          ),
-          const SizedBox(
-            height: 4,
-          ),
-          Divider(
-            height: 1,
-            color: AppTheme.grey.withOpacity(0.6),
-          ),
-          Expanded(
-            child: ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.all(0.0),
-              itemCount: drawerList.length,
-              itemBuilder: (BuildContext context, int index) {
-                return inkwell(drawerList[index]);
-              },
+            Divider(
+              height: 1.0,
+              color: AppTheme.grey.withOpacity(0.6),
             ),
-          ),
-          Divider(
-            height: 1,
-            color: AppTheme.grey.withOpacity(0.6),
-          ),
-          Column(
-            children: <Widget>[
-              ListTile(
-                title: Text(
-                  'Sign Out',
-                  style: TextStyle(
-                    fontFamily: AppTheme.fontName,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                    color: AppTheme.darkText,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-                trailing: Icon(
-                  Icons.power_settings_new,
-                  color: Colors.red,
-                ),
-                onTap: () => signOut(),
+            Expanded(
+              child: ListView.builder(
+                physics: BouncingScrollPhysics(),
+                padding: EdgeInsets.all(0.0),
+                itemCount: drawerList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return inkwell(drawerList[index]);
+                },
               ),
-              SizedBox(
-                height: MediaQuery.of(context).padding.bottom,
-              )
-            ],
-          ),
-        ],
+            ),
+            Divider(
+              height: 1.0,
+              color: AppTheme.grey.withOpacity(0.6),
+            ),
+            Column(
+              children: <Widget>[
+                ListTile(
+                  title: Text(
+                    'Sign Out',
+                    style: TextStyle(
+                      fontFamily: AppTheme.fontName,
+                      fontWeight: FontWeight.w600,
+                      fontSize: MediaQuery.of(context).size.height * 0.021,
+                      color: AppTheme.darkText,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                  trailing: Icon(
+                    Icons.power_settings_new,
+                    color: Colors.red,
+                  ),
+                  onTap: () => signOut(),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).padding.bottom,
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -225,7 +233,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        splashColor: Colors.grey.withOpacity(0.1),
+        splashColor: Colors.grey.withOpacity(0.3),
         highlightColor: Colors.transparent,
         onTap: () {
           navigationtoScreen(listData.index);
@@ -243,7 +251,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                       color: widget.screenIndex == listData.index
                           ? Colors.blue
                           : Colors.transparent,
-                      borderRadius: new BorderRadius.only(
+                      borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(0),
                         topRight: Radius.circular(16),
                         bottomLeft: Radius.circular(0),
@@ -268,7 +276,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     listData.labelName,
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
-                      fontSize: 16,
+                      letterSpacing: 0.5,
+                      fontSize: MediaQuery.of(context).size.height * 0.02,
                       color: widget.screenIndex == listData.index ? Colors.blue : AppTheme.nearlyBlack,
                     ),
                     textAlign: TextAlign.left,
@@ -290,7 +299,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                             height: 46,
                             decoration: BoxDecoration(
                               color: Colors.blue.withOpacity(0.2),
-                              borderRadius: new BorderRadius.only(
+                              borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(0),
                                 topRight: Radius.circular(28),
                                 bottomLeft: Radius.circular(0),

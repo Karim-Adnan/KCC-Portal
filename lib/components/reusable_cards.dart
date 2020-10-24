@@ -5,7 +5,7 @@ class ReusableCard extends StatelessWidget {
   final Widget cardChild;
   final Function onPress;
   final double height;
-  ReusableCard({@required this.colour, this.cardChild, this.onPress, this.height});
+  ReusableCard({@required this.colour,@required this.cardChild, this.onPress,@required this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -13,12 +13,12 @@ class ReusableCard extends StatelessWidget {
       onTap: onPress,
       child: Container(
         height: height,
-        child: cardChild,
-        margin: EdgeInsets.all(15.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
+        child: Card(
+          elevation: 8.0,
+          shadowColor: Colors.grey[500],
           color: colour,
         ),
+        margin: EdgeInsets.all(15.0),
       ),
     );
   }

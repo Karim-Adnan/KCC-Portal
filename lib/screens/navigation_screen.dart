@@ -3,6 +3,7 @@ import 'package:demo/screens/navigation_home_screen.dart';
 import 'package:demo/components/rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 
@@ -13,9 +14,11 @@ class NavigationScreen extends StatefulWidget {
 
 class _NavigationScreenState extends State<NavigationScreen> {
   bool isSigned = false;
+  int initScreen;
   @override
   void initState() {
     super.initState();
+    // setPreference();
     auth.FirebaseAuth.instance
         .authStateChanges()
         .listen((auth.User user) {
@@ -31,9 +34,15 @@ class _NavigationScreenState extends State<NavigationScreen> {
       }
     });
   }
+
+  // setPreference() async{
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   initScreen = await prefs.getInt("initScreen");
+  // }
   @override
   Widget build(BuildContext context) {
     print(isSigned);
+    print("111111111111111111111111");
     return Scaffold(
       body: isSigned ? NavigationHomeScreen() : WelcomeScreen(),
     );

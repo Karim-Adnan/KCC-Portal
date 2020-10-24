@@ -14,6 +14,7 @@ dependencies:
   cupertino_icons: ^0.1.3
   carousel_slider: ^2.2.1
   font_awesome_flutter: ^8.8.1
+  line_awesome_flutter: ^1.0.1
   google_fonts: ^1.1.0
   webview_flutter: ^0.3.24
   animated_text_kit: ^2.2.0
@@ -24,6 +25,9 @@ dependencies:
   fancy_on_boarding: ^1.6.0
   shared_preferences: ^0.5.12
   flare_flutter: ^2.0.6
+  url_launcher: ^5.7.5
+  page_transition: ^1.1.7+2
+  image_picker: ^0.6.7+11
 
 dev_dependencies:
   flutter_test:
@@ -36,6 +40,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/illustrations/
     - assets/icons/
     - assets/
 
@@ -45,11 +50,3 @@ flutter:
   #       - asset: fonts/Schyler-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/custom-fonts/#from-packages

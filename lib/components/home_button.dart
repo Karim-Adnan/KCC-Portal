@@ -1,6 +1,9 @@
 import 'package:demo/components/round_icon.dart';
 import 'package:demo/constants.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomeButton extends StatelessWidget {
 
@@ -8,7 +11,7 @@ class HomeButton extends StatelessWidget {
   final Function onPressed;
   final IconData icon;
 
-  const HomeButton({Key key,this.title,this.onPressed,this.icon}) : super(key: key);
+  const HomeButton({Key key,@required this.title,@required this.onPressed,@required this.icon}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +22,7 @@ class HomeButton extends StatelessWidget {
           onPressed: onPressed,
         ),
         SizedBox(height: 10.0),
-        Text(title),
+        Text(title, style: GoogleFonts.openSans(fontWeight: FontWeight.w600),),
       ],
     );
   }

@@ -1,5 +1,7 @@
 import 'package:demo/custom_drawer/drawer_user_controller.dart';
 import 'package:demo/custom_drawer/home_drawer.dart';
+import 'package:demo/screens/about_screen.dart';
+import 'package:demo/screens/feedback_screen.dart';
 import 'package:demo/screens/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/app_theme.dart';
@@ -56,13 +58,17 @@ class _NavigationHomeScreenState extends State<NavigationHomeScreen> {
         });
       } else if (drawerIndex == DrawerIndex.FeedBack) {
         setState(() {
-          // screenView = FeedbackScreen();
+          screenView = FeedbackScreen();
         });
       } else if (drawerIndex == DrawerIndex.Invite) {
         setState(() {
           // screenView = InviteFriend();
         });
-      } else {
+      } else if (drawerIndex == DrawerIndex.About) {
+        setState(() {
+          screenView = AboutScreen();
+        });
+      }else {
         //do in your way......
       }
     }
