@@ -27,6 +27,7 @@ dependencies:
   flare_flutter: ^2.0.6
   url_launcher: ^5.7.5
   page_transition: ^1.1.7+2
+  image_picker: ^0.6.7+11
 
 dev_dependencies:
   flutter_test:

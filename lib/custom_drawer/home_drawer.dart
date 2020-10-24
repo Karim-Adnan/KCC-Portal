@@ -123,26 +123,36 @@ class _HomeDrawerState extends State<HomeDrawer> {
                           child: RotationTransition(
                             turns: AlwaysStoppedAnimation<double>(Tween<double>(begin: 0.0, end: 24.0)
                                     .animate(CurvedAnimation(parent: widget.iconAnimationController, curve: Curves.fastOutSlowIn)).value / 360),
-                            child: Container(
-                              height: MediaQuery.of(context).size.height * 0.15,
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                boxShadow: <BoxShadow>[
-                                  BoxShadow(
-                                      color: AppTheme.grey.withOpacity(0.6),
-                                      offset: const Offset(2.0, 4.0),
-                                      blurRadius: 8,
-                                      spreadRadius: 1,
+                            child: StreamBuilder(
+                              stream: myStream,
+                              builder: (context, snapshot) {
+                                if(!snapshot.hasData){
+                                  return CircularProgressIndicator();
+                                }
+                                return Container(
+                                  height: MediaQuery.of(context).size.height * 0.15,
+                                  width: MediaQuery.of(context).size.width * 0.3,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    boxShadow: <BoxShadow>[
+                                      BoxShadow(
+                                          color: AppTheme.grey.withOpacity(0.6),
+                                          offset: const Offset(2.0, 4.0),
+                                          blurRadius: 8,
+                                          spreadRadius: 1,
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                              child: ClipOval(
-                                child: Image.asset(
-                                  'assets/images/placeholder_avatar.png',
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+                                  child: ClipOval(
+                                    child: Image.network(
+                                     snapshot.data['profilePic'],
+                                      height: MediaQuery.of(context).size.width * 0.35,
+                                      width: MediaQuery.of(context).size.width * 0.35,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                );
+                              }
                             ),
                           ),
                         );

@@ -99,7 +99,9 @@ class _HomeState extends State<Home> {
                               GestureDetector(
                                 onTap: ()=>Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: UserProfilePage(),),),
                                 child: CircleAvatar(
-                                  backgroundImage: AssetImage('assets/images/placeholder_avatar.png'),
+                                  backgroundImage: NetworkImage(
+                              snapshot.data['profilePic'],
+                              ),
                                   radius: 38.0,),
                               ),
                             ],

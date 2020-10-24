@@ -107,6 +107,7 @@ class _DrawerUserControllerState extends State<DrawerUserController> with Ticker
                           onDrawerClick();
                           try {
                             widget.onDrawerCall(indexType);
+                            print("DrawerrrrrIndexxxx=${widget.screenIndex}");
                           } catch (e) {}
                         },
                       ),
@@ -155,7 +156,7 @@ class _DrawerUserControllerState extends State<DrawerUserController> with Ticker
                                     ? widget.menuView
                                     : AnimatedIcon(
                                         size: 32,
-                                        color: Colors.white,
+                                        color: widget.screenIndex == DrawerIndex.FeedBack ? Colors.teal[500] : widget.screenIndex == DrawerIndex.About ? Colors.black : Colors.white,
                                         icon: widget.animatedIconData != null ? widget.animatedIconData : AnimatedIcons.arrow_menu,
                                         progress: iconAnimationController),
                               ),
