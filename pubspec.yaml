@@ -28,6 +28,8 @@ dependencies:
   url_launcher: ^5.7.5
   page_transition: ^1.1.7+2
   image_picker: ^0.6.7+11
+  lottie: ^0.7.0+1
+  smooth_star_rating: ^1.1.1
 
 dev_dependencies:
   flutter_test:
@@ -42,6 +44,7 @@ flutter:
     - assets/images/
     - assets/illustrations/
     - assets/icons/
+    - assets/lottie/
     - assets/
 
   # fonts:

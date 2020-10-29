@@ -37,191 +37,208 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              kSecondaryLightColor,
+              kSecondaryColor,
+              kPrimaryLightColor,
+              kPrimaryColor,
+              kPrimaryDarkColor,
+            ],
+          ),
+        ),
+        child: NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
 
-            // Top Bar
-            SliverAppBar(
-              backgroundColor: Colors.transparent,
-              expandedHeight: 200.0,
-              floating: true,
-              pinned: false,
-              flexibleSpace: FlexibleSpaceBar(
-                  centerTitle: true,
-                  background: StreamBuilder(
-                    stream: myStream,
-                    builder: (context, snapshot) {
-                      if(!snapshot.hasData){
-                        return CircularProgressIndicator();
-                      }
-                      return ClipPath(
-                        clipper: MyClipper(),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
-                                colors: <Color>[
-                                  kPrimaryDarkColor,
-                                  kPrimaryColor,
-                                ],
+              // Top Bar
+              SliverAppBar(
+                backgroundColor: Colors.transparent,
+                expandedHeight: 200.0,
+                floating: true,
+                pinned: false,
+                flexibleSpace: FlexibleSpaceBar(
+                    centerTitle: true,
+                    background: StreamBuilder(
+                      stream: myStream,
+                      builder: (context, snapshot) {
+                        if(!snapshot.hasData){
+                          return CircularProgressIndicator();
+                        }
+                        return ClipPath(
+                          clipper: MyClipper(),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: kPrimaryDarkColor,
+
+                              // gradient: LinearGradient(
+                              //     begin: Alignment.topCenter,
+                              //     end: Alignment.bottomCenter,
+                              //     colors: <Color>[
+                              //       kSecondaryLightColor,
+                              //       kPrimaryDarkColor,
+                              //     ],
+                              // ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Welcome,",
+                                      style: GoogleFonts.openSans(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: MediaQuery.of(context).size.width * .08,
+                                      ),
+                                    ),
+                                    TypewriterAnimatedTextKit(
+                                      speed: Duration(milliseconds: 500),
+                                      totalRepeatCount: 1,
+                                      text: [
+                                        snapshot.data['first name'],
+                                      ],
+                                      textStyle: GoogleFonts.openSans(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: MediaQuery.of(context).size.width * .05,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                GestureDetector(
+                                  onTap: ()=>Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: UserProfilePage(),),),
+                                  child: CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                snapshot.data['profilePic'],
+                                ),
+                                    radius: 38.0,),
+                                ),
+                              ],
                             ),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Welcome,",
-                                    style: GoogleFonts.openSans(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: MediaQuery.of(context).size.width * .08,
-                                    ),
-                                  ),
-                                  TypewriterAnimatedTextKit(
-                                    speed: Duration(milliseconds: 500),
-                                    totalRepeatCount: 1,
-                                    text: [
-                                      snapshot.data['first name'],
-                                    ],
-                                    textStyle: GoogleFonts.openSans(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: MediaQuery.of(context).size.width * .05,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              GestureDetector(
-                                onTap: ()=>Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: UserProfilePage(),),),
-                                child: CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                              snapshot.data['profilePic'],
-                              ),
-                                  radius: 38.0,),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }
-                  ),
-              ),
-            ),
-          ];
-        },
-        body: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(height: 15.0),
-              // Top Slider
-              Expanded(
-                child: ListView(
-                  physics: ScrollPhysics(parent: BouncingScrollPhysics()),
-                  children: [
-                    CarouselSlider(
-                      options: CarouselOptions(
-                        height: 170.0,
-                        enlargeCenterPage: true,
-                      ),
-                      items: [
-                        SliderItem(
-                          url: 'https://organize.mlh.io/participants/events/3989-the-open-source-roadshow-kccitm',
-                          linkTitle: 'HacktoberFest 2k20',
-                          image: 'hacktoberfest2020.jpeg',
-                        ),
-                        SliderItem(
-                          url: 'https://dsc.community.dev/kcc-institute-of-technology-management/',
-                          linkTitle: 'DSC-KCCITM',
-                          image: 'DSC.png',
-                        ),
-                        SliderItem(
-                          url: 'http://kccitm.acm.org',
-                          linkTitle: 'ACM-KCCITM',
-                          image: 'ACM.png',
-                        ),
-                      ],
+                        );
+                      }
                     ),
-
-                    // Navigation Buttons
-                    Container(
-                      margin: EdgeInsets.all(10.0),
-                      padding: EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              HomeButton(
-                                  title: "Time Table",
-                                  onPressed: ()=>Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: TimeTable()),),
-                                  icon: FontAwesomeIcons.table,
-                              ),
-                              HomeButton(
-                                title: "Time Table",
-                                onPressed: ()=>Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: TimeTable()),),
-                                icon: FontAwesomeIcons.table,
-                              ),
-                              HomeButton(
-                                title: "Time Table",
-                                onPressed: ()=>Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: TimeTable()),),
-                                icon: FontAwesomeIcons.table,
-                              ),
-                            ],
+                ),
+              ),
+            ];
+          },
+          body: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(height: 15.0),
+                // Top Slider
+                Expanded(
+                  child: ListView(
+                    physics: ScrollPhysics(parent: BouncingScrollPhysics()),
+                    children: [
+                      CarouselSlider(
+                        options: CarouselOptions(
+                          height: 170.0,
+                          enlargeCenterPage: true,
+                        ),
+                        items: [
+                          SliderItem(
+                            url: 'https://organize.mlh.io/participants/events/3989-the-open-source-roadshow-kccitm',
+                            linkTitle: 'HacktoberFest 2k20',
+                            image: 'hacktoberfest2020.jpeg',
                           ),
-                          SizedBox(
-                            height: 20.0,
+                          SliderItem(
+                            url: 'https://dsc.community.dev/kcc-institute-of-technology-management/',
+                            linkTitle: 'DSC-KCCITM',
+                            image: 'DSC.png',
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              HomeButton(
-                                title: "Time Table",
-                                onPressed: ()=>Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: TimeTable()),),
-                                icon: FontAwesomeIcons.table,
-                              ),
-                              HomeButton(
-                                title: "Time Table",
-                                onPressed: ()=>Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: TimeTable()),),
-                                icon: FontAwesomeIcons.table,
-                              ),
-                              HomeButton(
-                                title: "Time Table",
-                                onPressed: ()=>Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: TimeTable()),),
-                                icon: FontAwesomeIcons.table,
-                              ),
-                            ],
+                          SliderItem(
+                            url: 'http://kccitm.acm.org',
+                            linkTitle: 'ACM-KCCITM',
+                            image: 'ACM.png',
                           ),
                         ],
                       ),
-                    ),
 
-                   // Cards
-                    ReusableCard(
-                      cardChild: Card(),
-                      colour: Colors.white,
-                      height: 150.0,
-                    ),
-                    ReusableCard(
-                      colour: Colors.white,
-                      height: 150.0,
-                    ),
-                    ReusableCard(
-                      colour: Colors.white,
-                      height: 150.0,
-                    ),
-                  ],
-                ),
-              )
-            ]
+                      // Navigation Buttons
+                      Container(
+                        margin: EdgeInsets.all(10.0),
+                        padding: EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                HomeButton(
+                                    title: "Time Table",
+                                    onPressed: ()=>Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: TimeTable()),),
+                                    icon: FontAwesomeIcons.table,
+                                ),
+                                HomeButton(
+                                  title: "Time Table",
+                                  onPressed: ()=>Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: TimeTable()),),
+                                  icon: FontAwesomeIcons.table,
+                                ),
+                                HomeButton(
+                                  title: "Time Table",
+                                  onPressed: ()=>Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: TimeTable()),),
+                                  icon: FontAwesomeIcons.table,
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                HomeButton(
+                                  title: "Time Table",
+                                  onPressed: ()=>Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: TimeTable()),),
+                                  icon: FontAwesomeIcons.table,
+                                ),
+                                HomeButton(
+                                  title: "Time Table",
+                                  onPressed: ()=>Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: TimeTable()),),
+                                  icon: FontAwesomeIcons.table,
+                                ),
+                                HomeButton(
+                                  title: "Time Table",
+                                  onPressed: ()=>Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: TimeTable()),),
+                                  icon: FontAwesomeIcons.table,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+
+                     // Cards
+                      ReusableCard(
+                        cardChild: Card(),
+                        colour: Colors.white,
+                        height: 150.0,
+                      ),
+                      ReusableCard(
+                        colour: Colors.white,
+                        height: 150.0,
+                      ),
+                      ReusableCard(
+                        colour: Colors.white,
+                        height: 150.0,
+                      ),
+                    ],
+                  ),
+                )
+              ]
+          ),
         ),
       ),
     );

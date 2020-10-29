@@ -3,6 +3,7 @@ import 'package:demo/screens/webview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -58,8 +59,9 @@ class _AboutScreenState extends State<AboutScreen> {
                       Expanded(
                         child: Container(
                           height: size.height * 0.4,
-                          width: size.width * 1,
-                          child: Image.asset('assets/illustrations/about_us.png'),
+                          width: size.width * 0.8,
+                          child: Lottie.asset('assets/lottie/aboutScreenAnim.json'),
+                          // Image.asset('assets/illustrations/about_us.png'),
                         ),
                       ),
                     ],
