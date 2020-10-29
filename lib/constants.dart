@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
-const kPrimaryColor= Color(0xff22aed1);
-const kPrimaryLightColor = Color(0xFFF1E6FF);
-const kSecondaryColor = Color(0x4422aed1);
+const kPrimaryDarkColor = Color(0xFF0319FA);
+const kPrimaryColor = Color(0xFF0250DE);
+const kPrimaryLightColor= Color(0xFF099BF5);
+const kSecondaryColor = Color(0xFF02C3DE);
+const kSecondaryLightColor = Color(0xFF03FAD4);
+
 const size = 100.0;
 const kAboutIconSize = 22.0;
-const kPrimaryDarkColor = Color(0xff2081F7);
 
 const kTextFieldDecoration = InputDecoration(
   contentPadding:

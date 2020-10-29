@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 
 
 class DropDownMenu extends StatefulWidget {
+  final Color fillColor;
   final List<ListItem> dropdownItems;
   final Function onChanged;
   final String hint;
-  DropDownMenu({this.dropdownItems, this.onChanged, this.hint});
+  DropDownMenu({this.dropdownItems, this.onChanged, this.hint,this.fillColor});
 
   @override
   _DropDownMenuState createState() => _DropDownMenuState();
@@ -45,7 +46,7 @@ class _DropDownMenuState extends State<DropDownMenu> {
           width: size.width * 0.8,
           padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
           decoration: BoxDecoration(
-            color: kSecondaryColor,
+            color: widget.fillColor,
             borderRadius: BorderRadius.circular(10.0),
           ),
           child: DropdownButtonHideUnderline(
