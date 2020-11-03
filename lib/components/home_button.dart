@@ -22,7 +22,7 @@ class HomeButton extends StatelessWidget {
           onPressed: onPressed,
         ),
         SizedBox(height: 10.0),
-        Text(title, style: GoogleFonts.openSans(fontWeight: FontWeight.w600),),
+        Text(title, style: GoogleFonts.openSans(fontWeight: FontWeight.w600,),),
       ],
     );
   }

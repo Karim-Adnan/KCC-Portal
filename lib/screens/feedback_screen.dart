@@ -19,6 +19,7 @@ class FeedbackScreen extends StatefulWidget {
 }
 
 class _FeedbackScreenState extends State<FeedbackScreen> {
+  double rating = 3;
   var feedbackController = TextEditingController();
   String topic;
   var scaffoldKey = GlobalKey<ScaffoldState>();
@@ -39,7 +40,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
           .doc(firebaseUser.email)
           .collection('feedBacks')
           .doc(id)
-          .set({'topic': topic, 'response': feedbackController.text});
+          .set({'topic': topic, 'response': feedbackController.text, 'rating': rating});
       Navigator.pushReplacement(
         context,
         PageTransition(
@@ -58,7 +59,6 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    double rating = 3;
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -96,7 +96,9 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                             ),
                             SmoothStarRating(
                                 allowHalfRating: false,
-                                onRated: (v) {},
+                                onRated: (v) {
+                                  rating = v;
+                                },
                                 starCount: 5,
                                 rating: rating,
                                 size: 40.0,

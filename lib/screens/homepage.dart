@@ -5,6 +5,7 @@ import 'package:demo/components/reusable_cards.dart';
 import 'package:demo/components/slider_item.dart';
 import 'package:demo/constants.dart';
 import 'package:demo/database.dart';
+import 'package:demo/screens/study_material.dart';
 import 'package:demo/screens/time_table.dart';
 import 'package:demo/screens/user_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -182,9 +183,9 @@ class _HomeState extends State<Home> {
                                     icon: FontAwesomeIcons.table,
                                 ),
                                 HomeButton(
-                                  title: "Time Table",
-                                  onPressed: ()=>Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: TimeTable()),),
-                                  icon: FontAwesomeIcons.table,
+                                  title: "Study Material",
+                                  onPressed: ()=>Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: StudyMaterial()),),
+                                  icon: FontAwesomeIcons.book,
                                 ),
                                 HomeButton(
                                   title: "Time Table",
