@@ -1,13 +1,7 @@
-import 'package:demo/components/notes_card.dart';
-import 'package:demo/components/semester_card.dart';
 import 'package:demo/constants.dart';
 import 'package:demo/screens/question_paper_tab.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
-
 import 'class_notes_tab.dart';
 
 class StudyMaterial extends StatefulWidget {
@@ -15,8 +9,8 @@ class StudyMaterial extends StatefulWidget {
   _StudyMaterialState createState() => _StudyMaterialState();
 }
 
-class _StudyMaterialState extends State<StudyMaterial> with SingleTickerProviderStateMixin {
-
+class _StudyMaterialState extends State<StudyMaterial>
+    with SingleTickerProviderStateMixin {
   TabController _tabController;
   ScrollController _scrollViewController;
 
@@ -37,16 +31,17 @@ class _StudyMaterialState extends State<StudyMaterial> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: kPrimaryColor,
       body: NestedScrollView(
         controller: _scrollViewController,
-        headerSliverBuilder: (BuildContext context, bool boxIsScrolled){
+        headerSliverBuilder: (BuildContext context, bool boxIsScrolled) {
           return [
             SliverAppBar(
               shape: ContinuousRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(30), bottomRight: Radius.circular(30)
-                  )
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
+                ),
               ),
               backgroundColor: kPrimaryColor,
               title: Text('Study Material'),
@@ -72,17 +67,10 @@ class _StudyMaterialState extends State<StudyMaterial> with SingleTickerProvider
           ];
         },
         body: TabBarView(
-          children: [
-            QuestionPapersTab(),
-            ClassNotesTab()
-          ],
+          children: [QuestionPapersTab(), ClassNotesTab()],
           controller: _tabController,
         ),
       ),
     );
   }
 }
-
-
-
-
