@@ -31,13 +31,13 @@ class WelcomeScreen extends StatelessWidget {
     // Neumorphic colored container with 99% app width
     final widthNeuContainer = Container(
       width: width * 0.99,
-      color: kSecondaryLightColor,
+      color: kSecondaryColor,
     );
 
     // Neumorphic colored container with 99% app height
     final heightNeuContainer = Container(
       height: height * 0.99,
-      color: kSecondaryLightColor,
+      color: kSecondaryColor,
     );
 
     return Scaffold(
@@ -47,11 +47,9 @@ class WelcomeScreen extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              kSecondaryLightColor,
               kSecondaryColor,
               kPrimaryLightColor,
               kPrimaryColor,
-              kPrimaryDarkColor,
             ],
           ),
         ),
@@ -89,13 +87,13 @@ class WelcomeScreen extends StatelessWidget {
                 child: heightNeuContainer,
               ),
             ),
-            Align(
-              alignment: Alignment(0, -8),
-              child: SizedBox(
-                  width: width * 0.99,
-                  height: height * 0.99,
-                  child: Image.asset('assets/illustrations/welcomeImage.png')),
-            ),
+            // Align(
+            //   alignment: Alignment(0, -8),
+            //   child: SizedBox(
+            //       width: width * 0.99,
+            //       height: height * 0.99,
+            //       child: Image.asset('assets/illustrations/welcomeImage.png')),
+            // ),
             Align(
               alignment: Alignment(-60, 110),
               child: SizedBox(
@@ -111,7 +109,7 @@ class WelcomeScreen extends StatelessWidget {
             Align(
               alignment: Alignment.topCenter,
               child: Padding(
-                padding: EdgeInsets.only(top: height * 0.1),
+                padding: EdgeInsets.only(top: height * 0.24),
                 child: Text(
                   'Welcome User',
                   style: GoogleFonts.nunito(
@@ -125,40 +123,42 @@ class WelcomeScreen extends StatelessWidget {
             ),
             Align(
               alignment: Alignment(0, 0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  RoundedButton(
-                    text: "LOGIN",
-                    color: kPrimaryDarkColor,
-                    press: () {
-                      Navigator.push(
-                        context,
-                        PageTransition(
-                          type: PageTransitionType.fade,
-                          child: LoginScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  RoundedButton(
-                    text: "SIGN UP",
-                    color: kPrimaryLightColor,
-                    textColor: Colors.black,
-                    press: () {
-                      Navigator.push(
-                        context,
-                        PageTransition(
-                          type: PageTransitionType.fade,
-                          child: SignUpScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  SizedBox(
-                    height: height * 0.1,
-                  )
-                ],
+              child: Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    RoundedButton(
+                      text: "LOGIN",
+                      color: kPrimaryDarkColor,
+                      press: () {
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            type: PageTransitionType.fade,
+                            child: LoginScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    RoundedButton(
+                      text: "SIGN UP",
+                      color: kPrimaryLightColor,
+                      textColor: Colors.white,
+                      press: () {
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            type: PageTransitionType.fade,
+                            child: SignUpScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(
+                      height: height * 0.1,
+                    )
+                  ],
+                ),
               ),
             )
           ],

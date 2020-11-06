@@ -86,13 +86,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
     // Neumorphic colored container with 99% app width
     final widthNeuContainer = Container(
       width: width * 0.99,
-      color: kSecondaryLightColor,
+      color: kSecondaryColor,
     );
 
     // Neumorphic colored container with 99% app height
     final heightNeuContainer = Container(
       height: height * 0.99,
-      color: kSecondaryLightColor,
+      color: kSecondaryColor,
     );
 
     return GestureDetector(

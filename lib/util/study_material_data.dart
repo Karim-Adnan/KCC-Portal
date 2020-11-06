@@ -9,7 +9,7 @@ var colorGradients = [
   [Colors.cyan[700], Colors.cyan[200]],
 ];
 
-var subjects=[
+var subjects = [
   "DBMS",
   "CD",
   "MLT",
@@ -18,7 +18,7 @@ var subjects=[
   "DAA",
 ];
 
-var year=[
+var year = [
   "2011-12",
   "2012-13",
   "2013-14",
@@ -30,9 +30,9 @@ var year=[
   "2019-20",
 ];
 
-var semesterInRoman=["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
+var semesterInRoman = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
 
-Map<String ,String> semesterMap={
+Map<String, String> semesterMap = {
   "I": "First Semester",
   "II": "Second Semester",
   "III": "Third Semester",

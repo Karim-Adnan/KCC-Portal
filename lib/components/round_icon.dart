@@ -1,3 +1,4 @@
+import 'package:demo/constants.dart';
 import 'package:flutter/material.dart';
 
 class RoundIcon extends StatelessWidget {
@@ -12,20 +13,20 @@ class RoundIcon extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white54,
-          shape: BoxShape.circle,
+          color: kSecondaryLightColor.withOpacity(0.25),
+          borderRadius: BorderRadius.circular(20.0),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey[600],
-              offset: Offset(1.5, 1.5),
-              blurRadius: 8.0,
-              spreadRadius: 0.1,
+              color: kPrimaryDarkColor,
+              offset: Offset(-4, -4),
+              blurRadius: 15.0,
+              spreadRadius: 1,
             ),
             BoxShadow(
-              color: Colors.white,
-              offset: Offset(-3.0, -3.0),
-              blurRadius: 8.0,
-              spreadRadius: 0.1,
+              color: kPrimaryLightColor,
+              offset: Offset(4.0, 4.0),
+              blurRadius: 15.0,
+              spreadRadius: 1,
             ),
           ]
       ),
