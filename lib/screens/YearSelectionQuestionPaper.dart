@@ -4,9 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class YearSelectionQuestionPaper extends StatelessWidget {
-
   final sem;
 
   const YearSelectionQuestionPaper({Key key, this.sem}) : super(key: key);
@@ -21,86 +22,115 @@ class YearSelectionQuestionPaper extends StatelessWidget {
         backgroundColor: Colors.white,
         title: Text(
           semesterMap[sem.toString()],
-          style: GoogleFonts.nunito( color: Color(0xffAFA5EF), fontWeight: FontWeight.w800),
+          style: GoogleFonts.nunito(
+              color: Color(0xffAFA5EF), fontWeight: FontWeight.w800),
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Color(0xffAFA5EF),),
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Color(0xffAFA5EF),
+          ),
           onPressed: () => Navigator.pop(context),
         ),
       ),
       body: ListView(
         children: [
           Container(
-            height: size.height * 0.3,
-            width: size.width,
-            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            decoration: BoxDecoration(
-                // image: DecorationImage(
-                //     image: AssetImage(
-                //         'assets/illustrations/study_material_year_selection.jpg'),
-                //     fit: BoxFit.fitHeight),
-                color: Color(0xffAFA5EF).withOpacity(0.5),
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                      color: Color(0xffAFA5EF).withOpacity(0.5),
-                      offset: Offset(5, 5),
-                      blurRadius: 5,
-                      spreadRadius: 5)
-                ]),
-            child: Stack(
-              children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Lottie.asset('assets/lottie/studyMaterialAnim3.json'),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "Select your Year",
-                      style: GoogleFonts.nunito(
-                        fontSize: 25,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w900,
+              height: size.height * 0.3,
+              width: size.width,
+              margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              decoration: BoxDecoration(
+                  // image: DecorationImage(
+                  //     image: AssetImage(
+                  //         'assets/illustrations/study_material_year_selection.jpg'),
+                  //     fit: BoxFit.fitHeight),
+                  color: Color(0xffAFA5EF).withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Color(0xffAFA5EF).withOpacity(0.5),
+                        offset: Offset(5, 5),
+                        blurRadius: 5,
+                        spreadRadius: 5)
+                  ]),
+              child: Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child:
+                        Lottie.asset('assets/lottie/studyMaterialAnim3.json'),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Select your Year",
+                        style: GoogleFonts.nunito(
+                          fontSize: 25,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w900,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            )
-          ),
+                ],
+              )),
           ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               itemCount: year.length,
-              itemBuilder: (context, index) => QuestionPaperYearCard(year: year[index],))
+              itemBuilder: (context, index) => QuestionPaperYearCard(
+                    year: year[index],
+                  ))
         ],
       ),
     );
   }
 }
 
-class QuestionPaperYearCard extends StatelessWidget {
-
+class QuestionPaperYearCard extends StatefulWidget {
   final year;
 
   const QuestionPaperYearCard({
-    Key key, this.year,
+    Key key,
+    this.year,
   }) : super(key: key);
 
   @override
+  _QuestionPaperYearCardState createState() => _QuestionPaperYearCardState();
+}
+
+class _QuestionPaperYearCardState extends State<QuestionPaperYearCard> {
+
+  void setPreference() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("SelectedYear", widget.year);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setPreference();
+  }
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SubjectSelectionQuestionPaper(year: year,))),
+      onTap: () {
+        setPreference();
+        Navigator.push(
+            context,
+            PageTransition(
+                type: PageTransitionType.fade,
+                child: SubjectSelectionQuestionPaper(year: widget.year)));
+      },
       child: Container(
         height: 100,
         width: double.infinity,
         margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         decoration: BoxDecoration(
-          // color: Color(0xff006c5f),
+            // color: Color(0xff006c5f),
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
@@ -120,12 +150,11 @@ class QuestionPaperYearCard extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  year,
+                  widget.year,
                   style: GoogleFonts.nunito(
                       fontSize: 20,
                       color: Color(0xffAFA5EF),
-                      fontWeight: FontWeight.w800
-                  ),
+                      fontWeight: FontWeight.w800),
                 ),
               ),
             )

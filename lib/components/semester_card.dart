@@ -1,28 +1,51 @@
 import 'package:demo/screens/YearSelectionQuestionPaper.dart';
+import 'package:demo/util/study_material_data.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:demo/constants.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class SemesterCard extends StatelessWidget {
+class SemesterCard extends StatefulWidget {
   final Size size;
   final content;
 
   const SemesterCard({@required this.size, this.content});
 
   @override
+  _SemesterCardState createState() => _SemesterCardState();
+}
+
+class _SemesterCardState extends State<SemesterCard> {
+
+  void setPreference() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("SelectedSem", semesterInNumber[widget.content]);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setPreference();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         // Navigator.push(context, MaterialPageRoute(builder: (context)=>SubjectSelectionQuestionPaper(sem: content)));
+        setPreference();
         Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) => YearSelectionQuestionPaper(sem: content)),
+          PageTransition(
+            type: PageTransitionType.fade,
+            child: YearSelectionQuestionPaper(sem: widget.content)
+          )
         );
       },
       child: Container(
-        height: size.height * 0.2,
-        width: size.width * 0.4,
+        height: widget.size.height * 0.2,
+        width: widget.size.width * 0.4,
         margin: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         decoration: BoxDecoration(
           color: kPrimaryColor,
@@ -48,7 +71,7 @@ class SemesterCard extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                content,
+                widget.content,
                 style: GoogleFonts.nunito(
                   color: Colors.white,
                   shadows: [

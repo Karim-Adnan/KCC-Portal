@@ -55,7 +55,7 @@ class NotesCard extends StatelessWidget {
                   flex: 2,
                   child: Center(
                     child: Text(
-                      subjects[index],
+                      subjectsData[index],
                       style: GoogleFonts.nunito(
                         fontSize: size.width * 0.1,
                         fontWeight: FontWeight.w600,
