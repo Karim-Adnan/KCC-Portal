@@ -47,7 +47,7 @@ class NotesCard extends StatelessWidget {
                 Expanded(
                   flex: 1,
                   child: Image(
-                    height: 60,
+                    height: 50,
                     image: AssetImage('assets/icons/class_notes.png'),
                   ),
                 ),
@@ -69,21 +69,6 @@ class NotesCard extends StatelessWidget {
           ),
         ),
       ),
-      // Row(
-      //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-      //   children: [
-      //     Image(
-      //       height: 50,
-      //       image: AssetImage('assets/icons/class_notes.png'),
-      //     ),
-      //     Text(
-      //       subjects[index],
-      //       style: GoogleFonts.nunito(
-      //         fontSize: 32,
-      //       ),
-      //     )
-      //   ],
-      // ),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:demo/constants.dart';
 import 'package:demo/screens/navigation_screen.dart';
 import 'package:demo/screens/onboarding_screen.dart';
 import 'package:demo/screens/role_selection_screen.dart';
@@ -21,7 +22,7 @@ void main() async{
     debugShowCheckedModeBanner: false,
     home: initScreen == 0 || initScreen == null ? OnBoardingScreen() : initScreen == 2 ? RoleSelection() : NavigationScreen(),
     theme: ThemeData(
-      scaffoldBackgroundColor: Color(0xffd1f5ff),
+      scaffoldBackgroundColor: kPrimaryColor,
     ),
     )
   );

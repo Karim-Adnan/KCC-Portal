@@ -17,8 +17,7 @@ class SemesterCard extends StatefulWidget {
 }
 
 class _SemesterCardState extends State<SemesterCard> {
-
-  void setPreference() async{
+  void setPreference() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString("SelectedSem", semesterInNumber[widget.content]);
   }
@@ -33,14 +32,13 @@ class _SemesterCardState extends State<SemesterCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigator.push(context, MaterialPageRoute(builder: (context)=>SubjectSelectionQuestionPaper(sem: content)));
         setPreference();
         Navigator.push(
           context,
           PageTransition(
             type: PageTransitionType.fade,
-            child: YearSelectionQuestionPaper(sem: widget.content)
-          )
+            child: YearSelectionQuestionPaper(sem: widget.content),
+          ),
         );
       },
       child: Container(

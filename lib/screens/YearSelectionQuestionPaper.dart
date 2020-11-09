@@ -1,6 +1,6 @@
+import 'package:demo/constants.dart';
 import 'package:demo/screens/subject_selection_question_paper.dart';
 import 'package:demo/util/study_material_data.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
@@ -10,26 +10,30 @@ import 'package:shared_preferences/shared_preferences.dart';
 class YearSelectionQuestionPaper extends StatelessWidget {
   final sem;
 
-  const YearSelectionQuestionPaper({Key key, this.sem}) : super(key: key);
+  const YearSelectionQuestionPaper({this.sem});
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0.0,
-        backgroundColor: Colors.white,
+        backgroundColor: kPrimaryColor,
         title: Text(
           semesterMap[sem.toString()],
           style: GoogleFonts.nunito(
-              color: Color(0xffAFA5EF), fontWeight: FontWeight.w800),
+            fontSize: 25,
+            color: Colors.white,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 4,
+          ),
         ),
         centerTitle: true,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            color: Color(0xffAFA5EF),
+            color: Colors.white,
           ),
           onPressed: () => Navigator.pop(context),
         ),
@@ -41,19 +45,16 @@ class YearSelectionQuestionPaper extends StatelessWidget {
               width: size.width,
               margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               decoration: BoxDecoration(
-                  // image: DecorationImage(
-                  //     image: AssetImage(
-                  //         'assets/illustrations/study_material_year_selection.jpg'),
-                  //     fit: BoxFit.fitHeight),
-                  color: Color(0xffAFA5EF).withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Color(0xffAFA5EF).withOpacity(0.5),
-                        offset: Offset(5, 5),
-                        blurRadius: 5,
-                        spreadRadius: 5)
-                  ]),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: kPrimaryDarkColor,
+                    offset: Offset(0, 0),
+                    blurRadius: 10,
+                    spreadRadius: 10,
+                  ),
+                ],
+              ),
               child: Stack(
                 children: [
                   Align(
@@ -62,28 +63,31 @@ class YearSelectionQuestionPaper extends StatelessWidget {
                         Lottie.asset('assets/lottie/studyMaterialAnim3.json'),
                   ),
                   Align(
-                    alignment: Alignment.bottomCenter,
+                    alignment: Alignment(0, 1.5),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         "Select your Year",
                         style: GoogleFonts.nunito(
                           fontSize: 25,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w900,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
                   ),
                 ],
               )),
+          SizedBox(
+            height: size.height * 0.03,
+          ),
           ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: year.length,
-              itemBuilder: (context, index) => QuestionPaperYearCard(
-                    year: year[index],
-                  ))
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: year.length,
+            itemBuilder: (context, index) =>
+                QuestionPaperYearCard(year: year[index]),
+          )
         ],
       ),
     );
@@ -93,18 +97,14 @@ class YearSelectionQuestionPaper extends StatelessWidget {
 class QuestionPaperYearCard extends StatefulWidget {
   final year;
 
-  const QuestionPaperYearCard({
-    Key key,
-    this.year,
-  }) : super(key: key);
+  const QuestionPaperYearCard({this.year});
 
   @override
   _QuestionPaperYearCardState createState() => _QuestionPaperYearCardState();
 }
 
 class _QuestionPaperYearCardState extends State<QuestionPaperYearCard> {
-
-  void setPreference() async{
+  void setPreference() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString("SelectedYear", widget.year);
   }
@@ -114,58 +114,73 @@ class _QuestionPaperYearCardState extends State<QuestionPaperYearCard> {
     super.initState();
     setPreference();
   }
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        setPreference();
-        Navigator.push(
+    Size size = MediaQuery.of(context).size;
+
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      height: size.height * 0.15,
+      width: size.width * 0.1,
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: kPrimaryLightColor,
+            offset: Offset(-5, -5),
+            blurRadius: 10,
+            spreadRadius: 5,
+          ),
+          BoxShadow(
+            color: kPrimaryDarkColor,
+            offset: Offset(5, 5),
+            blurRadius: 10,
+            spreadRadius: 10,
+          ),
+        ],
+      ),
+      child: GestureDetector(
+        onTap: () {
+          setPreference();
+          Navigator.push(
             context,
             PageTransition(
-                type: PageTransitionType.fade,
-                child: SubjectSelectionQuestionPaper(year: widget.year)));
-      },
-      child: Container(
-        height: 100,
-        width: double.infinity,
-        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        decoration: BoxDecoration(
-            // color: Color(0xff006c5f),
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                  color: Color(0xffAFA5EF).withOpacity(0.8),
-                  offset: Offset(5, 5),
-                  blurRadius: 5,
-                  spreadRadius: 5)
-            ]),
-        child: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset('assets/icons/calendar.png'),
+              type: PageTransitionType.fade,
+              child: SubjectSelectionQuestionPaper(year: widget.year),
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  widget.year,
-                  style: GoogleFonts.nunito(
-                      fontSize: 20,
-                      color: Color(0xffAFA5EF),
-                      fontWeight: FontWeight.w800),
-                ),
-              ),
-            )
-          ],
+          );
+        },
+        child: Card(
+          color: Colors.white.withOpacity(0.9),
+          child: Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Expanded(
+                    flex: 1,
+                    child: Image(
+                      height: 50,
+                      image: AssetImage('assets/icons/calendar.png'),
+                    )),
+                Expanded(
+                  flex: 2,
+                  child: Center(
+                    child: Text(
+                      widget.year,
+                      style: GoogleFonts.nunito(
+                        fontSize: size.width * 0.08,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 4,
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 }
-
-//#5F466E
-
-//#FF6489
-//#AFA5EF

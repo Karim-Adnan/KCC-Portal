@@ -5,6 +5,7 @@ import 'package:demo/components/reusable_cards.dart';
 import 'package:demo/components/slider_item.dart';
 import 'package:demo/constants.dart';
 import 'package:demo/database.dart';
+import 'package:demo/screens/forum_screen.dart';
 import 'package:demo/screens/study_material.dart';
 import 'package:demo/screens/time_table.dart';
 import 'package:demo/screens/user_profile.dart';
@@ -54,7 +55,6 @@ class _HomeState extends State<Home> {
         child: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
-              // Top Bar
               SliverAppBar(
                 backgroundColor: Colors.transparent,
                 expandedHeight: 200.0,
@@ -139,7 +139,6 @@ class _HomeState extends State<Home> {
           body:
               Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             SizedBox(height: 15.0),
-            // Top Slider
             Expanded(
               child: ListView(
                 physics: ScrollPhysics(parent: BouncingScrollPhysics()),
@@ -204,12 +203,12 @@ class _HomeState extends State<Home> {
                               icon: FontAwesomeIcons.book,
                             ),
                             HomeButton(
-                              title: "Time Table",
+                              title: "Forum",
                               onPressed: () => Navigator.push(
                                 context,
                                 PageTransition(
                                     type: PageTransitionType.fade,
-                                    child: TimeTable()),
+                                    child: ForumPage()),
                               ),
                               icon: FontAwesomeIcons.table,
                             ),
