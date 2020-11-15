@@ -1,6 +1,6 @@
 import 'package:demo/components/drop_down_menu.dart';
 import 'package:demo/components/rounded_button.dart';
-import 'package:demo/components/rounded_input_field.dart';
+import 'file:///D:/AndroidProjects/KCC-Portal/lib/components/auth_components/rounded_input_field.dart';
 import 'package:demo/models/list_item.dart';
 import 'package:demo/models/user_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';

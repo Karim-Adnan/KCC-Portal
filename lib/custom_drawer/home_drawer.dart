@@ -79,22 +79,20 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 style: TextStyle(fontSize: 20, color: kPrimaryColor)),
             actions: [
               FlatButton(
-                color: Colors.red,
                 onPressed: () {
                   FirebaseAuth.instance.signOut();
                   Navigator.pop(context);
                 },
                 child: Text(
                   "Yes",
-                  style: TextStyle(fontSize: 20, color: Colors.white),
+                  style: TextStyle(fontSize: 20, color: Colors.red),
                 ),
               ),
               FlatButton(
-                color: Colors.lightBlue,
                 onPressed: () => Navigator.pop(context),
                 child: Text(
                   "No",
-                  style: TextStyle(fontSize: 20, color: Colors.white),
+                  style: TextStyle(fontSize: 20, color: Colors.lightBlue),
                 ),
               ),
             ],

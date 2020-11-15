@@ -5,10 +5,11 @@ import 'package:demo/components/reusable_cards.dart';
 import 'package:demo/components/slider_item.dart';
 import 'package:demo/constants.dart';
 import 'package:demo/database.dart';
-import 'package:demo/screens/forum_screen.dart';
-import 'package:demo/screens/study_material.dart';
+import 'file:///D:/AndroidProjects/KCC-Portal/lib/screens/Forum/forum_screen.dart';
+import 'file:///D:/AndroidProjects/KCC-Portal/lib/screens/StudyMaterial/study_material.dart';
 import 'package:demo/screens/time_table.dart';
 import 'package:demo/screens/user_profile.dart';
+import 'package:demo/util/home_button_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -177,82 +178,25 @@ class _HomeState extends State<Home> {
                       color: Colors.transparent,
                       borderRadius: BorderRadius.circular(20.0),
                     ),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            HomeButton(
-                              title: "Time Table",
-                              onPressed: () => Navigator.push(
-                                context,
-                                PageTransition(
-                                    type: PageTransitionType.fade,
-                                    child: TimeTable()),
-                              ),
-                              icon: FontAwesomeIcons.table,
-                            ),
-                            HomeButton(
-                              title: "Study Material",
-                              onPressed: () => Navigator.push(
-                                context,
-                                PageTransition(
-                                    type: PageTransitionType.fade,
-                                    child: StudyMaterial()),
-                              ),
-                              icon: FontAwesomeIcons.book,
-                            ),
-                            HomeButton(
-                              title: "Forum",
-                              onPressed: () => Navigator.push(
-                                context,
-                                PageTransition(
-                                    type: PageTransitionType.fade,
-                                    child: ForumPage()),
-                              ),
-                              icon: FontAwesomeIcons.table,
-                            ),
-                          ],
+                    child: GridView.count(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 10.0,
+                      mainAxisSpacing: 10.0,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      children: List.generate(
+                        6,
+                        (index) => HomeButton(
+                          title: homeButtonData[index][0].toString(),
+                          onPressed: () => Navigator.push(
+                            context,
+                            PageTransition(
+                                type: PageTransitionType.fade,
+                                child: homeButtonData[index][1]),
+                          ),
+                          icon: homeButtonData[index][2],
                         ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            HomeButton(
-                              title: "Time Table",
-                              onPressed: () => Navigator.push(
-                                context,
-                                PageTransition(
-                                    type: PageTransitionType.fade,
-                                    child: TimeTable()),
-                              ),
-                              icon: FontAwesomeIcons.table,
-                            ),
-                            HomeButton(
-                              title: "Time Table",
-                              onPressed: () => Navigator.push(
-                                context,
-                                PageTransition(
-                                    type: PageTransitionType.fade,
-                                    child: TimeTable()),
-                              ),
-                              icon: FontAwesomeIcons.table,
-                            ),
-                            HomeButton(
-                              title: "Time Table",
-                              onPressed: () => Navigator.push(
-                                context,
-                                PageTransition(
-                                    type: PageTransitionType.fade,
-                                    child: TimeTable()),
-                              ),
-                              icon: FontAwesomeIcons.table,
-                            ),
-                          ],
-                        ),
-                      ],
+                      ),
                     ),
                   ),
 

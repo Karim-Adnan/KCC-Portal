@@ -1,4 +1,4 @@
-import 'package:demo/components/role_selection_card.dart';
+import 'file:///D:/AndroidProjects/KCC-Portal/lib/components/auth_components/role_selection_card.dart';
 import 'package:demo/screens/complete_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

@@ -1,4 +1,3 @@
-import 'package:demo/app_theme.dart';
 import 'package:demo/components/round_icon.dart';
 import 'package:demo/constants.dart';
 import 'package:flutter/material.dart';
