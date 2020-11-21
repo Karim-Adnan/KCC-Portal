@@ -14,8 +14,12 @@ class HomeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Column(
       children: [
+        SizedBox(
+          height: size.height * 0.025,
+        ),
         RoundIcon(
           colour: kPrimaryDarkColor.withOpacity(0.89),
           iconData: icon,

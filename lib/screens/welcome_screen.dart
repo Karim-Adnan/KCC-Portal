@@ -1,9 +1,10 @@
+import 'package:demo/components/auth_components/bottom_left_clipper.dart';
+import 'package:demo/components/auth_components/bottom_left_clipper_bottom.dart';
+import 'package:demo/components/auth_components/clip_shadow_path.dart';
+import 'package:demo/components/auth_components/top_right_clipper.dart';
+import 'package:demo/components/auth_components/top_right_clipper_bottom.dart';
 import 'package:demo/components/rounded_button.dart';
-import 'file:///D:/AndroidProjects/KCC-Portal/lib/components/auth_components/bottom_left_clipper.dart';
-import 'file:///D:/AndroidProjects/KCC-Portal/lib/components/auth_components/bottom_left_clipper_bottom.dart';
-import 'file:///D:/AndroidProjects/KCC-Portal/lib/components/auth_components/clip_shadow_path.dart';
-import 'file:///D:/AndroidProjects/KCC-Portal/lib/components/auth_components/top_right_clipper.dart';
-import 'file:///D:/AndroidProjects/KCC-Portal/lib/components/auth_components/top_right_clipper_bottom.dart';
+
 import 'package:demo/constants.dart';
 import 'package:demo/screens/login_screen.dart';
 import 'package:demo/screens/sign_up_screen.dart';

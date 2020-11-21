@@ -1,5 +1,6 @@
 import 'package:demo/constants.dart';
-import 'file:///D:/AndroidProjects/KCC-Portal/lib/screens/StudyMaterial/question_paper_tab.dart';
+import 'package:demo/screens/StudyMaterial/question_paper_tab.dart';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'class_notes_tab.dart';

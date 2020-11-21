@@ -1,10 +1,7 @@
-import 'file:///D:/AndroidProjects/KCC-Portal/lib/screens/StudyMaterial/subject_selection_question_paper.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:demo/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
-
-import '../../constants.dart';
 
 class StudyMaterialCard extends StatefulWidget {
   final content;

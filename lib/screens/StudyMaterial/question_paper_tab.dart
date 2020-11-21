@@ -1,4 +1,5 @@
-import 'file:///D:/AndroidProjects/KCC-Portal/lib/components/study_material_components/semester_card.dart';
+
+import 'package:demo/components/study_material_components/semester_card.dart';
 import 'package:demo/constants.dart';
 import 'package:demo/util/study_material_data.dart';
 import 'package:flutter/material.dart';

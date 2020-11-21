@@ -1,17 +1,14 @@
 import 'package:demo/components/drop_down_menu.dart';
 import 'package:demo/constants.dart';
+import 'package:demo/database.dart';
 import 'package:demo/models/list_item.dart';
-import 'file:///D:/AndroidProjects/KCC-Portal/lib/screens/Feedback/feedback_thanks.dart';
-import 'package:demo/screens/navigation_home_screen.dart';
+import 'package:demo/screens/Feedback/feedback_thanks.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
-
-import '../../database.dart';
 
 class FeedbackScreen extends StatefulWidget {
   @override
@@ -40,7 +37,11 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
           .doc(firebaseUser.email)
           .collection('feedBacks')
           .doc(id)
-          .set({'topic': topic, 'response': feedbackController.text, 'rating': rating});
+          .set({
+        'topic': topic,
+        'response': feedbackController.text,
+        'rating': rating
+      });
       Navigator.pushReplacement(
         context,
         PageTransition(

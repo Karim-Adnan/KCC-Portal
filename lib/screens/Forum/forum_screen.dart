@@ -1,4 +1,5 @@
-import 'file:///D:/AndroidProjects/KCC-Portal/lib/components/forum_components/forum_card.dart';
+import 'package:demo/components/forum_components/forum_card.dart';
+import 'package:demo/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,8 +9,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-
-import '../../database.dart';
 
 class ForumPage extends StatefulWidget {
   @override
@@ -22,7 +21,6 @@ class _ForumPageState extends State<ForumPage> {
   var titleController = TextEditingController();
   var userName, profilePic;
   Stream myStream;
-  
 
   @override
   void initState() {
@@ -57,7 +55,6 @@ class _ForumPageState extends State<ForumPage> {
         year;
     return date;
   }
-
 
   postQuestion() async {
     try {
@@ -204,7 +201,7 @@ class _ForumPageState extends State<ForumPage> {
                           ),
                           Row(
                             children: [
-                              GestureDetector(
+                              InkWell(
                                 onTap: () {},
                                 child: Icon(
                                   FontAwesomeIcons.solidImage,
@@ -215,7 +212,7 @@ class _ForumPageState extends State<ForumPage> {
                               Spacer(
                                 flex: 1,
                               ),
-                              GestureDetector(
+                              InkWell(
                                 onTap: () {},
                                 child: Icon(
                                   FontAwesomeIcons.file,
@@ -226,42 +223,48 @@ class _ForumPageState extends State<ForumPage> {
                               Spacer(
                                 flex: 10,
                               ),
-                              GestureDetector(
+                              InkWell(
                                 onTap: () {
                                   if (titleController.text.isEmpty) {
                                     Fluttertoast.showToast(
-                                        msg: "Title cannot be empty",
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.BOTTOM,
-                                        timeInSecForIosWeb: 1,
-                                        backgroundColor: Colors.blue,
-                                        textColor: Colors.white,
-                                        fontSize: 16.0);
+                                      msg: "Title cannot be empty",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.blue,
+                                      textColor: Colors.white,
+                                      fontSize: 16,
+                                    );
                                   } else if (questionController.text.isEmpty) {
                                     Fluttertoast.showToast(
-                                        msg: "Question cannot be empty",
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.BOTTOM,
-                                        timeInSecForIosWeb: 1,
-                                        backgroundColor: Colors.blue,
-                                        textColor: Colors.white,
-                                        fontSize: 16.0);
+                                      msg: "Question cannot be empty",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.blue,
+                                      textColor: Colors.white,
+                                      fontSize: 16,
+                                    );
                                   } else {
                                     postQuestion();
                                   }
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                      color: Colors.grey.shade300
-                                          .withOpacity(0.75),
-                                      borderRadius: BorderRadius.circular(25)),
+                                    color:
+                                        Colors.grey.shade300.withOpacity(0.75),
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
                                   child: Padding(
                                     padding: EdgeInsets.symmetric(
-                                        vertical: 10.0, horizontal: 20),
+                                      vertical: 10,
+                                      horizontal: 20,
+                                    ),
                                     child: Text(
                                       'Post',
                                       style: GoogleFonts.nunito(
-                                          color: Colors.grey.shade800),
+                                        color: Colors.grey.shade800,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -312,18 +315,13 @@ class _ForumPageState extends State<ForumPage> {
                             bottom: size.height * 0.01),
                         child: Row(
                           children: [
-                            GestureDetector(
-                              onTap: () => Navigator.pop(context),
-                              child: Container(
-                                margin: EdgeInsets.all(8),
-                                child: Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Icon(
-                                    Icons.arrow_back_ios,
-                                    color: Colors.white,
-                                  ),
-                                ),
+                            IconButton(
+                              padding: EdgeInsets.all(size.width * 0.04),
+                              icon: Icon(
+                                Icons.arrow_back_ios,
+                                color: Colors.white,
                               ),
+                              onPressed: () => Navigator.pop(context),
                             ),
                             SizedBox(
                               width: size.width * 0.05,
@@ -340,26 +338,20 @@ class _ForumPageState extends State<ForumPage> {
                                 ),
                               ),
                             ),
-                            GestureDetector(
-                              onTap: () {}, // Open Forum Menu
-
-                              child: Container(
-                                margin: EdgeInsets.all(8.0),
-                                child: Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Icon(
-                                    Icons.menu,
-                                    color: Colors.white,
-                                  ),
-                                ),
+                            IconButton(
+                              padding: EdgeInsets.all(size.width * 0.04),
+                              icon: Icon(
+                                Icons.menu,
+                                color: Colors.white,
                               ),
+                              onPressed: () {},
                             ),
                           ],
                         ),
                       ),
                     ),
                     Align(
-                      alignment: Alignment(0, 1.2),
+                      alignment: Alignment(0, 1),
                       child: GestureDetector(
                         onTap: () {}, // Open Search Screen
 
@@ -391,9 +383,9 @@ class _ForumPageState extends State<ForumPage> {
                                     color: Colors.grey.shade800,
                                   ),
                                 ),
-                                SizedBox(
-                                  width: size.width * 0.025,
-                                ),
+                                // SizedBox(
+                                //   width: size.width * 0.025,
+                                // ),
                                 Text(
                                   'Looking for answers?',
                                   style: TextStyle(
@@ -410,57 +402,59 @@ class _ForumPageState extends State<ForumPage> {
                   ],
                 ),
               ),
-              SizedBox(
-                height: size.height * 0.03,
-              ),
+              // SizedBox(
+              //   height: size.height * 0.015,
+              // ),
               StreamBuilder(
                 stream: myStream,
                 builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return CircularProgressIndicator();
-              }
-              return snapshot.data.documents.length == 0
-                  ? Center(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            Container(
-                              height: size.height * 0.5,
-                              width: size.width * 0.7,
-                              child: Image.asset("assets/illustrations/no_posts.png"),
+                  if (!snapshot.hasData) {
+                    return CircularProgressIndicator();
+                  }
+                  return snapshot.data.documents.length == 0
+                      ? Center(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: size.height * 0.5,
+                                  width: size.width * 0.7,
+                                  child: Image.asset(
+                                      "assets/illustrations/no_posts.png"),
+                                ),
+                                Text(
+                                  "No Posts",
+                                  style: GoogleFonts.nunito(
+                                    fontSize: 30,
+                                  ),
+                                )
+                              ],
                             ),
-                            Text(
-                              "No Posts",
-                              style: GoogleFonts.nunito(
-                                fontSize: 30,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    )
-                  : Expanded(
-                      child: ListView.builder(
-                      itemCount: snapshot.data.documents.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        DocumentSnapshot post =
-                            snapshot.data.documents[index];
-                        return ForumCard(
-                          name: post.data()['name'],
-                          id: post.data()['id'],
-                          profilePic: post.data()['profilePic'],
-                          sem: post.data()['sem'],
-                          date: post.data()['date'],
-                          time: post.data()['time'],
-                          title: post.data()['title'],
-                          question: post.data()['question'],
-                          votes: post.data()['votes'],
-                          answers: post.data()['answers'],
-                          views: post.data()['views'],
+                          ),
+                        )
+                      : Expanded(
+                          child: ListView.builder(
+                            padding: EdgeInsets.zero,
+                            itemCount: snapshot.data.documents.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              DocumentSnapshot post =
+                                  snapshot.data.documents[index];
+                              return ForumCard(
+                                name: post.data()['name'],
+                                id: post.data()['id'],
+                                profilePic: post.data()['profilePic'],
+                                sem: post.data()['sem'],
+                                date: post.data()['date'],
+                                time: post.data()['time'],
+                                title: post.data()['title'],
+                                question: post.data()['question'],
+                                votes: post.data()['votes'],
+                                answers: post.data()['answers'],
+                                views: post.data()['views'],
+                              );
+                            },
+                          ),
                         );
-                      },
-                    ),
-                  );
                 },
               ),
             ],

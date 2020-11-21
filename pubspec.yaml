@@ -34,6 +34,7 @@ dependencies:
   fluttertoast: ^7.1.1
   intl: ^0.16.1
   simple_moment: ^1.0.7
+  timeline_tile: ^1.0.0
 
 dev_dependencies:
   flutter_test:

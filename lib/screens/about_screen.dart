@@ -1,4 +1,4 @@
-import 'file:///D:/AndroidProjects/KCC-Portal/lib/components/about_card.dart';
+import 'package:demo/components/about_card.dart';
 import 'package:demo/constants.dart';
 import 'package:demo/screens/webview.dart';
 import 'package:flutter/cupertino.dart';
@@ -79,6 +79,7 @@ class _AboutScreenState extends State<AboutScreen> {
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(25.0), topRight: Radius.circular(25.0)),
               ),
               child: ListView(
+                padding: EdgeInsets.zero,
                 children: [
                   AboutCard(
                     iconData: Icons.location_on,

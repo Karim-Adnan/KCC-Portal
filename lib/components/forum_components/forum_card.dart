@@ -12,9 +12,32 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:simple_moment/simple_moment.dart';
 
 class ForumCard extends StatefulWidget {
-  final id, name, profilePic, sem, date, time, title, question, votes, answers, views;
+  final id,
+      name,
+      profilePic,
+      sem,
+      date,
+      time,
+      title,
+      question,
+      votes,
+      answers,
+      views;
 
-  const ForumCard({Key key, this.name, this.profilePic, this.sem, this.date, this.title, this.question, this.votes, this.answers, this.views, this.time, this.id}) : super(key: key);
+  const ForumCard(
+      {Key key,
+      this.name,
+      this.profilePic,
+      this.sem,
+      this.date,
+      this.title,
+      this.question,
+      this.votes,
+      this.answers,
+      this.views,
+      this.time,
+      this.id})
+      : super(key: key);
   @override
   _ForumCardState createState() => _ForumCardState();
 }
@@ -41,25 +64,27 @@ class _ForumCardState extends State<ForumCard> {
   storeUsers() async {
     var firebaseUser = await FirebaseAuth.instance.currentUser;
     if (liked) {
-      await postCollection.doc(widget.id).collection('likedBy').doc(
-          firebaseUser.email).set({});
+      await postCollection
+          .doc(widget.id)
+          .collection('likedBy')
+          .doc(firebaseUser.email)
+          .set({});
     } else {
-      await postCollection.doc(widget.id).collection('likedBy').doc(
-          firebaseUser.email).delete();
+      await postCollection
+          .doc(widget.id)
+          .collection('likedBy')
+          .doc(firebaseUser.email)
+          .delete();
     }
     checkPostLiked();
   }
-
 
   void checkPostLiked() async {
     var firebaseUser = await FirebaseAuth.instance.currentUser;
     postLikedUsers.clear();
 
-
-    final QuerySnapshot result = await postCollection
-        .doc(widget.id)
-        .collection('likedBy')
-        .get();
+    final QuerySnapshot result =
+        await postCollection.doc(widget.id).collection('likedBy').get();
 
     if (result.docs.length != 0) {
       final List<DocumentSnapshot> documents = result.docs;
@@ -71,7 +96,6 @@ class _ForumCardState extends State<ForumCard> {
         });
       }
     }
-
 
     if (postLikedUsers.contains(firebaseUser.email)) {
       if (this.mounted) {
@@ -91,8 +115,7 @@ class _ForumCardState extends State<ForumCard> {
 
   void updateVotes() async {
     String votes = postLikedUsers.length.toString();
-    await postCollection.doc(widget.id)
-        .update({'votes': votes});
+    await postCollection.doc(widget.id).update({'votes': votes});
   }
 
   void getTimeAgo() {
@@ -105,6 +128,251 @@ class _ForumCardState extends State<ForumCard> {
       timeAgo = moment.from(dateForComparison).toString();
     });
   }
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        PageTransition(
+          type: PageTransitionType.fade,
+          child: ForumAnswer(),
+        ),
+      ),
+      child: Container(
+        margin: EdgeInsets.only(
+            left: size.width * 0.06,
+            right: size.width * 0.06,
+            top: size.height * 0.025),
+        width: size.width,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: kPrimaryColor.withOpacity(0.4),
+              offset: Offset(1, 1),
+              blurRadius: 12,
+              spreadRadius: 1,
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(size.width * 0.03),
+                  child: GestureDetector(
+                    onTap: () => Navigator.push(
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.fade,
+                        child: UserProfilePage(),
+                      ),
+                    ),
+                    child: CircleAvatar(
+                      backgroundImage:
+                          NetworkImage(widget.profilePic), // Profile Image
+                      radius: size.width * 0.07,
+                    ),
+                  ),
+                ),
+                // Spacer(
+                //   flex: 1,
+                // ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text('Kunal Manchandadadadadadadadad',
+                      // widget.name,
+                      maxLines: 2,
+                      style: GoogleFonts.roboto(
+                        fontSize: size.width * 0.05,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                    SizedBox(
+                      height: size.height * 0.005,
+                    ),
+                    Text(
+                      timeAgo,
+                      style: GoogleFonts.roboto(
+                        color: Colors.grey.shade500,
+                        fontSize: 11.0,
+                      ),
+                    ),
+                  ],
+                ),
+                Spacer(
+                  flex: 8,
+                ),
+                Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          liked
+                              ? FontAwesomeIcons.solidHeart
+                              : FontAwesomeIcons.heart,
+                          color: liked ? Colors.red : Colors.grey,
+                        ),
+                        onPressed: () {
+                          _pressed();
+                        },
+                      ),
+                      SizedBox(
+                        height: size.height * 0.015,
+                      ),
+                      Text(
+                        widget.date,
+                        style: GoogleFonts.roboto(
+                          color: Colors.grey.shade500,
+                          fontSize: 11.0,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            // SizedBox(
+            //   height: size.height * 0.01,
+            // ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 10.0),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        widget.title,
+                        style: GoogleFonts.nunito(
+                          color: kPrimaryLightColor,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10.0, bottom: 5.0),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.only(right: 13),
+                          child: Text(
+                            widget.question,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            style: GoogleFonts.nunito(
+                              color: Colors.grey.shade600,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Divider(
+              color: Colors.black,
+            ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        widget.votes,
+                        style: GoogleFonts.roboto(
+                          fontSize: size.width * 0.045,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1,
+                        ),
+                      ),
+                      SizedBox(
+                        width: size.width * 0.01,
+                      ),
+                      Text(
+                        'votes',
+                        style: GoogleFonts.roboto(
+                          color: Colors.grey.shade600,
+                          fontSize: size.width * 0.035,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        widget.answers,
+                        style: GoogleFonts.roboto(
+                          fontSize: size.width * 0.045,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1,
+                        ),
+                      ),
+                      SizedBox(
+                        width: size.width * 0.01,
+                      ),
+                      Text(
+                        'answers',
+                        style: GoogleFonts.roboto(
+                          color: Colors.grey.shade600,
+                          fontSize: size.width * 0.035,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        widget.views,
+                        style: GoogleFonts.roboto(
+                          fontSize: size.width * 0.045,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1,
+                        ),
+                      ),
+                      SizedBox(
+                        width: size.width * 0.01,
+                      ),
+                      Text(
+                        'views',
+                        style: GoogleFonts.roboto(
+                          color: Colors.grey.shade600,
+                          fontSize: size.width * 0.035,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 1,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 //   Widget build(BuildContext context) {
 //     int _viewCount = 2515;
@@ -352,246 +620,3 @@ class _ForumCardState extends State<ForumCard> {
 //     );
 //   }
 // }
-
-  @override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery
-        .of(context)
-        .size;
-
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        margin: EdgeInsets.only(
-            left: size.width * 0.06,
-            right: size.width * 0.06,
-            top: size.height * 0.025),
-        width: size.width,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: kPrimaryColor.withOpacity(0.4),
-              offset: Offset(1, 1),
-              blurRadius: 12,
-              spreadRadius: 1,
-            ),
-          ],
-        ),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(size.width * 0.03),
-                  child: GestureDetector(
-                    onTap: () =>
-                        Navigator.push(
-                          context,
-                          PageTransition(
-                            type: PageTransitionType.fade,
-                            child: UserProfilePage(),
-                          ),
-                        ),
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          widget.profilePic), // Profile Image
-                      radius: size.width * 0.07,
-                    ),
-                  ),
-                ),
-                Spacer(
-                  flex: 1,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.name,
-                      style: GoogleFonts.roboto(
-                        fontSize: size.width * 0.05,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 1,
-                      ),
-                    ),
-                    SizedBox(
-                      height: size.height * 0.005,
-                    ),
-                    Text(
-                      timeAgo,
-                      style: GoogleFonts.roboto(
-                        color: Colors.grey.shade500,
-                        fontSize: 11.0,
-                      ),
-                    ),
-                  ],
-                ),
-                Spacer(
-                  flex: 8,
-                ),
-                Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                          liked
-                              ? FontAwesomeIcons.solidHeart
-                              : FontAwesomeIcons.heart,
-                          color: liked ? Colors.red : Colors.grey,
-                        ),
-                        onPressed: () {
-                          _pressed();
-                        },
-                      ),
-                      SizedBox(
-                        height: size.height * 0.015,
-                      ),
-                      Text(
-                        widget.date,
-                        style: GoogleFonts.roboto(
-                          color: Colors.grey.shade500,
-                          fontSize: 11.0,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            // SizedBox(
-            //   height: size.height * 0.01,
-            // ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 10.0),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        widget.title,
-                        style: GoogleFonts.nunito(
-                          color: kPrimaryLightColor,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10.0, bottom: 5.0),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.only(right: 13),
-                          child: Text(
-                            widget.question,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            style: GoogleFonts.nunito(
-                              color: Colors.grey.shade600,
-                              fontSize: 13,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Divider(
-              color: Colors.black,
-            ),
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        widget.votes,
-                        style: GoogleFonts.roboto(
-                          fontSize: size.width * 0.045,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 1,
-                        ),
-                      ),
-                      SizedBox(
-                        width: size.width * 0.01,
-                      ),
-                      Text(
-                        'votes',
-                        style: GoogleFonts.roboto(
-                          color: Colors.grey.shade600,
-                          fontSize: size.width * 0.035,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 1,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        widget.answers,
-                        style: GoogleFonts.roboto(
-                          fontSize: size.width * 0.045,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 1,
-                        ),
-                      ),
-                      SizedBox(
-                        width: size.width * 0.01,
-                      ),
-                      Text(
-                        'answers',
-                        style: GoogleFonts.roboto(
-                          color: Colors.grey.shade600,
-                          fontSize: size.width * 0.035,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 1,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        widget.views,
-                        style: GoogleFonts.roboto(
-                          fontSize: size.width * 0.045,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 1,
-                        ),
-                      ),
-                      SizedBox(
-                        width: size.width * 0.01,
-                      ),
-                      Text(
-                        'views',
-                        style: GoogleFonts.roboto(
-                          color: Colors.grey.shade600,
-                          fontSize: size.width * 0.035,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 1,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-

@@ -5,15 +5,11 @@ import 'package:demo/components/reusable_cards.dart';
 import 'package:demo/components/slider_item.dart';
 import 'package:demo/constants.dart';
 import 'package:demo/database.dart';
-import 'file:///D:/AndroidProjects/KCC-Portal/lib/screens/Forum/forum_screen.dart';
-import 'file:///D:/AndroidProjects/KCC-Portal/lib/screens/StudyMaterial/study_material.dart';
-import 'package:demo/screens/time_table.dart';
 import 'package:demo/screens/user_profile.dart';
 import 'package:demo/util/home_button_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:page_transition/page_transition.dart';
@@ -40,6 +36,8 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -105,12 +103,12 @@ class _HomeState extends State<Home> {
                                       totalRepeatCount: 1,
                                       text: [snapshot.data['first name']],
                                       textStyle: GoogleFonts.openSans(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize:
-                                            MediaQuery.of(context).size.width *
-                                                0.05,
-                                      ),
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.05),
                                     ),
                                   ],
                                 ),
@@ -139,7 +137,9 @@ class _HomeState extends State<Home> {
           },
           body:
               Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            SizedBox(height: 15.0),
+            SizedBox(
+              height: 15.0,
+            ),
             Expanded(
               child: ListView(
                 physics: ScrollPhysics(parent: BouncingScrollPhysics()),
@@ -173,7 +173,7 @@ class _HomeState extends State<Home> {
                   // Navigation Buttons
                   Container(
                     margin: EdgeInsets.all(10.0),
-                    padding: EdgeInsets.all(10.0),
+                    padding: EdgeInsets.all(size.width * 0.025),
                     decoration: BoxDecoration(
                       color: Colors.transparent,
                       borderRadius: BorderRadius.circular(20.0),
