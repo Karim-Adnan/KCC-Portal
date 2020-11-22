@@ -77,6 +77,7 @@ class _ForumPageState extends State<ForumPage> {
         'views': '0',
       });
       Navigator.pop(context);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ForumPage()));
     } catch (e) {
       print("Error=$e");
     }
@@ -226,6 +227,9 @@ class _ForumPageState extends State<ForumPage> {
                               InkWell(
                                 onTap: () {
                                   if (titleController.text.isEmpty) {
+                                    if(Fluttertoast != null){
+                                      Fluttertoast.cancel();
+                                    }
                                     Fluttertoast.showToast(
                                       msg: "Title cannot be empty",
                                       toastLength: Toast.LENGTH_SHORT,
@@ -236,6 +240,9 @@ class _ForumPageState extends State<ForumPage> {
                                       fontSize: 16,
                                     );
                                   } else if (questionController.text.isEmpty) {
+                                    if(Fluttertoast != null){
+                                      Fluttertoast.cancel();
+                                    }
                                     Fluttertoast.showToast(
                                       msg: "Question cannot be empty",
                                       toastLength: Toast.LENGTH_SHORT,

@@ -1,16 +1,16 @@
 import 'package:demo/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class ForumTimelineTile extends StatelessWidget {
   final String reply;
-  final String image;
+  final String profilePic;
   final String replyCount;
+  final String userName, date;
   const ForumTimelineTile(
-      {Key key, @required this.reply, @required this.image, this.replyCount})
+      {Key key, @required this.reply, @required this.profilePic, this.replyCount, this.userName, this.date})
       : super(key: key);
 
   @override
@@ -21,20 +21,21 @@ class ForumTimelineTile extends StatelessWidget {
       beforeLineStyle: LineStyle(
         color: kPrimaryDarkColor,
       ),
-      indicatorStyle: IndicatorStyle(
-        width: size.width * 0.14,
-        height: size.width * 0.14,
-        padding: EdgeInsets.all(8),
-        indicator: CircleAvatar(
-          child: ClipOval(
-            child: Image.network(
-              image,
-              fit: BoxFit.cover,
-            ),
-          ), // Profile Image
-          radius: size.width * 0.07,
-        ),
-      ),
+      hasIndicator: false,
+      // indicatorStyle: IndicatorStyle(
+      //   width: size.width * 0.14,
+      //   height: size.width * 0.14,
+      //   padding: EdgeInsets.all(8),
+      //   indicator: CircleAvatar(
+      //     child: ClipOval(
+      //       child: Image.network(
+      //         image,
+      //         fit: BoxFit.cover,
+      //       ),
+      //     ), // Profile Image
+      //     radius: size.width * 0.07,
+      //   ),
+      // ),
       alignment: TimelineAlign.start,
       endChild: Padding(
         padding: EdgeInsets.symmetric(
@@ -58,18 +59,25 @@ class ForumTimelineTile extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Expanded(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(profilePic),
+                  ),
+                  title: Text(userName),
+                  subtitle: Text(date),
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Text(
                         reply,
                         style: GoogleFonts.nunito(
                           color: Colors.white,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 // ExpansionTile(
                 //   title: Text('View all replies ($replyCount)'),

@@ -1,4 +1,3 @@
-
 import 'package:demo/components/auth_components/already_have_an_account_check.dart';
 import 'package:demo/components/auth_components/bottom_left_clipper.dart';
 import 'package:demo/components/auth_components/bottom_left_clipper_bottom.dart';
@@ -43,18 +42,18 @@ class _LoginScreenState extends State<LoginScreen> {
       });
     } catch (e) {
       if (e.code == 'user-not-found') {
+        setState(() {
+          showSpinner = false;
+        });
         SnackBar snackbar =
             SnackBar(content: Text('No user found for that email.'));
         scaffoldKey.currentState.showSnackBar(snackbar);
+      } else if (e.code == 'wrong-password') {
         setState(() {
           showSpinner = false;
         });
-      } else if (e.code == 'wrong-password') {
         SnackBar snackbar = SnackBar(content: Text('Incorrect password'));
         scaffoldKey.currentState.showSnackBar(snackbar);
-        setState(() {
-          showSpinner = false;
-        });
       }
     }
   }
@@ -104,7 +103,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     kSecondaryColor,
                     kPrimaryLightColor,
                     kPrimaryColor,
-
                   ],
                 ),
               ),
