@@ -157,19 +157,16 @@ class _ForumCardState extends State<ForumCard> {
             .set({});
       }
       setState(() {
-         postViewedUsers.add(firebaseUser.email);
+        postViewedUsers.add(firebaseUser.email);
       });
     }
 
     updateViews();
   }
 
-
-  updateViews() async{
+  updateViews() async {
     String views = postViewedUsers.length.toString();
-    await postCollection
-        .doc(widget.id)
-        .update({'views': views});
+    await postCollection.doc(widget.id).update({'views': views});
   }
 
   @override
@@ -200,19 +197,21 @@ class _ForumCardState extends State<ForumCard> {
       },
       child: Container(
         margin: EdgeInsets.only(
-            left: size.width * 0.06,
-            right: size.width * 0.06,
-            top: size.height * 0.025),
+          left: size.width * 0.04,
+          right: size.width * 0.04,
+          top: size.width * 0,
+          bottom: size.width * 0.05,
+        ),
         width: size.width,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
+          borderRadius: BorderRadius.circular(size.width * 0.006),
           color: Colors.white,
           boxShadow: [
             BoxShadow(
               color: kPrimaryColor.withOpacity(0.4),
               offset: Offset(1, 1),
-              blurRadius: 12,
-              spreadRadius: 1,
+              blurRadius: size.width * 0.036,
+              spreadRadius: size.width * 0.003,
             ),
           ],
         ),
@@ -220,20 +219,35 @@ class _ForumCardState extends State<ForumCard> {
           children: [
             Row(
               children: [
-                Padding(
-                  padding: EdgeInsets.all(size.width * 0.03),
-                  child: GestureDetector(
-                    onTap: () => Navigator.push(
-                      context,
-                      PageTransition(
-                        type: PageTransitionType.fade,
-                        child: UserProfilePage(),
-                      ),
+                GestureDetector(
+                  onTap: () => Navigator.push(
+                    context,
+                    PageTransition(
+                      type: PageTransitionType.fade,
+                      child: UserProfilePage(),
                     ),
-                    child: CircleAvatar(
-                      backgroundImage:
-                          NetworkImage(widget.profilePic), // Profile Image
-                      radius: size.width * 0.07,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(
+                      size.width * 0.03,
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.6),
+                            offset: Offset(0, 0),
+                            blurRadius: 0,
+                            spreadRadius: size.width * 0.0015,
+                          ),
+                        ],
+                      ),
+                      child: CircleAvatar(
+                        backgroundImage:
+                            NetworkImage(widget.profilePic), // Profile Image
+                        radius: size.width * 0.07,
+                      ),
                     ),
                   ),
                 ),
@@ -250,7 +264,7 @@ class _ForumCardState extends State<ForumCard> {
                       style: GoogleFonts.roboto(
                         fontSize: size.width * 0.05,
                         fontWeight: FontWeight.w600,
-                        letterSpacing: 1,
+                        letterSpacing: size.width * 0.003,
                       ),
                     ),
                     SizedBox(
@@ -260,7 +274,7 @@ class _ForumCardState extends State<ForumCard> {
                       timeAgo,
                       style: GoogleFonts.roboto(
                         color: Colors.grey.shade500,
-                        fontSize: 11.0,
+                        fontSize: size.width * 0.03,
                       ),
                     ),
                   ],
@@ -269,7 +283,9 @@ class _ForumCardState extends State<ForumCard> {
                   flex: 8,
                 ),
                 Padding(
-                  padding: EdgeInsets.all(10.0),
+                  padding: EdgeInsets.all(
+                    size.width * 0.03,
+                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -278,7 +294,7 @@ class _ForumCardState extends State<ForumCard> {
                           liked
                               ? FontAwesomeIcons.solidHeart
                               : FontAwesomeIcons.heart,
-                          color: liked ? Colors.red : Colors.grey,
+                          color: liked ? Colors.red : Colors.grey[400],
                         ),
                         onPressed: () {
                           _pressed();
@@ -291,8 +307,8 @@ class _ForumCardState extends State<ForumCard> {
                         widget.date,
                         style: GoogleFonts.roboto(
                           color: Colors.grey.shade500,
-                          fontSize: 11.0,
-                          letterSpacing: 0.5,
+                          fontSize: size.width * 0.03,
+                          letterSpacing: size.width * 0.0015,
                         ),
                       ),
                     ],
@@ -304,7 +320,10 @@ class _ForumCardState extends State<ForumCard> {
             //   height: size.height * 0.01,
             // ),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 10.0),
+              padding: EdgeInsets.symmetric(
+                vertical: size.width * 0.006,
+                horizontal: size.width * 0.03,
+              ),
               child: Column(
                 children: [
                   Row(
@@ -315,7 +334,7 @@ class _ForumCardState extends State<ForumCard> {
                           // overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.nunito(
                             color: kPrimaryLightColor,
-                            fontSize: 20,
+                            fontSize: size.width * 0.055,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -323,19 +342,22 @@ class _ForumCardState extends State<ForumCard> {
                     ],
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 10.0, bottom: 5.0),
+                    padding: EdgeInsets.only(
+                      top: size.width * 0.03,
+                      bottom: size.width * 0.015,
+                    ),
                     child: Row(
                       children: [
                         Expanded(
                           child: Container(
-                            padding: EdgeInsets.only(right: 13),
+                            padding: EdgeInsets.only(right: size.width * 0.035),
                             child: Text(
                               widget.question,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                               style: GoogleFonts.nunito(
                                 color: Colors.grey.shade600,
-                                fontSize: 13,
+                                fontSize: size.width * 0.036,
                               ),
                             ),
                           ),
@@ -350,7 +372,7 @@ class _ForumCardState extends State<ForumCard> {
               color: Colors.black,
             ),
             Padding(
-              padding: EdgeInsets.all(10.0),
+              padding: EdgeInsets.all(size.width * 0.03),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -373,7 +395,7 @@ class _ForumCardState extends State<ForumCard> {
                           color: Colors.grey.shade600,
                           fontSize: size.width * 0.035,
                           fontWeight: FontWeight.w600,
-                          letterSpacing: 1,
+                          letterSpacing: size.width * 0.003,
                         ),
                       ),
                     ],
@@ -385,7 +407,7 @@ class _ForumCardState extends State<ForumCard> {
                         style: GoogleFonts.roboto(
                           fontSize: size.width * 0.045,
                           fontWeight: FontWeight.w600,
-                          letterSpacing: 1,
+                          letterSpacing: size.width * 0.003,
                         ),
                       ),
                       SizedBox(
@@ -397,7 +419,7 @@ class _ForumCardState extends State<ForumCard> {
                           color: Colors.grey.shade600,
                           fontSize: size.width * 0.035,
                           fontWeight: FontWeight.w600,
-                          letterSpacing: 1,
+                          letterSpacing: size.width * 0.003,
                         ),
                       ),
                     ],
@@ -409,7 +431,7 @@ class _ForumCardState extends State<ForumCard> {
                         style: GoogleFonts.roboto(
                           fontSize: size.width * 0.045,
                           fontWeight: FontWeight.w600,
-                          letterSpacing: 1,
+                          letterSpacing: size.width * 0.003,
                         ),
                       ),
                       SizedBox(
@@ -421,7 +443,7 @@ class _ForumCardState extends State<ForumCard> {
                           color: Colors.grey.shade600,
                           fontSize: size.width * 0.035,
                           fontWeight: FontWeight.w500,
-                          letterSpacing: 1,
+                          letterSpacing: size.width * 0.003,
                         ),
                       ),
                     ],

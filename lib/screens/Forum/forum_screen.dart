@@ -1,5 +1,6 @@
 import 'package:demo/components/forum_components/forum_card.dart';
 import 'package:demo/database.dart';
+import 'package:demo/screens/Forum/forum_search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,6 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:page_transition/page_transition.dart';
 
 class ForumPage extends StatefulWidget {
   @override
@@ -77,7 +79,8 @@ class _ForumPageState extends State<ForumPage> {
         'views': '0',
       });
       Navigator.pop(context);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ForumPage()));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => ForumPage()));
     } catch (e) {
       print("Error=$e");
     }
@@ -101,7 +104,7 @@ class _ForumPageState extends State<ForumPage> {
                   overflow: Overflow.visible,
                   children: [
                     Container(
-                      height: size.height * 0.5,
+                      height: size.height * 0.6,
                       width: size.width * 0.8,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -112,9 +115,10 @@ class _ForumPageState extends State<ForumPage> {
                               Text(
                                 'Ask a Question!',
                                 style: GoogleFonts.nunito(
+                                  color: kPrimaryLightColor,
                                   fontSize: size.width * 0.045,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 1,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: size.width * 0.005,
                                 ),
                               ),
                               InkResponse(
@@ -190,7 +194,7 @@ class _ForumPageState extends State<ForumPage> {
                               errorBorder: InputBorder.none,
                               disabledBorder: InputBorder.none,
                               contentPadding: EdgeInsets.only(
-                                bottom: 10.0,
+                                bottom: 20.0,
                               ),
                               hintText: 'What do you want to ask?',
                               hintStyle: GoogleFonts.nunito(color: Colors.grey),
@@ -206,7 +210,7 @@ class _ForumPageState extends State<ForumPage> {
                                 onTap: () {},
                                 child: Icon(
                                   FontAwesomeIcons.solidImage,
-                                  color: Colors.black,
+                                  color: kPrimaryLightColor,
                                   size: size.width * 0.06,
                                 ),
                               ),
@@ -217,7 +221,7 @@ class _ForumPageState extends State<ForumPage> {
                                 onTap: () {},
                                 child: Icon(
                                   FontAwesomeIcons.file,
-                                  color: Colors.black,
+                                  color: kPrimaryLightColor,
                                   size: size.width * 0.06,
                                 ),
                               ),
@@ -227,7 +231,7 @@ class _ForumPageState extends State<ForumPage> {
                               InkWell(
                                 onTap: () {
                                   if (titleController.text.isEmpty) {
-                                    if(Fluttertoast != null){
+                                    if (Fluttertoast != null) {
                                       Fluttertoast.cancel();
                                     }
                                     Fluttertoast.showToast(
@@ -235,12 +239,13 @@ class _ForumPageState extends State<ForumPage> {
                                       toastLength: Toast.LENGTH_SHORT,
                                       gravity: ToastGravity.BOTTOM,
                                       timeInSecForIosWeb: 1,
-                                      backgroundColor: Colors.blue,
+                                      backgroundColor:
+                                          Colors.red.withOpacity(0.9),
                                       textColor: Colors.white,
                                       fontSize: 16,
                                     );
                                   } else if (questionController.text.isEmpty) {
-                                    if(Fluttertoast != null){
+                                    if (Fluttertoast != null) {
                                       Fluttertoast.cancel();
                                     }
                                     Fluttertoast.showToast(
@@ -248,7 +253,8 @@ class _ForumPageState extends State<ForumPage> {
                                       toastLength: Toast.LENGTH_SHORT,
                                       gravity: ToastGravity.BOTTOM,
                                       timeInSecForIosWeb: 1,
-                                      backgroundColor: Colors.blue,
+                                      backgroundColor:
+                                          Colors.red.withOpacity(0.9),
                                       textColor: Colors.white,
                                       fontSize: 16,
                                     );
@@ -258,8 +264,7 @@ class _ForumPageState extends State<ForumPage> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color:
-                                        Colors.grey.shade300.withOpacity(0.75),
+                                    color: kPrimaryLightColor.withOpacity(0.7),
                                     borderRadius: BorderRadius.circular(25),
                                   ),
                                   child: Padding(
@@ -270,7 +275,7 @@ class _ForumPageState extends State<ForumPage> {
                                     child: Text(
                                       'Post',
                                       style: GoogleFonts.nunito(
-                                        color: Colors.grey.shade800,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
@@ -360,17 +365,24 @@ class _ForumPageState extends State<ForumPage> {
                     Align(
                       alignment: Alignment(0, 1),
                       child: GestureDetector(
-                        onTap: () {}, // Open Search Screen
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                                child: SearchForum(),
+                                type: PageTransitionType.fade),
+                          );
+                        }, // Open Search Screen
 
                         child: Container(
                           height: size.height * 0.06,
                           width: size.width * 0.7,
                           decoration: BoxDecoration(
+                            color: Colors.white,
                             border: Border.all(
-                              width: 2.8,
+                              width: size.width * 0.008,
                               color: kPrimaryLightColor.withOpacity(0.9),
                             ),
-                            color: Colors.white,
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(size.width * 0.03),
                               topRight: Radius.circular(size.width * 0.03),
@@ -383,19 +395,17 @@ class _ForumPageState extends State<ForumPage> {
                               children: [
                                 Padding(
                                   padding: EdgeInsets.symmetric(
-                                      horizontal: size.width * 0.05),
+                                    horizontal: size.width * 0.05,
+                                  ),
                                   child: Icon(
                                     Icons.search,
                                     size: size.width * 0.05,
                                     color: Colors.grey.shade800,
                                   ),
                                 ),
-                                // SizedBox(
-                                //   width: size.width * 0.025,
-                                // ),
                                 Text(
                                   'Looking for answers?',
-                                  style: TextStyle(
+                                  style: GoogleFonts.nunito(
                                     color: Colors.grey.shade500,
                                     fontSize: size.width * 0.04,
                                   ),
@@ -409,9 +419,9 @@ class _ForumPageState extends State<ForumPage> {
                   ],
                 ),
               ),
-              // SizedBox(
-              //   height: size.height * 0.015,
-              // ),
+              SizedBox(
+                height: size.height * 0.015,
+              ),
               StreamBuilder(
                 stream: myStream,
                 builder: (context, snapshot) {
