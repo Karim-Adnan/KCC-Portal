@@ -1,51 +1,110 @@
-import 'package:demo/components/forum_components/time_line_tile.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo/constants.dart';
 import 'package:demo/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:popup_menu/popup_menu.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:timeline_tile/timeline_tile.dart';
 
-class ForumReplyTile extends StatefulWidget {
+class TimeLineTile extends StatefulWidget {
   final String reply;
   final String profilePic;
-  final String replyCount;
   final String userName, date;
-  final id, parentReplyId;
-  final votes;
-  const ForumReplyTile(
-      {Key key,
-      @required this.reply,
-      @required this.profilePic,
-      this.replyCount,
-      this.userName,
-      this.date,
-      this.id,
-      this.parentReplyId,
-      this.votes})
-      : super(key: key);
+  final grandParentRepyId;
+  final parentReplyId;
+  final id;
+  final isTaggingReply;
+  final taggingUsername;
+  final taggingReply;
+  const TimeLineTile({
+    Key key,
+    this.reply,
+    this.profilePic,
+    this.userName,
+    this.date,
+    this.id,
+    this.parentReplyId,
+    this.grandParentRepyId,
+    this.isTaggingReply, this.taggingUsername, this.taggingReply,
+  }) : super(key: key);
 
   @override
-  _ForumReplyTileState createState() => _ForumReplyTileState();
+  _TimeLineTileState createState() => _TimeLineTileState();
 }
 
-class _ForumReplyTileState extends State<ForumReplyTile> {
+class _TimeLineTileState extends State<TimeLineTile> {
   bool upVoted = false;
   bool downVoted = false;
   bool isReplying = false;
   int upvoteCount = 0;
-  var userName, profilePic;
   GlobalKey keyBtn = GlobalKey();
   bool isLoading = false;
-  var replyController = TextEditingController();
   Stream myStream;
   List<String> upvotedUsers = [];
   List<String> downvotedUsers = [];
+  var userName, profilePic;
+  var replyController = TextEditingController();
+
+  void getData() async {
+    var firebaseUser = await FirebaseAuth.instance.currentUser;
+    DocumentSnapshot userDocument =
+        await userCollection.doc(firebaseUser.email).get();
+    userName =
+        userDocument.get('first name') + " " + userDocument.get('last name');
+    profilePic = userDocument.get('profilePic');
+  }
+
+  String getDate() {
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('dd MMM yy').format(now);
+    String year = "'" + formattedDate.split(" ")[2];
+    String date = formattedDate.split(" ")[0] +
+        " " +
+        formattedDate.split(" ")[1] +
+        " " +
+        year;
+    return date;
+  }
+
+  addReply() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      DateTime now = DateTime.now();
+      final id = postCollection.doc().id;
+      postCollection
+          .doc(widget.grandParentRepyId)
+          .collection('replies')
+          .doc(widget.parentReplyId)
+          .collection('replies')
+          .doc(id)
+          .set({
+        'name': userName,
+        'profilePic': profilePic,
+        'id': id,
+        'reply': replyController.text,
+        'time': now.toString(),
+        'date': getDate(),
+        'isTaggingReply': true,
+        'taggingUserName': widget.userName,
+        'taggingReply': widget.reply
+      });
+      replyController.clear();
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      print("Error=$e");
+    }
+  }
 
   _pressedUp() async {
     if (downVoted) {
@@ -85,76 +144,6 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
     storePostVotedUsers();
   }
 
-    void getData() async {
-    var firebaseUser = await FirebaseAuth.instance.currentUser;
-    DocumentSnapshot userDocument =
-        await userCollection.doc(firebaseUser.email).get();
-    userName =
-        userDocument.get('first name') + " " + userDocument.get('last name');
-    profilePic = userDocument.get('profilePic');
-  }
-
-  String getDate() {
-    DateTime now = DateTime.now();
-    String formattedDate = DateFormat('dd MMM yy').format(now);
-    String year = "'" + formattedDate.split(" ")[2];
-    String date = formattedDate.split(" ")[0] +
-        " " +
-        formattedDate.split(" ")[1] +
-        " " +
-        year;
-    return date;
-  }
-
-  addReply() async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
-      DateTime now = DateTime.now();
-      final id = postCollection.doc().id;
-      postCollection
-          .doc(widget.parentReplyId)
-          .collection('replies')
-          .doc(widget.id)
-          .collection('replies')
-          .doc(id)
-          .set({
-        'name': userName,
-        'profilePic': profilePic,
-        'id': id,
-        'reply': replyController.text,
-        'time': now.toString(),
-        'date': getDate(),
-        'votes': '0',
-        'isTaggingReply': false,
-        'taggingUserName': " ",
-        'taggingReply': " "
-      });
-      replyController.clear();
-      setState(() {
-        isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-      print("Error=$e");
-    }
-  }
-
-  getStream() async {
-    setState(() {
-      myStream = postCollection
-          .doc(widget.parentReplyId)
-          .collection('replies')
-          .doc(widget.id)
-          .collection('replies')
-          .orderBy('time', descending: false)
-          .snapshots();
-    });
-  }
-
   //storing upvoted or downvoted users
   storePostVotedUsers() async {
     var firebaseUser = await FirebaseAuth.instance.currentUser;
@@ -163,6 +152,8 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
     if (upVoted) {
       //adding user to upVoted collection
       await postCollection
+          .doc(widget.grandParentRepyId)
+          .collection('replies')
           .doc(widget.parentReplyId)
           .collection('replies')
           .doc(widget.id)
@@ -173,6 +164,8 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
       //deleting user from downVoted collection if the user has previously downVoted the reply
       if (downvotedUsers.contains(firebaseUser.email)) {
         await postCollection
+            .doc(widget.grandParentRepyId)
+            .collection('replies')
             .doc(widget.parentReplyId)
             .collection('replies')
             .doc(widget.id)
@@ -185,6 +178,8 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
     else if (downVoted) {
       //adding user to downVoted collection
       await postCollection
+          .doc(widget.grandParentRepyId)
+          .collection('replies')
           .doc(widget.parentReplyId)
           .collection('replies')
           .doc(widget.id)
@@ -195,6 +190,8 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
       //deleting user from upVoted collection if the user has previously upVoted the reply
       if (upvotedUsers.contains(firebaseUser.email)) {
         await postCollection
+            .doc(widget.grandParentRepyId)
+            .collection('replies')
             .doc(widget.parentReplyId)
             .collection('replies')
             .doc(widget.id)
@@ -209,6 +206,8 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
       //deleting user from upVoted collection if the user has previously upVoted the reply
       if (upvotedUsers.contains(firebaseUser.email)) {
         await postCollection
+            .doc(widget.grandParentRepyId)
+            .collection('replies')
             .doc(widget.parentReplyId)
             .collection('replies')
             .doc(widget.id)
@@ -220,6 +219,8 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
       //deleting user from downVoted collection if the user has previously downVoted the reply
       if (downvotedUsers.contains(firebaseUser.email)) {
         await postCollection
+            .doc(widget.grandParentRepyId)
+            .collection('replies')
             .doc(widget.parentReplyId)
             .collection('replies')
             .doc(widget.id)
@@ -239,6 +240,8 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
 
     // getting upvoted Users
     final QuerySnapshot upVotedResult = await postCollection
+        .doc(widget.grandParentRepyId)
+        .collection('replies')
         .doc(widget.parentReplyId)
         .collection('replies')
         .doc(widget.id)
@@ -258,6 +261,8 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
 
     //getting downvoted Users
     final QuerySnapshot downVotedResult = await postCollection
+        .doc(widget.grandParentRepyId)
+        .collection('replies')
         .doc(widget.parentReplyId)
         .collection('replies')
         .doc(widget.id)
@@ -307,6 +312,8 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
       upvoteCount = totalvotes;
     });
     await postCollection
+        .doc(widget.grandParentRepyId)
+        .collection('replies')
         .doc(widget.parentReplyId)
         .collection('replies')
         .doc(widget.id)
@@ -316,58 +323,52 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
   @override
   void initState() {
     super.initState();
-    getStream();
-    getData();
     checkPostUpvotedOrDownVoted();
+    getData();
   }
+
+  PopupMenu menu = PopupMenu(
+      backgroundColor: Colors.grey[400].withOpacity(0.5),
+      lineColor: Colors.black,
+      maxColumn: 1,
+      items: [
+        MenuItem(
+          title: 'Report',
+          textStyle: GoogleFonts.nunito(
+            fontSize: 15,
+            color: Colors.black,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+      ],
+      onClickMenu: (MenuItemProvider item) {
+        if (item.menuTitle == 'Report') {}
+      });
 
   @override
   Widget build(BuildContext context) {
     PopupMenu.context = context;
     Size size = MediaQuery.of(context).size;
-
-    PopupMenu menu = PopupMenu(
-        backgroundColor: Colors.grey[400].withOpacity(0.5),
-        lineColor: Colors.black,
-        maxColumn: 1,
-        items: [
-          MenuItem(
-            title: 'Report',
-            textStyle: GoogleFonts.nunito(
-              fontSize: 15,
-              color: Colors.black,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-        ],
-        onClickMenu: (MenuItemProvider item) {
-          if (item.menuTitle == 'Report') {}
-        });
-
     return GestureDetector(
-        onTap: () {
-          setState(() {
-            isReplying = false;
-          });
-          FocusScopeNode currentFocus = FocusScope.of(context);
-          if (!currentFocus.hasPrimaryFocus) {
-            currentFocus.unfocus();
-          }
-        },
-        child: ModalProgressHUD(
-          inAsyncCall: isLoading,
-          child: Container(
-            margin: EdgeInsets.all(size.width * 0.006),
-            constraints: BoxConstraints(
-              minHeight: 70,
+      onTap: () {
+        setState(() {
+          isReplying = false;
+        });
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: ModalProgressHUD(
+        inAsyncCall: isLoading,
+        child: TimelineTile(
+            alignment: TimelineAlign.manual,
+            lineXY: 0.1,
+            hasIndicator: false,
+            beforeLineStyle: LineStyle(
+              color: Colors.black45,
             ),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border(
-                bottom: BorderSide(color: Colors.black.withOpacity(0.2)),
-              ),
-            ),
-            child: Column(children: [
+            endChild: Column(children: [
               Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: size.width * 0.036,
@@ -432,16 +433,33 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
                   horizontal: size.width * 0.036,
                   // bottom: size.width * 0.02,
                 ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                child: Column(
                   children: [
-                    Expanded(
-                      child: Text(
-                        widget.reply,
-                        style: GoogleFonts.nunito(
-                          color: Colors.black,
+                    widget.isTaggingReply
+                        ? Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Container(
+                            width: size.width,
+                              color: Colors.grey,
+                              child: Column(children: [
+                                Text(widget.taggingUsername),
+                                Text(widget.taggingReply)
+                              ],),
+                            ),
+                        )
+                        : Container(),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            widget.reply,
+                            style: GoogleFonts.nunito(
+                              color: Colors.black,
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ],
                 ),
@@ -626,49 +644,8 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
                       ),
                     )
                   : Container(),
-              StreamBuilder(
-                stream: myStream,
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return CircularProgressIndicator();
-                  }
-                  return snapshot.data.documents.length == 0
-                      ? Container()
-                      : ListView.builder(
-                          shrinkWrap: true,
-                          padding: EdgeInsets.zero,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: snapshot.data.documents.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            DocumentSnapshot reply =
-                                snapshot.data.documents[index];
-                            return TimeLineTile(
-                              userName: reply.data()['name'],
-                              profilePic: reply.data()['profilePic'],
-                              date: reply.data()['date'],
-                              reply: reply.data()['reply'],
-                              id: reply.data()['id'],
-                              parentReplyId: widget.id,
-                              grandParentRepyId: widget.parentReplyId,
-                              isTaggingReply: reply.data()['isTaggingReply'],
-                              taggingUsername: reply.data()['taggingUserName'],
-                              taggingReply: reply.data()['taggingReply'],
-                            );
-                          },
-                        );
-                },
-              ),
-            ]),
-          ),
-        ));
-
-    // TimelineTile(
-    //   beforeLineStyle: LineStyle(
-    //     color: kPrimaryDarkColor,
-    //   ),
-    //   hasIndicator: false,
-    //   alignment: TimelineAlign.start,
-    //   endChild: ,
-    // );
+            ])),
+      ),
+    );
   }
 }

@@ -169,31 +169,37 @@ class _ForumCardState extends State<ForumCard> {
     await postCollection.doc(widget.id).update({'views': views});
   }
 
+  void moveToForumAnswer(BuildContext context) async {
+    await Navigator.push(
+      context,
+      PageTransition(
+        type: PageTransitionType.fade,
+        child: ForumAnswer(
+            id: widget.id,
+            name: widget.name,
+            profilePic: widget.profilePic,
+            sem: widget.sem,
+            date: widget.date,
+            time: widget.time,
+            title: widget.title,
+            question: widget.question,
+            votes: postLikedUsers.length.toString(),
+            answers: widget.answers,
+            views: postViewedUsers.length.toString()),
+      ),
+    );
+
+    checkPostLiked();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
     return GestureDetector(
       onTap: () async {
         await storeViewedUsers();
-        Navigator.push(
-          context,
-          PageTransition(
-            type: PageTransitionType.fade,
-            child: ForumAnswer(
-                id: widget.id,
-                name: widget.name,
-                profilePic: widget.profilePic,
-                sem: widget.sem,
-                date: widget.date,
-                time: widget.time,
-                title: widget.title,
-                question: widget.question,
-                votes: postLikedUsers.length.toString(),
-                answers: widget.answers,
-                views: postViewedUsers.length.toString()),
-          ),
-        );
+        await moveToForumAnswer(context);
       },
       child: Container(
         margin: EdgeInsets.only(

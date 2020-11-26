@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo/components/forum_components/forum_answer_comments.dart';
+import 'package:demo/components/forum_components/forum_card.dart';
 import 'package:demo/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -47,19 +48,87 @@ class _ForumAnswerState extends State<ForumAnswer> {
   bool liked = false;
   List<String> postViewedUsers = [];
   Stream myStream, userStream;
-  var userName, profilePic;
+  var userName, profilePic, postStream;
   var replyController = TextEditingController();
   bool isLoading = false;
+  List<String> postLikedUsers = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getStream();
+    getData();
+    checkPostLiked();
+  }
 
   _pressed() async {
     setState(() {
       liked = !liked;
     });
+    storePostLikedUsers();
+  }
+
+  storePostLikedUsers() async {
+    var firebaseUser = await FirebaseAuth.instance.currentUser;
+    if (liked) {
+      await postCollection
+          .doc(widget.id)
+          .collection('likedBy')
+          .doc(firebaseUser.email)
+          .set({});
+    } else {
+      await postCollection
+          .doc(widget.id)
+          .collection('likedBy')
+          .doc(firebaseUser.email)
+          .delete();
+    }
+    checkPostLiked();
+  }
+
+  void checkPostLiked() async {
+    var firebaseUser = await FirebaseAuth.instance.currentUser;
+    postLikedUsers.clear();
+
+    final QuerySnapshot result =
+        await postCollection.doc(widget.id).collection('likedBy').get();
+
+    if (result.docs.length != 0) {
+      final List<DocumentSnapshot> documents = result.docs;
+      if (this.mounted) {
+        setState(() {
+          for (var document in documents) {
+            postLikedUsers.add(document.reference.id);
+          }
+        });
+      }
+    }
+
+    if (postLikedUsers.contains(firebaseUser.email)) {
+      if (this.mounted) {
+        setState(() {
+          liked = true;
+        });
+      }
+    } else {
+      if (this.mounted) {
+        setState(() {
+          liked = false;
+        });
+      }
+    }
+    updateVotes();
+  }
+
+  void updateVotes() async {
+    String votes = postLikedUsers.length.toString();
+    await postCollection.doc(widget.id).update({'votes': votes});
   }
 
   getStream() async {
     var firebaseUser = await FirebaseAuth.instance.currentUser;
     setState(() {
+      postStream = postCollection.doc(widget.id).snapshots();
       myStream = postCollection
           .doc(widget.id)
           .collection('replies')
@@ -104,9 +173,8 @@ class _ForumAnswerState extends State<ForumAnswer> {
         'reply': replyController.text,
         'time': now.toString(),
         'date': getDate(),
+        'votes': '0'
       });
-      // Navigator.pushReplacement(
-      //     context, MaterialPageRoute(builder: (context) => ForumAnswer()));
       replyController.clear();
       setState(() {
         isLoading = false;
@@ -117,13 +185,6 @@ class _ForumAnswerState extends State<ForumAnswer> {
       });
       print("Error=$e");
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getStream();
-    getData();
   }
 
   @override
@@ -241,85 +302,85 @@ class _ForumAnswerState extends State<ForumAnswer> {
                 Padding(
                   padding: EdgeInsets.all(10.0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            widget.votes,
-                            style: GoogleFonts.roboto(
-                                fontSize: size.width * 0.045,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 1,
-                                color: Colors.white),
-                          ),
-                          SizedBox(
-                            width: size.width * 0.01,
-                          ),
-                          Text(
-                            'votes',
-                            style: GoogleFonts.roboto(
-                              color: Colors.white,
-                              fontSize: size.width * 0.035,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  postLikedUsers.length.toString(),
+                                  style: GoogleFonts.roboto(
+                                      fontSize: size.width * 0.045,
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: 1,
+                                      color: Colors.white),
+                                ),
+                                SizedBox(
+                                  width: size.width * 0.01,
+                                ),
+                                Text(
+                                  'votes',
+                                  style: GoogleFonts.roboto(
+                                    color: Colors.white,
+                                    fontSize: size.width * 0.035,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 1,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
+                            Row(
+                              children: [
+                                Text(
+                                  widget.answers,
+                                  style: GoogleFonts.roboto(
+                                    fontSize: size.width * 0.045,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 1,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: size.width * 0.01,
+                                ),
+                                Text(
+                                  'answers',
+                                  style: GoogleFonts.roboto(
+                                    color: Colors.white,
+                                    fontSize: size.width * 0.035,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 1,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  widget.views,
+                                  style: GoogleFonts.roboto(
+                                    fontSize: size.width * 0.045,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 1,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: size.width * 0.01,
+                                ),
+                                Text(
+                                  'views',
+                                  style: GoogleFonts.roboto(
+                                    color: Colors.white,
+                                    fontSize: size.width * 0.035,
+                                    fontWeight: FontWeight.w500,
+                                    letterSpacing: 1,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
                       ),
-                      Row(
-                        children: [
-                          Text(
-                            widget.answers,
-                            style: GoogleFonts.roboto(
-                              fontSize: size.width * 0.045,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1,
-                              color: Colors.white,
-                            ),
-                          ),
-                          SizedBox(
-                            width: size.width * 0.01,
-                          ),
-                          Text(
-                            'answers',
-                            style: GoogleFonts.roboto(
-                              color: Colors.white,
-                              fontSize: size.width * 0.035,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            widget.views,
-                            style: GoogleFonts.roboto(
-                              fontSize: size.width * 0.045,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1,
-                              color: Colors.white,
-                            ),
-                          ),
-                          SizedBox(
-                            width: size.width * 0.01,
-                          ),
-                          Text(
-                            'views',
-                            style: GoogleFonts.roboto(
-                              color: Colors.white,
-                              fontSize: size.width * 0.035,
-                              fontWeight: FontWeight.w500,
-                              letterSpacing: 1,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.35),
@@ -486,6 +547,9 @@ class _ForumAnswerState extends State<ForumAnswer> {
                                     profilePic: reply.data()['profilePic'],
                                     date: reply.data()['date'],
                                     reply: reply.data()['reply'],
+                                    id: reply.data()['id'],
+                                    parentReplyId: widget.id,
+                                    votes: reply.data()['votes'],
                                   );
                                 },
                               ),
