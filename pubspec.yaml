@@ -36,6 +36,7 @@ dependencies:
   simple_moment: ^1.0.7
   timeline_tile: ^1.0.0
   popup_menu: ^1.0.5
+  uuid: ^2.2.2
 
 dev_dependencies:
   flutter_test:
@@ -53,6 +54,7 @@ flutter:
     - assets/lottie/
     - assets/
     - assets/icons/vote/
+    - assets/icons/SemesterIcons/
 
   # fonts:
   #   - family: Schyler

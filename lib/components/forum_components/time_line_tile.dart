@@ -29,7 +29,9 @@ class TimeLineTile extends StatefulWidget {
     this.id,
     this.parentReplyId,
     this.grandParentRepyId,
-    this.isTaggingReply, this.taggingUsername, this.taggingReply,
+    this.isTaggingReply,
+    this.taggingUsername,
+    this.taggingReply,
   }) : super(key: key);
 
   @override
@@ -76,7 +78,14 @@ class _TimeLineTileState extends State<TimeLineTile> {
         isLoading = true;
       });
       DateTime now = DateTime.now();
-      final id = postCollection.doc().id;
+      final id = postCollection
+          .doc(widget.grandParentRepyId)
+          .collection('replies')
+          .doc(widget.parentReplyId)
+          .collection('replies')
+          .doc()
+          .id;
+
       postCollection
           .doc(widget.grandParentRepyId)
           .collection('replies')
@@ -437,16 +446,40 @@ class _TimeLineTileState extends State<TimeLineTile> {
                   children: [
                     widget.isTaggingReply
                         ? Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Container(
-                            width: size.width,
-                              color: Colors.grey,
-                              child: Column(children: [
-                                Text(widget.taggingUsername),
-                                Text(widget.taggingReply)
-                              ],),
+                            padding: EdgeInsets.all(10),
+                            child: Container(
+                              width: size.width,
+                              color: Colors.grey[300],
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 8),
+                                    child: Text(
+                                      widget.taggingUsername,
+                                      style: GoogleFonts.nunito(
+                                          fontStyle: FontStyle.italic,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 8),
+                                    child: Text(
+                                      widget.taggingReply,
+                                      style: GoogleFonts.nunito(
+                                          fontStyle: FontStyle.italic,
+                                          fontSize: 14,
+                                          color: Colors.black54),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                        )
+                          )
                         : Container(),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,

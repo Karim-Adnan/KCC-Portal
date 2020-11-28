@@ -19,6 +19,7 @@ class ForumCard extends StatefulWidget {
       date,
       time,
       title,
+      attachment,
       question,
       votes,
       answers,
@@ -36,7 +37,8 @@ class ForumCard extends StatefulWidget {
       this.answers,
       this.views,
       this.time,
-      this.id})
+      this.id,
+      this.attachment})
       : super(key: key);
   @override
   _ForumCardState createState() => _ForumCardState();
@@ -53,6 +55,7 @@ class _ForumCardState extends State<ForumCard> {
     super.initState();
     checkPostLiked();
     getTimeAgo();
+    // updateAnswerCount();
   }
 
   _pressed() async {
@@ -61,6 +64,14 @@ class _ForumCardState extends State<ForumCard> {
     });
     storePostLikedUsers();
   }
+
+  // updateAnswerCount() async{
+  //    QuerySnapshot answers = await postCollection.doc(widget.id).collection('replies').get();
+  //    List<DocumentSnapshot> answerscount = answers.docs;
+  //    await postCollection.doc(widget.id).update({
+  //      'answers': answerscount.length.toString()
+  //    });
+  // }
 
   storePostLikedUsers() async {
     var firebaseUser = await FirebaseAuth.instance.currentUser;
@@ -183,6 +194,7 @@ class _ForumCardState extends State<ForumCard> {
             time: widget.time,
             title: widget.title,
             question: widget.question,
+            attachment: widget.attachment,
             votes: postLikedUsers.length.toString(),
             answers: widget.answers,
             views: postViewedUsers.length.toString()),
@@ -191,7 +203,6 @@ class _ForumCardState extends State<ForumCard> {
 
     checkPostLiked();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -264,6 +275,9 @@ class _ForumCardState extends State<ForumCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
+                    SizedBox(
+                      height: size.height * 0.005,
+                    ),
                     Text(
                       widget.name,
                       maxLines: 2,
@@ -272,6 +286,28 @@ class _ForumCardState extends State<ForumCard> {
                         fontWeight: FontWeight.w600,
                         letterSpacing: size.width * 0.003,
                       ),
+                    ),
+                    SizedBox(
+                      height: size.height * 0.005,
+                    ),
+                    Row(
+                      children: [
+                        Image.asset(
+                          'assets/icons/SemesterIcons/${widget.sem}.png',
+                          height: 20,
+                          width: 20,
+                        ),
+                        SizedBox(
+                          width: size.width * 0.015,
+                        ),
+                        Text(
+                          "Sem",
+                          style: GoogleFonts.roboto(
+                            color: Colors.grey.shade500,
+                            fontSize: size.width * 0.03,
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(
                       height: size.height * 0.005,

@@ -106,6 +106,16 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
     return date;
   }
 
+
+  
+  // updateAnswerCount() async{
+  //    QuerySnapshot answers = await postCollection.doc(widget.parentReplyId).collection('replies').get();
+  //    List<DocumentSnapshot> answerscount = answers.docs;
+  //    await postCollection.doc(widget.id).update({
+  //      'answers': answerscount.length.toString()
+  //    });
+  // }
+
   addReply() async {
     try {
       setState(() {
@@ -132,6 +142,7 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
         'taggingReply': " "
       });
       replyController.clear();
+      // updateAnswerCount();
       setState(() {
         isLoading = false;
       });

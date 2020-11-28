@@ -21,6 +21,7 @@ class ForumAnswer extends StatefulWidget {
       time,
       title,
       question,
+      attachment,
       votes,
       answers,
       views;
@@ -37,7 +38,8 @@ class ForumAnswer extends StatefulWidget {
       this.question,
       this.votes,
       this.answers,
-      this.views})
+      this.views,
+      this.attachment})
       : super(key: key);
 
   @override
@@ -52,6 +54,7 @@ class _ForumAnswerState extends State<ForumAnswer> {
   var replyController = TextEditingController();
   bool isLoading = false;
   List<String> postLikedUsers = [];
+  List<DocumentSnapshot> answerscount;
 
   @override
   void initState() {
@@ -59,6 +62,7 @@ class _ForumAnswerState extends State<ForumAnswer> {
     getStream();
     getData();
     checkPostLiked();
+    updateAnswerCount();
   }
 
   _pressed() async {
@@ -159,13 +163,27 @@ class _ForumAnswerState extends State<ForumAnswer> {
     return date;
   }
 
+  updateAnswerCount() async{
+     QuerySnapshot answers = await postCollection.doc(widget.id).collection('replies').get();
+     setState(() {
+      answerscount = answers.docs;
+     });
+     await postCollection.doc(widget.id).update({
+       'answers': answerscount.length.toString()
+     });
+  }
+
   addReply() async {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
     try {
       setState(() {
         isLoading = true;
       });
       DateTime now = DateTime.now();
-      final id = postCollection.doc().id;
+      final id = postCollection.doc(widget.id).collection('replies').doc().id;
       postCollection.doc(widget.id).collection('replies').doc(id).set({
         'name': userName,
         'profilePic': profilePic,
@@ -176,6 +194,7 @@ class _ForumAnswerState extends State<ForumAnswer> {
         'votes': '0'
       });
       replyController.clear();
+      updateAnswerCount();
       setState(() {
         isLoading = false;
       });
@@ -272,115 +291,122 @@ class _ForumAnswerState extends State<ForumAnswer> {
                     ],
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: size.height * 0.01,
-                        horizontal: size.width * 0.075,
+                widget.attachment == "No attachment"
+                    ? Container()
+                    : Image(
+                        width: size.width,
+                        height: size.height * 0.25,
+                        fit: BoxFit.cover,
+                        image: NetworkImage(widget.attachment),
                       ),
-                      child: Container(
-                        height: size.height * 0.12,
-                        width: size.width * 0.3,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: size.height * 0.01,
-                        horizontal: size.width * 0.075,
-                      ),
-                      child: Container(
-                        height: size.height * 0.12,
-                        width: size.width * 0.3,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.start,
+                //   children: [
+                //     Padding(
+                //       padding: EdgeInsets.symmetric(
+                //         vertical: size.height * 0.01,
+                //         horizontal: size.width * 0.075,
+                //       ),
+                //       child: Container(
+                //         height: size.height * 0.12,
+                //         width: size.width * 0.3,
+                //         color: Colors.white,
+                //       ),
+                //     ),
+                //     Padding(
+                //       padding: EdgeInsets.symmetric(
+                //         vertical: size.height * 0.01,
+                //         horizontal: size.width * 0.075,
+                //       ),
+                //       child: Container(
+                //         height: size.height * 0.12,
+                //         width: size.width * 0.3,
+                //         color: Colors.white,
+                //       ),
+                //     ),
+                //   ],
+                // ),
                 Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    padding: EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Row(
                           children: [
-                            Row(
-                              children: [
-                                Text(
-                                  postLikedUsers.length.toString(),
-                                  style: GoogleFonts.roboto(
-                                      fontSize: size.width * 0.045,
-                                      fontWeight: FontWeight.w600,
-                                      letterSpacing: 1,
-                                      color: Colors.white),
-                                ),
-                                SizedBox(
-                                  width: size.width * 0.01,
-                                ),
-                                Text(
-                                  'votes',
-                                  style: GoogleFonts.roboto(
-                                    color: Colors.white,
-                                    fontSize: size.width * 0.035,
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 1,
-                                  ),
-                                ),
-                              ],
+                            Text(
+                              postLikedUsers.length.toString(),
+                              style: GoogleFonts.roboto(
+                                  fontSize: size.width * 0.045,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 1,
+                                  color: Colors.white),
                             ),
-                            Row(
-                              children: [
-                                Text(
-                                  widget.answers,
-                                  style: GoogleFonts.roboto(
-                                    fontSize: size.width * 0.045,
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 1,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: size.width * 0.01,
-                                ),
-                                Text(
-                                  'answers',
-                                  style: GoogleFonts.roboto(
-                                    color: Colors.white,
-                                    fontSize: size.width * 0.035,
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 1,
-                                  ),
-                                ),
-                              ],
+                            SizedBox(
+                              width: size.width * 0.01,
                             ),
-                            Row(
-                              children: [
-                                Text(
-                                  widget.views,
-                                  style: GoogleFonts.roboto(
-                                    fontSize: size.width * 0.045,
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 1,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: size.width * 0.01,
-                                ),
-                                Text(
-                                  'views',
-                                  style: GoogleFonts.roboto(
-                                    color: Colors.white,
-                                    fontSize: size.width * 0.035,
-                                    fontWeight: FontWeight.w500,
-                                    letterSpacing: 1,
-                                  ),
-                                ),
-                              ],
+                            Text(
+                              'votes',
+                              style: GoogleFonts.roboto(
+                                color: Colors.white,
+                                fontSize: size.width * 0.035,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1,
+                              ),
                             ),
                           ],
-                        )
-                      ),
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              answerscount.length.toString(),
+                              style: GoogleFonts.roboto(
+                                fontSize: size.width * 0.045,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(
+                              width: size.width * 0.01,
+                            ),
+                            Text(
+                              'answers',
+                              style: GoogleFonts.roboto(
+                                color: Colors.white,
+                                fontSize: size.width * 0.035,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              widget.views,
+                              style: GoogleFonts.roboto(
+                                fontSize: size.width * 0.045,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(
+                              width: size.width * 0.01,
+                            ),
+                            Text(
+                              'views',
+                              style: GoogleFonts.roboto(
+                                color: Colors.white,
+                                fontSize: size.width * 0.035,
+                                fontWeight: FontWeight.w500,
+                                letterSpacing: 1,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    )),
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.35),
@@ -469,22 +495,25 @@ class _ForumAnswerState extends State<ForumAnswer> {
                             ),
                             padding: EdgeInsets.zero,
                             onPressed: () {
-                              if (replyController.text.isEmpty) {
-                                if (Fluttertoast != null) {
-                                  Fluttertoast.cancel();
-                                }
-                                Fluttertoast.showToast(
-                                  msg: "Comment cannot be empty",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: Colors.red.withOpacity(0.9),
-                                  textColor: Colors.white,
-                                  fontSize: 16,
-                                );
-                              } else {
+                              if(replyController.text.isNotEmpty){
                                 addReply();
                               }
+                              // if (replyController.text.isEmpty) {
+                              //   if (Fluttertoast != null) {
+                              //     Fluttertoast.cancel();
+                              //   }
+                              //   Fluttertoast.showToast(
+                              //     msg: "Comment cannot be empty",
+                              //     toastLength: Toast.LENGTH_SHORT,
+                              //     gravity: ToastGravity.BOTTOM,
+                              //     timeInSecForIosWeb: 1,
+                              //     backgroundColor: Colors.red.withOpacity(0.9),
+                              //     textColor: Colors.white,
+                              //     fontSize: 16,
+                              //   );
+                              // } else {
+                              //   addReply();
+                              // }
                             },
                             color: kPrimaryColor,
                             child: Text(
