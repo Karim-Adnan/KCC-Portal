@@ -12,16 +12,21 @@ import 'package:popup_menu/popup_menu.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ForumReplyTile extends StatefulWidget {
-  final String reply;
-  final String profilePic;
-  final String replyCount;
-  final String userName, date;
-  final id, parentReplyId;
-  final votes;
+  final reply,
+      profilePic,
+      sem,
+      replyCount,
+      userName,
+      date,
+      id,
+      parentReplyId,
+      votes;
+
   const ForumReplyTile(
       {Key key,
       @required this.reply,
       @required this.profilePic,
+      this.sem,
       this.replyCount,
       this.userName,
       this.date,
@@ -85,7 +90,7 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
     storePostVotedUsers();
   }
 
-    void getData() async {
+  void getData() async {
     var firebaseUser = await FirebaseAuth.instance.currentUser;
     DocumentSnapshot userDocument =
         await userCollection.doc(firebaseUser.email).get();
@@ -106,8 +111,6 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
     return date;
   }
 
-
-  
   // updateAnswerCount() async{
   //    QuerySnapshot answers = await postCollection.doc(widget.parentReplyId).collection('replies').get();
   //    List<DocumentSnapshot> answerscount = answers.docs;
@@ -312,16 +315,16 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
   }
 
   void updateVotes() async {
-    int totalvotes =
+    int totalVotes =
         upvotedUsers.length.toInt() - downvotedUsers.length.toInt();
     setState(() {
-      upvoteCount = totalvotes;
+      upvoteCount = totalVotes;
     });
     await postCollection
         .doc(widget.parentReplyId)
         .collection('replies')
         .doc(widget.id)
-        .update({'votes': totalvotes.toString()});
+        .update({'votes': totalVotes.toString()});
   }
 
   @override
@@ -370,7 +373,7 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
           child: Container(
             margin: EdgeInsets.all(size.width * 0.006),
             constraints: BoxConstraints(
-              minHeight: 70,
+              minHeight: size.width * 0.2,
             ),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -378,298 +381,330 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
                 bottom: BorderSide(color: Colors.black.withOpacity(0.2)),
               ),
             ),
-            child: Column(children: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: size.width * 0.036,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: size.width * 0.03,
-                        bottom: size.width * 0.03,
-                      ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.6),
-                              offset: Offset(0, 0),
-                              blurRadius: 0,
-                              spreadRadius: size.width * 0.0015,
-                            ),
-                          ],
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: size.width * 0.036,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: size.width * 0.04,
                         ),
-                        child: CircleAvatar(
-                          backgroundImage: NetworkImage(widget.profilePic),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: size.width * 0.02,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.userName,
-                          style: GoogleFonts.roboto(
-                            fontSize: size.width * 0.04,
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: size.width * 0.003,
-                          ),
-                        ),
-                        SizedBox(
-                          height: size.height * 0.005,
-                        ),
-                        Text(
-                          widget.date,
-                          style: GoogleFonts.roboto(
-                            color: Colors.black.withOpacity(0.6),
-                            fontSize: size.width * 0.03,
-                            letterSpacing: size.width * 0.0015,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: size.width * 0.036,
-                  // bottom: size.width * 0.02,
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        widget.reply,
-                        style: GoogleFonts.nunito(
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: size.width * 0.036,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        _pressedUp();
-                      },
-                      child: Container(
-                        height: size.width * 0.11,
-                        child: Row(
-                          children: [
-                            Container(
-                              height: size.width * 0.08,
-                              child: upVoted
-                                  ? Image.asset(
-                                      "assets/icons/vote/upvote_fill.png",
-                                      color: kPrimaryLightColor,
-                                    )
-                                  : Image.asset("assets/icons/vote/upvote.png"),
-                            ),
-                            Text(
-                              'Upvote  $upvoteCount',
-                              style: GoogleFonts.nunito(
-                                color:
-                                    upVoted ? kPrimaryLightColor : Colors.black,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: size.width * 0.02,
-                    ),
-                    Row(
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            setState(() {
-                              isReplying = !isReplying;
-                            });
-                          },
-                          child: Container(
-                            height: size.width * 0.11,
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    /* vertical: 8.0 ,*/ horizontal:
-                                        size.width * 0.03,
-                                  ),
-                                  child: Icon(
-                                    FontAwesomeIcons.reply,
-                                    color: kPrimaryLightColor,
-                                  ),
-                                ),
-                                Text(
-                                  'Reply',
-                                  style: GoogleFonts.nunito(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        _pressedDown();
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.all(size.width * 0.02),
                         child: Container(
-                          height: size.width * 0.08,
-                          child: downVoted
-                              ? Image.asset(
-                                  "assets/icons/vote/downvote_fill.png",
-                                  color: kPrimaryLightColor,
-                                )
-                              : Image.asset("assets/icons/vote/downvote.png"),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.6),
+                                offset: Offset(0, 0),
+                                blurRadius: 0,
+                                spreadRadius: size.width * 0.0015,
+                              ),
+                            ],
+                          ),
+                          child: CircleAvatar(
+                            backgroundImage: NetworkImage(widget.profilePic),
+                          ),
                         ),
                       ),
-                    ),
-                    InkWell(
-                      key: keyBtn,
-                      enableFeedback: true,
-                      onTap: () {
-                        menu.show(widgetKey: keyBtn);
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.all(size.width * 0.025),
-                        child: Icon(FontAwesomeIcons.ellipsisH),
+                      SizedBox(
+                        width: size.width * 0.02,
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              isReplying
-                  ? Container(
-                      decoration: BoxDecoration(
-                          color: kSecondaryColor.withOpacity(0.2)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
-                            width: size.width * 0.04,
-                          ),
-                          Expanded(
-                            child: TextField(
-                              cursorHeight: size.width * 0.045,
-                              style: GoogleFonts.nunito(
-                                height: size.width * 0.004,
-                                fontSize: 14,
-                              ),
-                              controller: replyController, //NEED A CONTROLLER
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white,
-                                contentPadding: EdgeInsets.symmetric(
-                                  vertical: size.width * 0.021,
-                                  horizontal: size.width * 0.036,
-                                ),
-                                isDense: true,
-                                hintText: "Add a reply...",
-                                hintStyle: GoogleFonts.nunito(
-                                  fontSize: size.width * 0.039,
-                                ),
-                                // focusColor: Colors.white,
-                                // fillColor: Colors.white,
-                                border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.circular(size.width * 0.09),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.circular(size.width * 0.09),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.circular(size.width * 0.09),
-                                ),
-                              ),
+                          Text(
+                            widget.userName,
+                            style: GoogleFonts.roboto(
+                              fontSize: size.width * 0.04,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: size.width * 0.003,
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(left: size.width * 0.006),
-                            child: MaterialButton(
-                              height: size.width * 0.108,
-                              shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.circular(size.width * 0.09),
+                          Row(
+                            children: [
+                              Image.asset(
+                                'assets/icons/SemesterIcons/${widget.sem}.png',
+                                height: size.width * 0.05,
+                                width: size.width * 0.05,
                               ),
-                              padding: EdgeInsets.zero,
-                              onPressed: () => addReply(),
-                              color: kPrimaryColor,
-                              child: Text(
-                                "Reply",
-                                style: GoogleFonts.nunito(
-                                  fontSize: 14,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
+                              SizedBox(
+                                width: size.width * 0.015,
+                              ),
+                              Text(
+                                "Sem",
+                                style: GoogleFonts.roboto(
+                                  color: Colors.grey.shade500,
+                                  fontSize: size.width * 0.03,
                                 ),
                               ),
-                            ),
+                            ],
                           ),
-                          SizedBox(
-                            width: size.width * 0.04,
+                          Text(
+                            widget.date,
+                            style: GoogleFonts.roboto(
+                              color: Colors.black.withOpacity(0.6),
+                              fontSize: size.width * 0.03,
+                              letterSpacing: size.width * 0.0015,
+                            ),
                           ),
                         ],
                       ),
-                    )
-                  : Container(),
-              StreamBuilder(
-                stream: myStream,
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return CircularProgressIndicator();
-                  }
-                  return snapshot.data.documents.length == 0
-                      ? Container()
-                      : ListView.builder(
-                          shrinkWrap: true,
-                          padding: EdgeInsets.zero,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: snapshot.data.documents.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            DocumentSnapshot reply =
-                                snapshot.data.documents[index];
-                            return TimeLineTile(
-                              userName: reply.data()['name'],
-                              profilePic: reply.data()['profilePic'],
-                              date: reply.data()['date'],
-                              reply: reply.data()['reply'],
-                              id: reply.data()['id'],
-                              parentReplyId: widget.id,
-                              grandParentRepyId: widget.parentReplyId,
-                              isTaggingReply: reply.data()['isTaggingReply'],
-                              taggingUsername: reply.data()['taggingUserName'],
-                              taggingReply: reply.data()['taggingReply'],
-                            );
-                          },
-                        );
-                },
-              ),
-            ]),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: size.width * 0.036,
+                    // bottom: size.width * 0.02,
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          widget.reply,
+                          style: GoogleFonts.nunito(
+                            letterSpacing: 1,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: size.width * 0.036,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          _pressedUp();
+                        },
+                        child: Container(
+                          height: size.width * 0.11,
+                          child: Row(
+                            children: [
+                              Container(
+                                height: size.width * 0.08,
+                                child: upVoted
+                                    ? Image.asset(
+                                        "assets/icons/vote/upvote_fill.png",
+                                        color: kPrimaryLightColor,
+                                      )
+                                    : Image.asset(
+                                        "assets/icons/vote/upvote.png"),
+                              ),
+                              Text(
+                                'Upvote  $upvoteCount',
+                                style: GoogleFonts.nunito(
+                                  color: upVoted
+                                      ? kPrimaryLightColor
+                                      : Colors.black,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: size.width * 0.02,
+                      ),
+                      Row(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                isReplying = !isReplying;
+                              });
+                            },
+                            child: Container(
+                              height: size.width * 0.11,
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      /* vertical: 8.0 ,*/ horizontal:
+                                          size.width * 0.03,
+                                    ),
+                                    child: Icon(
+                                      FontAwesomeIcons.reply,
+                                      color: kPrimaryLightColor,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Reply',
+                                    style: GoogleFonts.nunito(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Spacer(),
+                      GestureDetector(
+                        onTap: () {
+                          _pressedDown();
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.all(size.width * 0.02),
+                          child: Container(
+                            height: size.width * 0.08,
+                            child: downVoted
+                                ? Image.asset(
+                                    "assets/icons/vote/downvote_fill.png",
+                                    color: kPrimaryLightColor,
+                                  )
+                                : Image.asset("assets/icons/vote/downvote.png"),
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        key: keyBtn,
+                        enableFeedback: true,
+                        onTap: () {
+                          menu.show(widgetKey: keyBtn);
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.all(size.width * 0.025),
+                          child: Icon(FontAwesomeIcons.ellipsisH),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: size.width * 0.03,
+                    right: size.width * 0.03,
+                  ),
+                  child: Container(
+                    height: size.width * 0.001,
+                    color: Colors.black.withOpacity(0.5),
+                  ),
+                ),
+                isReplying
+                    ? Container(
+                        decoration: BoxDecoration(
+                            color: kSecondaryColor.withOpacity(0.2)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: size.width * 0.04,
+                            ),
+                            Expanded(
+                              child: TextField(
+                                cursorHeight: size.width * 0.045,
+                                style: GoogleFonts.nunito(
+                                  height: size.width * 0.004,
+                                  fontSize: 14,
+                                ),
+                                controller: replyController, //NEED A CONTROLLER
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  contentPadding: EdgeInsets.symmetric(
+                                    vertical: size.width * 0.021,
+                                    horizontal: size.width * 0.036,
+                                  ),
+                                  isDense: true,
+                                  hintText: "Add a reply...",
+                                  hintStyle: GoogleFonts.nunito(
+                                    fontSize: size.width * 0.039,
+                                  ),
+                                  // focusColor: Colors.white,
+                                  // fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        size.width * 0.09),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        size.width * 0.09),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        size.width * 0.09),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(left: size.width * 0.006),
+                              child: MaterialButton(
+                                height: size.width * 0.108,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(size.width * 0.09),
+                                ),
+                                padding: EdgeInsets.zero,
+                                onPressed: () => addReply(),
+                                color: kPrimaryColor,
+                                child: Text(
+                                  "Reply",
+                                  style: GoogleFonts.nunito(
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: size.width * 0.04,
+                            ),
+                          ],
+                        ),
+                      )
+                    : Container(),
+                StreamBuilder(
+                  stream: myStream,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return CircularProgressIndicator();
+                    }
+                    return snapshot.data.documents.length == 0
+                        ? Container()
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            padding: EdgeInsets.zero,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: snapshot.data.documents.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              DocumentSnapshot reply =
+                                  snapshot.data.documents[index];
+                              return TimeLineTile(
+                                userName: reply.data()['name'],
+                                profilePic: reply.data()['profilePic'],
+                                sem: reply.data()['sem'],
+                                date: reply.data()['date'],
+                                reply: reply.data()['reply'],
+                                id: reply.data()['id'],
+                                parentReplyId: widget.id,
+                                grandParentReplyId: widget.parentReplyId,
+                                isTaggingReply: reply.data()['isTaggingReply'],
+                                taggingUsername:
+                                    reply.data()['taggingUserName'],
+                                taggingReply: reply.data()['taggingReply'],
+                              );
+                            },
+                          );
+                  },
+                ),
+              ],
+            ),
           ),
         ));
 

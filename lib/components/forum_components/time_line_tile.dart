@@ -13,8 +13,9 @@ import 'package:timeline_tile/timeline_tile.dart';
 class TimeLineTile extends StatefulWidget {
   final String reply;
   final String profilePic;
+  final sem;
   final String userName, date;
-  final grandParentRepyId;
+  final grandParentReplyId;
   final parentReplyId;
   final id;
   final isTaggingReply;
@@ -24,11 +25,12 @@ class TimeLineTile extends StatefulWidget {
     Key key,
     this.reply,
     this.profilePic,
+    this.sem,
     this.userName,
     this.date,
     this.id,
     this.parentReplyId,
-    this.grandParentRepyId,
+    this.grandParentReplyId,
     this.isTaggingReply,
     this.taggingUsername,
     this.taggingReply,
@@ -79,7 +81,7 @@ class _TimeLineTileState extends State<TimeLineTile> {
       });
       DateTime now = DateTime.now();
       final id = postCollection
-          .doc(widget.grandParentRepyId)
+          .doc(widget.grandParentReplyId)
           .collection('replies')
           .doc(widget.parentReplyId)
           .collection('replies')
@@ -87,7 +89,7 @@ class _TimeLineTileState extends State<TimeLineTile> {
           .id;
 
       postCollection
-          .doc(widget.grandParentRepyId)
+          .doc(widget.grandParentReplyId)
           .collection('replies')
           .doc(widget.parentReplyId)
           .collection('replies')
@@ -161,7 +163,7 @@ class _TimeLineTileState extends State<TimeLineTile> {
     if (upVoted) {
       //adding user to upVoted collection
       await postCollection
-          .doc(widget.grandParentRepyId)
+          .doc(widget.grandParentReplyId)
           .collection('replies')
           .doc(widget.parentReplyId)
           .collection('replies')
@@ -173,7 +175,7 @@ class _TimeLineTileState extends State<TimeLineTile> {
       //deleting user from downVoted collection if the user has previously downVoted the reply
       if (downvotedUsers.contains(firebaseUser.email)) {
         await postCollection
-            .doc(widget.grandParentRepyId)
+            .doc(widget.grandParentReplyId)
             .collection('replies')
             .doc(widget.parentReplyId)
             .collection('replies')
@@ -187,7 +189,7 @@ class _TimeLineTileState extends State<TimeLineTile> {
     else if (downVoted) {
       //adding user to downVoted collection
       await postCollection
-          .doc(widget.grandParentRepyId)
+          .doc(widget.grandParentReplyId)
           .collection('replies')
           .doc(widget.parentReplyId)
           .collection('replies')
@@ -199,7 +201,7 @@ class _TimeLineTileState extends State<TimeLineTile> {
       //deleting user from upVoted collection if the user has previously upVoted the reply
       if (upvotedUsers.contains(firebaseUser.email)) {
         await postCollection
-            .doc(widget.grandParentRepyId)
+            .doc(widget.grandParentReplyId)
             .collection('replies')
             .doc(widget.parentReplyId)
             .collection('replies')
@@ -215,7 +217,7 @@ class _TimeLineTileState extends State<TimeLineTile> {
       //deleting user from upVoted collection if the user has previously upVoted the reply
       if (upvotedUsers.contains(firebaseUser.email)) {
         await postCollection
-            .doc(widget.grandParentRepyId)
+            .doc(widget.grandParentReplyId)
             .collection('replies')
             .doc(widget.parentReplyId)
             .collection('replies')
@@ -228,7 +230,7 @@ class _TimeLineTileState extends State<TimeLineTile> {
       //deleting user from downVoted collection if the user has previously downVoted the reply
       if (downvotedUsers.contains(firebaseUser.email)) {
         await postCollection
-            .doc(widget.grandParentRepyId)
+            .doc(widget.grandParentReplyId)
             .collection('replies')
             .doc(widget.parentReplyId)
             .collection('replies')
@@ -249,7 +251,7 @@ class _TimeLineTileState extends State<TimeLineTile> {
 
     // getting upvoted Users
     final QuerySnapshot upVotedResult = await postCollection
-        .doc(widget.grandParentRepyId)
+        .doc(widget.grandParentReplyId)
         .collection('replies')
         .doc(widget.parentReplyId)
         .collection('replies')
@@ -270,7 +272,7 @@ class _TimeLineTileState extends State<TimeLineTile> {
 
     //getting downvoted Users
     final QuerySnapshot downVotedResult = await postCollection
-        .doc(widget.grandParentRepyId)
+        .doc(widget.grandParentReplyId)
         .collection('replies')
         .doc(widget.parentReplyId)
         .collection('replies')
@@ -315,18 +317,18 @@ class _TimeLineTileState extends State<TimeLineTile> {
   }
 
   void updateVotes() async {
-    int totalvotes =
+    int totalVotes =
         upvotedUsers.length.toInt() - downvotedUsers.length.toInt();
     setState(() {
-      upvoteCount = totalvotes;
+      upvoteCount = totalVotes;
     });
     await postCollection
-        .doc(widget.grandParentRepyId)
+        .doc(widget.grandParentReplyId)
         .collection('replies')
         .doc(widget.parentReplyId)
         .collection('replies')
         .doc(widget.id)
-        .update({'votes': totalvotes.toString()});
+        .update({'votes': totalVotes.toString()});
   }
 
   @override
@@ -371,13 +373,34 @@ class _TimeLineTileState extends State<TimeLineTile> {
       child: ModalProgressHUD(
         inAsyncCall: isLoading,
         child: TimelineTile(
-            alignment: TimelineAlign.manual,
-            lineXY: 0.1,
-            hasIndicator: false,
-            beforeLineStyle: LineStyle(
-              color: Colors.black45,
+          alignment: TimelineAlign.manual,
+          lineXY: 0.08,
+          hasIndicator: true,
+          indicatorStyle: IndicatorStyle(
+            width: size.width * 0.11,
+            height: size.width * 0.11,
+            indicator: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.6),
+                    offset: Offset(0, 0),
+                    blurRadius: 0,
+                    spreadRadius: size.width * 0.0015,
+                  ),
+                ],
+              ),
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(widget.profilePic),
+              ),
             ),
-            endChild: Column(children: [
+          ),
+          beforeLineStyle: LineStyle(
+            color: kPrimaryColor.withOpacity(0.7),
+          ),
+          endChild: Column(
+            children: [
               Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: size.width * 0.036,
@@ -385,44 +408,79 @@ class _TimeLineTileState extends State<TimeLineTile> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: size.width * 0.03,
-                        bottom: size.width * 0.03,
-                      ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.6),
-                              offset: Offset(0, 0),
-                              blurRadius: 0,
-                              spreadRadius: size.width * 0.0015,
-                            ),
-                          ],
-                        ),
-                        child: CircleAvatar(
-                          backgroundImage: NetworkImage(widget.profilePic),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: size.width * 0.02,
-                    ),
+                    // Padding(
+                    //   padding: EdgeInsets.symmetric(
+                    //     vertical: size.width * 0.04,
+                    //   ),
+                    //   child: Container(
+                    //     decoration: BoxDecoration(
+                    //       shape: BoxShape.circle,
+                    //       boxShadow: <BoxShadow>[
+                    //         BoxShadow(
+                    //           color: Colors.black.withOpacity(0.6),
+                    //           offset: Offset(0, 0),
+                    //           blurRadius: 0,
+                    //           spreadRadius: size.width * 0.0015,
+                    //         ),
+                    //       ],
+                    //     ),
+                    //     child: CircleAvatar(
+                    //       backgroundImage: NetworkImage(widget.profilePic),
+                    //     ),
+                    //   ),
+                    // ),
+                    // SizedBox(
+                    //   width: size.width * 0.02,
+                    // ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          widget.userName,
-                          style: GoogleFonts.roboto(
-                            fontSize: size.width * 0.04,
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: size.width * 0.003,
+                        Padding(
+                          padding: EdgeInsets.only(top: size.width * 0.03),
+                          child: Row(
+                            children: [
+                              Text(
+                                widget.userName,
+                                style: GoogleFonts.roboto(
+                                  fontSize: size.width * 0.04,
+                                  fontWeight: FontWeight.w500,
+                                  letterSpacing: size.width * 0.003,
+                                ),
+                              ),
+                              SizedBox(
+                                width: size.width * 0.01,
+                              ),
+                              Text(
+                                '·',
+                                style: GoogleFonts.nunito(
+                                  color: Colors.grey.shade900,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: size.width * 0.03,
+                                ),
+                              ),
+                              SizedBox(
+                                width: size.width * 0.01,
+                              ),
+                              Image.asset(
+                                'assets/icons/SemesterIcons/${widget.sem}.png',
+                                height: 20,
+                                width: 20,
+                              ),
+                              SizedBox(
+                                width: size.width * 0.015,
+                              ),
+                              Text(
+                                "Sem",
+                                style: GoogleFonts.roboto(
+                                  color: Colors.grey.shade500,
+                                  fontSize: size.width * 0.03,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         SizedBox(
-                          height: size.height * 0.005,
+                          height: size.width * 0.01,
                         ),
                         Text(
                           widget.date,
@@ -437,43 +495,74 @@ class _TimeLineTileState extends State<TimeLineTile> {
                   ],
                 ),
               ),
+              // SizedBox(height: size.width * 0.04,),
               Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: size.width * 0.036,
-                  // bottom: size.width * 0.02,
+                padding: EdgeInsets.only(
+                  top: size.width * 0.04,
+                  bottom: size.width * 0.025,
+                  left: size.width * 0.035,
+                  right: size.width * 0.035,
                 ),
                 child: Column(
                   children: [
                     widget.isTaggingReply
                         ? Padding(
-                            padding: EdgeInsets.all(10),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: size.width * 0.015,
+                              vertical: size.width * 0.025,
+                            ),
                             child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.12),
+                                border: Border(
+                                  left: BorderSide(
+                                    color: Colors.lightBlueAccent,
+                                    width: size.width * 0.02,
+                                  ),
+                                  right: BorderSide(
+                                    color: Colors.black,
+                                    width: size.width * 0.0012,
+                                  ),
+                                  top: BorderSide(
+                                    color: Colors.black,
+                                    width: size.width * 0.0012,
+                                  ),
+                                  bottom: BorderSide(
+                                    color: Colors.black,
+                                    width: size.width * 0.0012,
+                                  ),
+                                ),
+                              ),
                               width: size.width,
-                              color: Colors.grey[300],
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 8),
+                                      horizontal: size.width * 0.03,
+                                      vertical: size.width * 0.02,
+                                    ),
                                     child: Text(
                                       widget.taggingUsername,
                                       style: GoogleFonts.nunito(
-                                          fontStyle: FontStyle.italic,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black),
+                                        fontStyle: FontStyle.italic,
+                                        fontSize: size.width * 0.04,
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                     ),
                                   ),
                                   Padding(
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 8),
+                                      horizontal: size.width * 0.03,
+                                      vertical: size.width * 0.02,
+                                    ),
                                     child: Text(
                                       widget.taggingReply,
                                       style: GoogleFonts.nunito(
-                                          fontStyle: FontStyle.italic,
-                                          fontSize: 14,
-                                          color: Colors.black54),
+                                        fontStyle: FontStyle.italic,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 0.5,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -488,7 +577,7 @@ class _TimeLineTileState extends State<TimeLineTile> {
                           child: Text(
                             widget.reply,
                             style: GoogleFonts.nunito(
-                              color: Colors.black,
+                              letterSpacing: 0.5,
                             ),
                           ),
                         ),
@@ -540,9 +629,11 @@ class _TimeLineTileState extends State<TimeLineTile> {
                       children: [
                         InkWell(
                           onTap: () {
-                            setState(() {
-                              isReplying = !isReplying;
-                            });
+                            setState(
+                              () {
+                                isReplying = !isReplying;
+                              },
+                            );
                           },
                           child: Container(
                             height: size.width * 0.11,
@@ -550,8 +641,7 @@ class _TimeLineTileState extends State<TimeLineTile> {
                               children: [
                                 Padding(
                                   padding: EdgeInsets.symmetric(
-                                    /* vertical: 8.0 ,*/ horizontal:
-                                        size.width * 0.03,
+                                    horizontal: size.width * 0.03,
                                   ),
                                   child: Icon(
                                     FontAwesomeIcons.reply,
@@ -602,10 +692,20 @@ class _TimeLineTileState extends State<TimeLineTile> {
                   ],
                 ),
               ),
+              Padding(
+                padding: EdgeInsets.only(
+                  right: size.width * 0.03,
+                ),
+                child: Container(
+                  height: size.width * 0.001,
+                  color: Colors.black.withOpacity(0.5),
+                ),
+              ),
               isReplying
                   ? Container(
                       decoration: BoxDecoration(
-                          color: kSecondaryColor.withOpacity(0.2)),
+                        color: kSecondaryColor.withOpacity(0.2),
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -617,7 +717,6 @@ class _TimeLineTileState extends State<TimeLineTile> {
                               cursorHeight: size.width * 0.045,
                               style: GoogleFonts.nunito(
                                 height: size.width * 0.004,
-                                fontSize: 14,
                               ),
                               controller: replyController, //NEED A CONTROLLER
                               decoration: InputDecoration(
@@ -663,7 +762,6 @@ class _TimeLineTileState extends State<TimeLineTile> {
                               child: Text(
                                 "Reply",
                                 style: GoogleFonts.nunito(
-                                  fontSize: 14,
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -677,7 +775,9 @@ class _TimeLineTileState extends State<TimeLineTile> {
                       ),
                     )
                   : Container(),
-            ])),
+            ],
+          ),
+        ),
       ),
     );
   }

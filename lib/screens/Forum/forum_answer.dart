@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo/components/forum_components/forum_answer_comments.dart';
-import 'package:demo/components/forum_components/forum_card.dart';
 import 'package:demo/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -163,14 +161,15 @@ class _ForumAnswerState extends State<ForumAnswer> {
     return date;
   }
 
-  updateAnswerCount() async{
-     QuerySnapshot answers = await postCollection.doc(widget.id).collection('replies').get();
-     setState(() {
+  updateAnswerCount() async {
+    QuerySnapshot answers =
+        await postCollection.doc(widget.id).collection('replies').get();
+    setState(() {
       answerscount = answers.docs;
-     });
-     await postCollection.doc(widget.id).update({
-       'answers': answerscount.length.toString()
-     });
+    });
+    await postCollection
+        .doc(widget.id)
+        .update({'answers': answerscount.length.toString()});
   }
 
   addReply() async {
@@ -217,9 +216,9 @@ class _ForumAnswerState extends State<ForumAnswer> {
         }
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: kSecondaryColor,
         appBar: AppBar(
-          backgroundColor: kPrimaryLightColor.withOpacity(0.9),
+          backgroundColor: kPrimaryLightColor,
           elevation: 0.0,
           leading: GestureDetector(
               onTap: () => Navigator.pop(context),
@@ -227,7 +226,7 @@ class _ForumAnswerState extends State<ForumAnswer> {
         ),
         body: Container(
           height: double.infinity,
-          color: kPrimaryLightColor.withOpacity(0.9),
+          color: kPrimaryLightColor,
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -411,13 +410,15 @@ class _ForumAnswerState extends State<ForumAnswer> {
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.35),
                     border: Border(
-                        bottom:
-                            BorderSide(color: Colors.black.withOpacity(0.2))),
+                      bottom: BorderSide(
+                        color: Colors.black.withOpacity(0.2),
+                      ),
+                    ),
                   ),
                   child: Padding(
                     padding: EdgeInsets.symmetric(
-                      vertical: 10,
-                      horizontal: 10,
+                      vertical: size.width * 0.025,
+                      horizontal: size.width * 0.025,
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -429,7 +430,9 @@ class _ForumAnswerState extends State<ForumAnswer> {
                                 return CircularProgressIndicator();
                               }
                               return Padding(
-                                padding: EdgeInsets.only(right: 5.0),
+                                padding: EdgeInsets.only(
+                                  right: size.width * 0.015,
+                                ),
                                 child: Container(
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
@@ -475,27 +478,27 @@ class _ForumAnswerState extends State<ForumAnswer> {
                               // focusColor: Colors.white,
                               // fillColor: Colors.white,
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30.0),
+                                borderRadius: BorderRadius.circular(size.width * 0.9),
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30.0),
+                                borderRadius: BorderRadius.circular(size.width * 0.9),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30.0),
+                                borderRadius: BorderRadius.circular(size.width * 0.9),
                               ),
                             ),
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 5.0),
+                          padding: EdgeInsets.only(left: size.width * 0.015),
                           child: MaterialButton(
-                            height: 40,
+                            height: size.width * 0.1,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
+                              borderRadius: BorderRadius.circular(size.width * 0.9),
                             ),
                             padding: EdgeInsets.zero,
                             onPressed: () {
-                              if(replyController.text.isNotEmpty){
+                              if (replyController.text.isNotEmpty) {
                                 addReply();
                               }
                               // if (replyController.text.isEmpty) {
@@ -519,7 +522,6 @@ class _ForumAnswerState extends State<ForumAnswer> {
                             child: Text(
                               "Add Reply",
                               style: GoogleFonts.nunito(
-                                fontSize: 14,
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -531,9 +533,8 @@ class _ForumAnswerState extends State<ForumAnswer> {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.all(1),
+                  padding: EdgeInsets.all(size.width * 0.01),
                   width: double.infinity,
-                  color: kSecondaryColor,
                   child: StreamBuilder(
                     stream: myStream,
                     builder: (context, snapshot) {
@@ -554,34 +555,32 @@ class _ForumAnswerState extends State<ForumAnswer> {
                                     Text(
                                       "No Replies..",
                                       style: GoogleFonts.nunito(
-                                        fontSize: 30,
+                                        fontSize: size.width * 0.09,
                                       ),
                                     )
                                   ],
                                 ),
                               ),
                             )
-                          : Flexible(
-                              fit: FlexFit.loose,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                padding: EdgeInsets.zero,
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount: snapshot.data.documents.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  DocumentSnapshot reply =
-                                      snapshot.data.documents[index];
-                                  return ForumReplyTile(
-                                    userName: reply.data()['name'],
-                                    profilePic: reply.data()['profilePic'],
-                                    date: reply.data()['date'],
-                                    reply: reply.data()['reply'],
-                                    id: reply.data()['id'],
-                                    parentReplyId: widget.id,
-                                    votes: reply.data()['votes'],
-                                  );
-                                },
-                              ),
+                          : ListView.builder(
+                              shrinkWrap: true,
+                              padding: EdgeInsets.zero,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: snapshot.data.documents.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                DocumentSnapshot reply =
+                                    snapshot.data.documents[index];
+                                return ForumReplyTile(
+                                  userName: reply.data()['name'],
+                                  profilePic: reply.data()['profilePic'],
+                                  sem: reply.data()['sem'],
+                                  date: reply.data()['date'],
+                                  reply: reply.data()['reply'],
+                                  id: reply.data()['id'],
+                                  parentReplyId: widget.id,
+                                  votes: reply.data()['votes'],
+                                );
+                              },
                             );
                     },
                   ),
