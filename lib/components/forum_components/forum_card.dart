@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:popup_menu/popup_menu.dart';
 import 'package:simple_moment/simple_moment.dart';
 
 class ForumCard extends StatefulWidget {
@@ -16,6 +17,8 @@ class ForumCard extends StatefulWidget {
       name,
       profilePic,
       sem,
+      email,
+      tags,
       date,
       time,
       title,
@@ -38,7 +41,9 @@ class ForumCard extends StatefulWidget {
       this.views,
       this.time,
       this.id,
-      this.attachment})
+      this.attachment,
+      this.email,
+      this.tags})
       : super(key: key);
   @override
   _ForumCardState createState() => _ForumCardState();
@@ -49,13 +54,22 @@ class _ForumCardState extends State<ForumCard> {
   List<String> postLikedUsers = [];
   List<String> postViewedUsers = [];
   String timeAgo;
+  GlobalKey keyBtn = GlobalKey();
+  var _tapPosition;
+  var email;
 
   @override
   void initState() {
     super.initState();
     checkPostLiked();
     getTimeAgo();
+    getUsersEmail();
     // updateAnswerCount();
+  }
+
+  getUsersEmail() async {
+    var firebaseUser = await FirebaseAuth.instance.currentUser;
+    email = firebaseUser.email;
   }
 
   _pressed() async {
@@ -123,6 +137,9 @@ class _ForumCardState extends State<ForumCard> {
       }
     }
     updateVotes();
+    await postCollection
+        .doc(widget.id)
+        .set({'likedBy': postLikedUsers.toList()}, SetOptions(merge: true));
   }
 
   void updateVotes() async {
@@ -190,6 +207,7 @@ class _ForumCardState extends State<ForumCard> {
             name: widget.name,
             profilePic: widget.profilePic,
             sem: widget.sem,
+            tags: widget.tags,
             date: widget.date,
             time: widget.time,
             title: widget.title,
@@ -204,9 +222,82 @@ class _ForumCardState extends State<ForumCard> {
     checkPostLiked();
   }
 
+  deletePost() async {
+    await postCollection.doc(widget.id).delete();
+  }
+
+  _showPopupMenu(BuildContext context) {
+    final RenderBox overlay = Overlay.of(context).context.findRenderObject();
+    Size size = MediaQuery.of(context).size;
+    showMenu<String>(
+      context: context,
+      position: RelativeRect.fromRect(
+          _tapPosition & Size(40, 40), // smaller rect, the touch area
+          Offset.zero & overlay.size // Bigger rect, the entire screen
+          ),
+      items: email == widget.email
+          ? [
+              PopupMenuItem<String>(child: Text('Share'), value: 'Share'),
+              PopupMenuItem<String>(child: Text('Report'), value: 'Report'),
+              PopupMenuItem<String>(child: Text('Delete'), value: 'Delete'),
+            ]
+          : [
+              PopupMenuItem<String>(child: Text('Share'), value: 'Share'),
+              PopupMenuItem<String>(child: Text('Report'), value: 'Report'),
+            ],
+      elevation: 8.0,
+    ).then<void>((String itemSelected) {
+      if (itemSelected == null) return;
+
+      if (itemSelected == "Delete") {
+        deletePost();
+      } else if (itemSelected == "Share") {
+        //code here
+      } else if (itemSelected == "Report") {
+        //code here
+      } else {
+        //code here
+      }
+    });
+  }
+
+  void _storePosition(TapDownDetails details) {
+    _tapPosition = details.globalPosition;
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
+    PopupMenu menu = PopupMenu(
+        backgroundColor: Colors.grey[400].withOpacity(0.5),
+        lineColor: Colors.black,
+        maxColumn: 2,
+        items: [
+          MenuItem(
+            title: 'Delete',
+            textStyle: GoogleFonts.nunito(
+              fontSize: 15,
+              color: Colors.black,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          MenuItem(
+            title: 'Report',
+            textStyle: GoogleFonts.nunito(
+              fontSize: 15,
+              color: Colors.black,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ],
+        onClickMenu: (MenuItemProvider item) {
+          if (item.menuTitle == 'Report') {
+          } else if (item.menuTitle == 'Delete') {
+            // deletePost();
+          }
+        });
+
     return GestureDetector(
       onTap: () async {
         await storeViewedUsers();
@@ -282,7 +373,8 @@ class _ForumCardState extends State<ForumCard> {
                       widget.name,
                       maxLines: 2,
                       style: GoogleFonts.roboto(
-                        fontSize: size.width * 0.05,
+                        // fontSize: size.width * 0.05,
+                        fontSize: size.width * 0.03,
                         fontWeight: FontWeight.w600,
                         letterSpacing: size.width * 0.003,
                       ),
@@ -356,11 +448,22 @@ class _ForumCardState extends State<ForumCard> {
                     ],
                   ),
                 ),
+                InkWell(
+                  key: keyBtn,
+                  enableFeedback: true,
+                  onTap: () {
+                    menu.show(widgetKey: keyBtn);
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.all(size.width * 0.025),
+                    child: GestureDetector(
+                        onTapDown: _storePosition,
+                        onTap: () => _showPopupMenu(context),
+                        child: Icon(FontAwesomeIcons.ellipsisV)),
+                  ),
+                ),
               ],
             ),
-            // SizedBox(
-            //   height: size.height * 0.01,
-            // ),
             Padding(
               padding: EdgeInsets.symmetric(
                 vertical: size.width * 0.006,
@@ -407,6 +510,49 @@ class _ForumCardState extends State<ForumCard> {
                       ],
                     ),
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Wrap(
+                        alignment: WrapAlignment.start,
+                        direction: Axis.horizontal,
+                        children: widget.tags.map<Widget>((e) {
+                          return Padding(
+                            padding:
+                                EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                            child: Chip(
+                              backgroundColor: Colors.blue[100],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(7),
+                              ),
+                              label: Text(e.toString(),
+                                  style: TextStyle(color: Colors.blue[900])),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
+                  // GridView.count(
+                  //   crossAxisCount: 4,
+                  //   crossAxisSpacing: 5.0,
+                  //   mainAxisSpacing: 1.0,
+                  //   shrinkWrap: true,
+                  //   padding: EdgeInsets.zero,
+                  //   childAspectRatio: 2.5,
+                  //   physics: NeverScrollableScrollPhysics(),
+                  //   children: List.generate(
+                  //     widget.tags.length,
+                  //     (index) => Chip(
+                  //       backgroundColor: Colors.blue[100],
+                  //       shape: RoundedRectangleBorder(
+                  //         borderRadius: BorderRadius.circular(7),
+                  //       ),
+                  //       label: Text(widget.tags[index],
+                  //           style: TextStyle(color: Colors.blue[900])),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),

@@ -14,6 +14,7 @@ class TimeLineTile extends StatefulWidget {
   final String reply;
   final String profilePic;
   final sem;
+  final email;
   final String userName, date;
   final grandParentReplyId;
   final parentReplyId;
@@ -34,6 +35,7 @@ class TimeLineTile extends StatefulWidget {
     this.isTaggingReply,
     this.taggingUsername,
     this.taggingReply,
+    this.email,
   }) : super(key: key);
 
   @override
@@ -50,7 +52,7 @@ class _TimeLineTileState extends State<TimeLineTile> {
   Stream myStream;
   List<String> upvotedUsers = [];
   List<String> downvotedUsers = [];
-  var userName, profilePic;
+  var userName, profilePic, sem, email;
   var replyController = TextEditingController();
 
   void getData() async {
@@ -60,6 +62,8 @@ class _TimeLineTileState extends State<TimeLineTile> {
     userName =
         userDocument.get('first name') + " " + userDocument.get('last name');
     profilePic = userDocument.get('profilePic');
+    sem = userDocument.get('semester');
+    email = firebaseUser.email;
   }
 
   String getDate() {
@@ -97,6 +101,8 @@ class _TimeLineTileState extends State<TimeLineTile> {
           .set({
         'name': userName,
         'profilePic': profilePic,
+        'email': email,
+        'sem': sem,
         'id': id,
         'reply': replyController.text,
         'time': now.toString(),
@@ -331,6 +337,16 @@ class _TimeLineTileState extends State<TimeLineTile> {
         .update({'votes': totalVotes.toString()});
   }
 
+  deletePost() async {
+    await postCollection
+        .doc(widget.grandParentReplyId)
+        .collection('replies')
+        .doc(widget.parentReplyId)
+        .collection('replies')
+        .doc(widget.id)
+        .delete();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -338,28 +354,51 @@ class _TimeLineTileState extends State<TimeLineTile> {
     getData();
   }
 
-  PopupMenu menu = PopupMenu(
-      backgroundColor: Colors.grey[400].withOpacity(0.5),
-      lineColor: Colors.black,
-      maxColumn: 1,
-      items: [
-        MenuItem(
-          title: 'Report',
-          textStyle: GoogleFonts.nunito(
-            fontSize: 15,
-            color: Colors.black,
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-      ],
-      onClickMenu: (MenuItemProvider item) {
-        if (item.menuTitle == 'Report') {}
-      });
-
   @override
   Widget build(BuildContext context) {
     PopupMenu.context = context;
     Size size = MediaQuery.of(context).size;
+
+    PopupMenu menu = PopupMenu(
+        backgroundColor: Colors.grey[400].withOpacity(0.5),
+        lineColor: Colors.black,
+        maxColumn: 1,
+        items: email == widget.email
+            ? [
+                MenuItem(
+                  title: 'Delete',
+                  textStyle: GoogleFonts.nunito(
+                    fontSize: 15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                MenuItem(
+                  title: 'Report',
+                  textStyle: GoogleFonts.nunito(
+                    fontSize: 15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ]
+            : [
+                MenuItem(
+                  title: 'Report',
+                  textStyle: GoogleFonts.nunito(
+                    fontSize: 15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ],
+        onClickMenu: (MenuItemProvider item) {
+          if (item.menuTitle == 'Report') {
+          } else if (item.menuTitle == 'Delete') {
+            deletePost();
+          }
+        });
+
     return GestureDetector(
       onTap: () {
         setState(() {

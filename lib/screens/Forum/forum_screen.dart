@@ -1,9 +1,10 @@
-
 import 'package:demo/components/forum_components/forum_card.dart';
 import 'package:demo/database.dart';
+import 'package:demo/screens/Forum/forum_favourite_posts.dart';
 import 'package:demo/screens/Forum/forum_new_post.dart';
 import 'package:demo/screens/Forum/forum_search.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:demo/screens/Forum/forum_users_posts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/constants.dart';
@@ -17,6 +18,7 @@ class ForumPage extends StatefulWidget {
 }
 
 class _ForumPageState extends State<ForumPage> {
+  
   var scaffoldKey = GlobalKey<ScaffoldState>();
   var questionController = TextEditingController();
   var titleController = TextEditingController();
@@ -37,53 +39,35 @@ class _ForumPageState extends State<ForumPage> {
     });
   }
 
-  // pickImage(ImageSource imageSource) async {
-  //   final image = await ImagePicker()
-  //       .getImage(source: imageSource, maxHeight: 670, maxWidth: 800);
-  //   setState(() {
-  //     attachmentImagePath = File(image.path);
-  //   });
-  //   Navigator.pop(context);
-  // }
+  _showPopupMenu() {
+    showMenu<String>(
+      context: context,
+      position: RelativeRect.fromLTRB(25.0, 80.0, 0.0,
+          0.0), //position where you want to show the menu on screen
 
-  // pickImageDialog() {
-  //   return showDialog(
-  //       context: context,
-  //       builder: (context) {
-  //         return SimpleDialog(
-  //           title: Column(children: [
-  //             Text(
-  //               "Choose attachment",
-  //               style: GoogleFonts.nunito(color: Colors.black87,)
-  //             ),
-  //             Divider(
-  //               thickness: 0.5,
-  //               color: Colors.black,
-  //             ),
-  //           ]),
-  //           children: [
-  //             SimpleDialogOption(
-  //               onPressed: () => pickImage(ImageSource.gallery),
-  //               child: Text("From Galley",
-  //                   style:
-  //                       GoogleFonts.nunito(fontSize: 20, color: kPrimaryLightColor)),
-  //             ),
-  //             SimpleDialogOption(
-  //               onPressed: () => pickImage(ImageSource.camera),
-  //               child: Text("From Camera",
-  //                   style:
-  //                       GoogleFonts.nunito(fontSize: 20, color: kPrimaryLightColor)),
-  //             ),
-  //             SimpleDialogOption(
-  //               onPressed: () => Navigator.pop(context),
-  //               child: Text("Cancel",
-  //                   style:
-  //                       GoogleFonts.nunito(fontSize: 20, color: kPrimaryLightColor)),
-  //             ),
-  //           ],
-  //         );
-  //       });
-  // }
+      items: [
+        PopupMenuItem<String>(child: Text('My Posts'), value: 'My Posts'),
+        PopupMenuItem<String>(child: Text('Favourite Posts'), value: 'Favourite Posts'),
+      ],
+      elevation: 8.0,
+    ).then<void>((String itemSelected) {
+      if (itemSelected == null) return;
+
+      if (itemSelected == "My Posts") {
+        Navigator.pushReplacement(
+            context,
+            PageTransition(
+                child: ForumUsersPosts(), type: PageTransitionType.fade));
+      } else if (itemSelected == "Favourite Posts") {
+             Navigator.pushReplacement(
+            context,
+            PageTransition(
+                child: ForumFavouritePosts(), type: PageTransitionType.fade));
+      } else {
+        //code here
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +133,9 @@ class _ForumPageState extends State<ForumPage> {
                                   Icons.menu,
                                   color: Colors.white,
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  _showPopupMenu();
+                                },
                               ),
                             ],
                           ),
@@ -254,6 +240,8 @@ class _ForumPageState extends State<ForumPage> {
                                   id: post.data()['id'],
                                   profilePic: post.data()['profilePic'],
                                   sem: post.data()['sem'],
+                                  email: post.data()['email'],
+                                  tags: post.data()['tags'],
                                   date: post.data()['date'],
                                   time: post.data()['time'],
                                   title: post.data()['title'],
@@ -275,7 +263,11 @@ class _ForumPageState extends State<ForumPage> {
             onPressed: () {
               titleController.clear();
               questionController.clear();
-              Navigator.push(context, PageTransition(child: ForumNewQuestion(), type: PageTransitionType.fade));
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      child: ForumNewQuestion(),
+                      type: PageTransitionType.fade));
             },
             backgroundColor: kPrimaryDarkColor,
             child: Icon(Icons.add),

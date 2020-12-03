@@ -15,6 +15,7 @@ class ForumReplyTile extends StatefulWidget {
   final reply,
       profilePic,
       sem,
+      email,
       replyCount,
       userName,
       date,
@@ -32,7 +33,8 @@ class ForumReplyTile extends StatefulWidget {
       this.date,
       this.id,
       this.parentReplyId,
-      this.votes})
+      this.votes,
+      this.email})
       : super(key: key);
 
   @override
@@ -44,7 +46,7 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
   bool downVoted = false;
   bool isReplying = false;
   int upvoteCount = 0;
-  var userName, profilePic;
+  var userName, profilePic, sem, email;
   GlobalKey keyBtn = GlobalKey();
   bool isLoading = false;
   var replyController = TextEditingController();
@@ -97,6 +99,8 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
     userName =
         userDocument.get('first name') + " " + userDocument.get('last name');
     profilePic = userDocument.get('profilePic');
+    sem = userDocument.get('semester');
+    email = firebaseUser.email;
   }
 
   String getDate() {
@@ -135,6 +139,8 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
           .set({
         'name': userName,
         'profilePic': profilePic,
+        'sem': sem,
+        'email': email,
         'id': id,
         'reply': replyController.text,
         'time': now.toString(),
@@ -327,6 +333,14 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
         .update({'votes': totalVotes.toString()});
   }
 
+  deletePost() async {
+    await postCollection
+      .doc(widget.parentReplyId)
+      .collection('replies')
+      .doc(widget.id)
+      .delete();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -344,18 +358,40 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
         backgroundColor: Colors.grey[400].withOpacity(0.5),
         lineColor: Colors.black,
         maxColumn: 1,
-        items: [
-          MenuItem(
-            title: 'Report',
-            textStyle: GoogleFonts.nunito(
-              fontSize: 15,
-              color: Colors.black,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-        ],
+        items: email == widget.email
+            ? [
+                MenuItem(
+                  title: 'Delete',
+                  textStyle: GoogleFonts.nunito(
+                    fontSize: 15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                MenuItem(
+                  title: 'Report',
+                  textStyle: GoogleFonts.nunito(
+                    fontSize: 15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ]
+            : [
+                MenuItem(
+                  title: 'Report',
+                  textStyle: GoogleFonts.nunito(
+                    fontSize: 15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ],
         onClickMenu: (MenuItemProvider item) {
-          if (item.menuTitle == 'Report') {}
+          if (item.menuTitle == 'Report') {
+          } else if (item.menuTitle == 'Delete') {
+            deletePost();
+          }
         });
 
     return GestureDetector(
@@ -689,6 +725,7 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
                                 userName: reply.data()['name'],
                                 profilePic: reply.data()['profilePic'],
                                 sem: reply.data()['sem'],
+                                email: reply.data()['email'],
                                 date: reply.data()['date'],
                                 reply: reply.data()['reply'],
                                 id: reply.data()['id'],

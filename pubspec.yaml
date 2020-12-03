@@ -37,6 +37,8 @@ dependencies:
   timeline_tile: ^1.0.0
   popup_menu: ^1.0.5
   uuid: ^2.2.2
+  flutter_spinkit: "^4.1.2"
+  autocomplete_textfield: ^1.7.3
 
 dev_dependencies:
   flutter_test:

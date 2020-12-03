@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo/components/forum_components/forum_answer_comments.dart';
 import 'package:demo/constants.dart';
+import 'package:demo/screens/Forum/preview_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,12 +10,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:demo/database.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class ForumAnswer extends StatefulWidget {
   final id,
       name,
       profilePic,
       sem,
+      tags,
       date,
       time,
       title,
@@ -37,7 +40,8 @@ class ForumAnswer extends StatefulWidget {
       this.votes,
       this.answers,
       this.views,
-      this.attachment})
+      this.attachment,
+      this.tags})
       : super(key: key);
 
   @override
@@ -48,11 +52,12 @@ class _ForumAnswerState extends State<ForumAnswer> {
   bool liked = false;
   List<String> postViewedUsers = [];
   Stream myStream, userStream;
-  var userName, profilePic, postStream;
+  var userName, profilePic, sem, email, postStream;
   var replyController = TextEditingController();
   bool isLoading = false;
   List<String> postLikedUsers = [];
   List<DocumentSnapshot> answerscount;
+  var attachments;
 
   @override
   void initState() {
@@ -89,6 +94,9 @@ class _ForumAnswerState extends State<ForumAnswer> {
   }
 
   void checkPostLiked() async {
+    setState(() {
+      isLoading = true;
+    });
     var firebaseUser = await FirebaseAuth.instance.currentUser;
     postLikedUsers.clear();
 
@@ -120,6 +128,12 @@ class _ForumAnswerState extends State<ForumAnswer> {
       }
     }
     updateVotes();
+    await postCollection
+        .doc(widget.id)
+        .set({'likedBy': postLikedUsers.toList()}, SetOptions(merge: true));
+    setState(() {
+      isLoading = false;
+    });
   }
 
   void updateVotes() async {
@@ -128,6 +142,9 @@ class _ForumAnswerState extends State<ForumAnswer> {
   }
 
   getStream() async {
+    setState(() {
+      isLoading = true;
+    });
     var firebaseUser = await FirebaseAuth.instance.currentUser;
     setState(() {
       postStream = postCollection.doc(widget.id).snapshots();
@@ -138,15 +155,26 @@ class _ForumAnswerState extends State<ForumAnswer> {
           .snapshots();
       userStream = userCollection.doc(firebaseUser.email).snapshots();
     });
+    setState(() {
+      isLoading = false;
+    });
   }
 
   void getData() async {
+    setState(() {
+      isLoading = true;
+    });
     var firebaseUser = await FirebaseAuth.instance.currentUser;
     DocumentSnapshot userDocument =
         await userCollection.doc(firebaseUser.email).get();
     userName =
         userDocument.get('first name') + " " + userDocument.get('last name');
     profilePic = userDocument.get('profilePic');
+    sem = userDocument.get('semester');
+    email = firebaseUser.email;
+    setState(() {
+      isLoading = false;
+    });
   }
 
   String getDate() {
@@ -162,6 +190,9 @@ class _ForumAnswerState extends State<ForumAnswer> {
   }
 
   updateAnswerCount() async {
+    setState(() {
+      isLoading = true;
+    });
     QuerySnapshot answers =
         await postCollection.doc(widget.id).collection('replies').get();
     setState(() {
@@ -170,6 +201,9 @@ class _ForumAnswerState extends State<ForumAnswer> {
     await postCollection
         .doc(widget.id)
         .update({'answers': answerscount.length.toString()});
+    setState(() {
+      isLoading = false;
+    });
   }
 
   addReply() async {
@@ -186,6 +220,8 @@ class _ForumAnswerState extends State<ForumAnswer> {
       postCollection.doc(widget.id).collection('replies').doc(id).set({
         'name': userName,
         'profilePic': profilePic,
+        'email': email,
+        'sem': sem,
         'id': id,
         'reply': replyController.text,
         'time': now.toString(),
@@ -208,384 +244,374 @@ class _ForumAnswerState extends State<ForumAnswer> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return GestureDetector(
-      onTap: () {
-        FocusScopeNode currentFocus = FocusScope.of(context);
-        if (!currentFocus.hasPrimaryFocus) {
-          currentFocus.unfocus();
-        }
-      },
-      child: Scaffold(
-        backgroundColor: kSecondaryColor,
-        appBar: AppBar(
-          backgroundColor: kPrimaryLightColor,
-          elevation: 0.0,
-          leading: GestureDetector(
-              onTap: () => Navigator.pop(context),
-              child: Icon(Icons.arrow_back_ios)),
-        ),
-        body: Container(
-          height: double.infinity,
-          color: kPrimaryLightColor,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: size.width * 0.065,
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              child: Text(
-                                widget.title,
-                                style: GoogleFonts.nunito(
-                                  color: Colors.white,
-                                  fontSize: 23,
-                                  fontWeight: FontWeight.w600,
+    return ModalProgressHUD(
+      inAsyncCall: isLoading,
+      child: GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+        child: Scaffold(
+          backgroundColor: kSecondaryColor,
+          appBar: AppBar(
+            backgroundColor: kPrimaryLightColor,
+            elevation: 0.0,
+            leading: GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Icon(Icons.arrow_back_ios)),
+          ),
+          body: Container(
+            height: double.infinity,
+            color: kPrimaryLightColor,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: size.width * 0.065,
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                child: Text(
+                                  widget.title,
+                                  style: GoogleFonts.nunito(
+                                    color: Colors.white,
+                                    fontSize: 23,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          IconButton(
-                            icon: Icon(
-                              liked
-                                  ? FontAwesomeIcons.solidHeart
-                                  : FontAwesomeIcons.heart,
-                              color: liked ? Colors.red : Colors.grey[400],
+                            IconButton(
+                              icon: Icon(
+                                liked
+                                    ? FontAwesomeIcons.solidHeart
+                                    : FontAwesomeIcons.heart,
+                                color: liked ? Colors.red : Colors.grey[400],
+                              ),
+                              onPressed: () {
+                                _pressed();
+                              },
                             ),
-                            onPressed: () {
-                              _pressed();
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: size.height * 0.015,
-                    horizontal: size.width * 0.07,
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            widget.question,
-                            textAlign: TextAlign.start,
-                            style: GoogleFonts.nunito(
-                              color: Colors.white54,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                widget.attachment == "No attachment"
-                    ? Container()
-                    : Image(
-                        width: size.width,
-                        height: size.height * 0.25,
-                        fit: BoxFit.cover,
-                        image: NetworkImage(widget.attachment),
-                      ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.start,
-                //   children: [
-                //     Padding(
-                //       padding: EdgeInsets.symmetric(
-                //         vertical: size.height * 0.01,
-                //         horizontal: size.width * 0.075,
-                //       ),
-                //       child: Container(
-                //         height: size.height * 0.12,
-                //         width: size.width * 0.3,
-                //         color: Colors.white,
-                //       ),
-                //     ),
-                //     Padding(
-                //       padding: EdgeInsets.symmetric(
-                //         vertical: size.height * 0.01,
-                //         horizontal: size.width * 0.075,
-                //       ),
-                //       child: Container(
-                //         height: size.height * 0.12,
-                //         width: size.width * 0.3,
-                //         color: Colors.white,
-                //       ),
-                //     ),
-                //   ],
-                // ),
-                Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: size.height * 0.015,
+                      horizontal: size.width * 0.07,
+                    ),
+                    child: Column(
                       children: [
                         Row(
                           children: [
                             Text(
-                              postLikedUsers.length.toString(),
-                              style: GoogleFonts.roboto(
+                              widget.question,
+                              textAlign: TextAlign.start,
+                              style: GoogleFonts.nunito(
+                                color: Colors.white54,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  widget.attachment[0].toString() == "No attachment"
+                      ? Container()
+                      : GridView.count(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 10.0,
+                          mainAxisSpacing: 10.0,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          children: List.generate(
+                              widget.attachment.length,
+                              (index) => GestureDetector(
+                                    onTap: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => PreviewImage(
+                                                image: widget.attachment[index]
+                                                    .toString()))),
+                                    child: Container(
+                                      width: size.width * 0.3,
+                                      height: size.height * 0.15,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.grey, width: 3.0),
+                                      ),
+                                      child: Hero(
+                                        tag: 'attachment $index',
+                                        child: Image.network(
+                                          widget.attachment[index].toString(),
+                                          fit: BoxFit.fill,
+                                        ),
+                                      ),
+                                    ),
+                                  )),
+                        ),
+                  Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                postLikedUsers.length.toString(),
+                                style: GoogleFonts.roboto(
+                                    fontSize: size.width * 0.045,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 1,
+                                    color: Colors.white),
+                              ),
+                              SizedBox(
+                                width: size.width * 0.01,
+                              ),
+                              Text(
+                                'votes',
+                                style: GoogleFonts.roboto(
+                                  color: Colors.white,
+                                  fontSize: size.width * 0.035,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 1,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                answerscount.length.toString(),
+                                style: GoogleFonts.roboto(
                                   fontSize: size.width * 0.045,
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: 1,
-                                  color: Colors.white),
-                            ),
-                            SizedBox(
-                              width: size.width * 0.01,
-                            ),
-                            Text(
-                              'votes',
-                              style: GoogleFonts.roboto(
-                                color: Colors.white,
-                                fontSize: size.width * 0.035,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 1,
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                          ],
+                              SizedBox(
+                                width: size.width * 0.01,
+                              ),
+                              Text(
+                                'answers',
+                                style: GoogleFonts.roboto(
+                                  color: Colors.white,
+                                  fontSize: size.width * 0.035,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 1,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                widget.views,
+                                style: GoogleFonts.roboto(
+                                  fontSize: size.width * 0.045,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 1,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              SizedBox(
+                                width: size.width * 0.01,
+                              ),
+                              Text(
+                                'views',
+                                style: GoogleFonts.roboto(
+                                  color: Colors.white,
+                                  fontSize: size.width * 0.035,
+                                  fontWeight: FontWeight.w500,
+                                  letterSpacing: 1,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      )),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.35),
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Colors.black.withOpacity(0.2),
                         ),
-                        Row(
-                          children: [
-                            Text(
-                              answerscount.length.toString(),
-                              style: GoogleFonts.roboto(
-                                fontSize: size.width * 0.045,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 1,
-                                color: Colors.white,
+                      ),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: size.width * 0.025,
+                        horizontal: size.width * 0.025,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          StreamBuilder(
+                              stream: userStream,
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return CircularProgressIndicator();
+                                }
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                    right: size.width * 0.015,
+                                  ),
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        boxShadow: <BoxShadow>[
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.6),
+                                            offset: Offset(0, 0),
+                                            blurRadius: 0,
+                                            spreadRadius: size.width * 0.0015,
+                                          ),
+                                        ],
+                                      ),
+                                      child: CircleAvatar(
+                                        child: ClipOval(
+                                          child: Image.network(
+                                            snapshot.data['profilePic'],
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      )),
+                                );
+                              }),
+                          Expanded(
+                            child: TextField(
+                              cursorHeight: size.width * 0.045,
+                              style: GoogleFonts.nunito(
+                                height: size.width * 0.004,
+                                fontSize: size.width * 0.039,
+                              ),
+                              controller: replyController,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
+                                contentPadding: EdgeInsets.symmetric(
+                                  vertical: size.width * 0.021,
+                                  horizontal: size.width * 0.033,
+                                ),
+                                isDense: true,
+                                hintText: "Add a reply...",
+                                hintStyle: GoogleFonts.nunito(
+                                  fontSize: size.width * 0.039,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(size.width * 0.9),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(size.width * 0.9),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(size.width * 0.9),
+                                ),
                               ),
                             ),
-                            SizedBox(
-                              width: size.width * 0.01,
-                            ),
-                            Text(
-                              'answers',
-                              style: GoogleFonts.roboto(
-                                color: Colors.white,
-                                fontSize: size.width * 0.035,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 1,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: size.width * 0.015),
+                            child: MaterialButton(
+                              height: size.width * 0.1,
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular(size.width * 0.9),
+                              ),
+                              padding: EdgeInsets.zero,
+                              onPressed: () {
+                                if (replyController.text.isNotEmpty) {
+                                  addReply();
+                                }
+                              },
+                              color: kPrimaryColor,
+                              child: Text(
+                                "Add Reply",
+                                style: GoogleFonts.nunito(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              widget.views,
-                              style: GoogleFonts.roboto(
-                                fontSize: size.width * 0.045,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 1,
-                                color: Colors.white,
-                              ),
-                            ),
-                            SizedBox(
-                              width: size.width * 0.01,
-                            ),
-                            Text(
-                              'views',
-                              style: GoogleFonts.roboto(
-                                color: Colors.white,
-                                fontSize: size.width * 0.035,
-                                fontWeight: FontWeight.w500,
-                                letterSpacing: 1,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    )),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.35),
-                    border: Border(
-                      bottom: BorderSide(
-                        color: Colors.black.withOpacity(0.2),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      vertical: size.width * 0.025,
-                      horizontal: size.width * 0.025,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        StreamBuilder(
-                            stream: userStream,
-                            builder: (context, snapshot) {
-                              if (!snapshot.hasData) {
-                                return CircularProgressIndicator();
-                              }
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                  right: size.width * 0.015,
-                                ),
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      boxShadow: <BoxShadow>[
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.6),
-                                          offset: Offset(0, 0),
-                                          blurRadius: 0,
-                                          spreadRadius: size.width * 0.0015,
-                                        ),
-                                      ],
-                                    ),
-                                    child: CircleAvatar(
-                                      child: ClipOval(
-                                        child: Image.network(
-                                          snapshot.data['profilePic'],
-                                          fit: BoxFit.cover,
-                                        ),
+                  Container(
+                    padding: EdgeInsets.all(size.width * 0.01),
+                    width: double.infinity,
+                    child: StreamBuilder(
+                      stream: myStream,
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return CircularProgressIndicator();
+                        }
+                        return snapshot.data.documents.length == 0
+                            ? Center(
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        height: size.height * 0.5,
+                                        width: size.width * 0.7,
+                                        child: Image.asset(
+                                            "assets/illustrations/no_posts.png"),
                                       ),
-                                    )),
+                                      Text(
+                                        "No Replies..",
+                                        style: GoogleFonts.nunito(
+                                          fontSize: size.width * 0.09,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : ListView.builder(
+                                shrinkWrap: true,
+                                padding: EdgeInsets.zero,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: snapshot.data.documents.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  DocumentSnapshot reply =
+                                      snapshot.data.documents[index];
+                                  return ForumReplyTile(
+                                    userName: reply.data()['name'],
+                                    profilePic: reply.data()['profilePic'],
+                                    sem: reply.data()['sem'],
+                                    email: reply.data()['email'],
+                                    date: reply.data()['date'],
+                                    reply: reply.data()['reply'],
+                                    id: reply.data()['id'],
+                                    parentReplyId: widget.id,
+                                    votes: reply.data()['votes'],
+                                  );
+                                },
                               );
-                            }),
-                        Expanded(
-                          child: TextField(
-                            cursorHeight: size.width * 0.045,
-                            style: GoogleFonts.nunito(
-                              height: size.width * 0.004,
-                              fontSize: size.width * 0.039,
-                            ),
-                            controller: replyController,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.white,
-                              contentPadding: EdgeInsets.symmetric(
-                                vertical: size.width * 0.021,
-                                horizontal: size.width * 0.033,
-                              ),
-                              isDense: true,
-                              hintText: "Add a reply...",
-                              hintStyle: GoogleFonts.nunito(
-                                fontSize: size.width * 0.039,
-                              ),
-                              // focusColor: Colors.white,
-                              // fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(size.width * 0.9),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(size.width * 0.9),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(size.width * 0.9),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: size.width * 0.015),
-                          child: MaterialButton(
-                            height: size.width * 0.1,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(size.width * 0.9),
-                            ),
-                            padding: EdgeInsets.zero,
-                            onPressed: () {
-                              if (replyController.text.isNotEmpty) {
-                                addReply();
-                              }
-                              // if (replyController.text.isEmpty) {
-                              //   if (Fluttertoast != null) {
-                              //     Fluttertoast.cancel();
-                              //   }
-                              //   Fluttertoast.showToast(
-                              //     msg: "Comment cannot be empty",
-                              //     toastLength: Toast.LENGTH_SHORT,
-                              //     gravity: ToastGravity.BOTTOM,
-                              //     timeInSecForIosWeb: 1,
-                              //     backgroundColor: Colors.red.withOpacity(0.9),
-                              //     textColor: Colors.white,
-                              //     fontSize: 16,
-                              //   );
-                              // } else {
-                              //   addReply();
-                              // }
-                            },
-                            color: kPrimaryColor,
-                            child: Text(
-                              "Add Reply",
-                              style: GoogleFonts.nunito(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                      },
                     ),
                   ),
-                ),
-                Container(
-                  padding: EdgeInsets.all(size.width * 0.01),
-                  width: double.infinity,
-                  child: StreamBuilder(
-                    stream: myStream,
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return CircularProgressIndicator();
-                      }
-                      return snapshot.data.documents.length == 0
-                          ? Center(
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      height: size.height * 0.5,
-                                      width: size.width * 0.7,
-                                      child: Image.asset(
-                                          "assets/illustrations/no_posts.png"),
-                                    ),
-                                    Text(
-                                      "No Replies..",
-                                      style: GoogleFonts.nunito(
-                                        fontSize: size.width * 0.09,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            )
-                          : ListView.builder(
-                              shrinkWrap: true,
-                              padding: EdgeInsets.zero,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: snapshot.data.documents.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                DocumentSnapshot reply =
-                                    snapshot.data.documents[index];
-                                return ForumReplyTile(
-                                  userName: reply.data()['name'],
-                                  profilePic: reply.data()['profilePic'],
-                                  sem: reply.data()['sem'],
-                                  date: reply.data()['date'],
-                                  reply: reply.data()['reply'],
-                                  id: reply.data()['id'],
-                                  parentReplyId: widget.id,
-                                  votes: reply.data()['votes'],
-                                );
-                              },
-                            );
-                    },
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
