@@ -4,10 +4,9 @@ import 'package:demo/components/auth_components/clip_shadow_path.dart';
 import 'package:demo/components/auth_components/top_right_clipper.dart';
 import 'package:demo/components/auth_components/top_right_clipper_bottom.dart';
 import 'package:demo/components/rounded_button.dart';
-
 import 'package:demo/constants.dart';
-import 'package:demo/screens/login_screen.dart';
 import 'package:demo/screens/sign_up_screen.dart';
+import 'file:///D:/apps/KCC-Portal/lib/screens/login_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -88,13 +87,6 @@ class WelcomeScreen extends StatelessWidget {
                 child: heightNeuContainer,
               ),
             ),
-            // Align(
-            //   alignment: Alignment(0, -8),
-            //   child: SizedBox(
-            //       width: width * 0.99,
-            //       height: height * 0.99,
-            //       child: Image.asset('assets/illustrations/welcomeImage.png')),
-            // ),
             Align(
               alignment: Alignment(-60, 110),
               child: SizedBox(
@@ -161,7 +153,7 @@ class WelcomeScreen extends StatelessWidget {
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

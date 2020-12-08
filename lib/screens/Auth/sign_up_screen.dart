@@ -1,4 +1,5 @@
 
+
 import 'package:demo/components/auth_components/already_have_an_account_check.dart';
 import 'package:demo/components/auth_components/bottom_left_clipper.dart';
 import 'package:demo/components/auth_components/bottom_left_clipper_bottom.dart';
@@ -8,16 +9,15 @@ import 'package:demo/components/auth_components/rounded_password_field.dart';
 import 'package:demo/components/auth_components/top_right_clipper.dart';
 import 'package:demo/components/auth_components/top_right_clipper_bottom.dart';
 import 'package:demo/components/rounded_button.dart';
-
 import 'package:demo/constants.dart';
+import 'package:demo/screens/login_screen.dart';
 import 'package:demo/screens/role_selection_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:page_transition/page_transition.dart';
-import 'login_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
