@@ -1,4 +1,4 @@
-name: demo
+name: KCC_Portal
 description: A new Flutter project.
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -11,52 +11,52 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^0.1.3
-  carousel_slider: ^2.2.1
-  font_awesome_flutter: ^8.8.1
+  cupertino_icons: ^1.0.1+1
+  carousel_slider: ^2.3.1
+  font_awesome_flutter: ^8.10.0
   line_awesome_flutter: ^1.0.1
-  google_fonts: ^1.1.0
-  webview_flutter: ^0.3.24
-  animated_text_kit: ^2.2.0
-  cloud_firestore: ^0.14.0+2
-  firebase_auth: ^0.18.0+1
-  firebase_storage: ^4.0.0
+  google_fonts: ^1.1.1
+  webview_flutter: ^1.0.7
+  animated_text_kit: ^2.5.4
+  cloud_firestore: ^0.14.4
+  firebase_auth: ^0.18.4+1
+  firebase_storage: ^5.2.0
   modal_progress_hud: ^0.1.3
-  fancy_on_boarding: ^1.6.0
-  shared_preferences: ^0.5.12
+  fancy_on_boarding: ^1.7.0
+  shared_preferences: ^0.5.12+4
   flare_flutter: ^2.0.6
   url_launcher: ^5.7.5
-  page_transition: ^1.1.7+2
-  image_picker: ^0.6.7+11
+  page_transition: ^1.1.7+3
+  image_picker: ^0.6.7+14
   lottie: ^0.7.0+1
   smooth_star_rating: ^1.1.1
-  advance_pdf_viewer: ^1.2.0
-  fluttertoast: ^7.1.1
+  advance_pdf_viewer: ^1.2.1+1
+  fluttertoast: ^7.1.5
   intl: ^0.16.1
   simple_moment: ^1.0.7
   timeline_tile: ^1.0.0
   popup_menu: ^1.0.5
   uuid: ^2.2.2
-  flutter_spinkit: "^4.1.2"
+  flutter_spinkit: ^4.1.2+1
   autocomplete_textfield: ^1.7.3
+  animated_onboarding: ^0.0.2
+  provider: ^4.3.2+3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-dependency_overrides:
-  flutter_svg: 0.18.0
-
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/
-    - assets/illustrations/
-    - assets/icons/
-    - assets/lottie/
     - assets/
-    - assets/icons/vote/
+    - assets/icons/
     - assets/icons/SemesterIcons/
+    - assets/icons/vote/
+    - assets/illustrations/
+    - assets/images/
+    - assets/lottie/
+
 
   # fonts:
   #   - family: Schyler

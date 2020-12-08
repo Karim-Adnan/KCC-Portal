@@ -1,6 +1,7 @@
-import 'package:demo/components/about_card.dart';
-import 'package:demo/constants.dart';
-import 'package:demo/screens/webview.dart';
+
+import 'package:KCC_Portal/components/about_card.dart';
+import 'package:KCC_Portal/constants.dart';
+import 'package:KCC_Portal/screens/webview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

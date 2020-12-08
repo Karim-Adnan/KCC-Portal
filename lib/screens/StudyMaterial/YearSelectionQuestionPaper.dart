@@ -1,11 +1,9 @@
-import 'package:demo/components/study_material_components/question_paper_year_card.dart';
-import 'package:demo/constants.dart';
-import 'package:demo/util/study_material_data.dart';
+import 'package:KCC_Portal/components/study_material_components/question_paper_year_card.dart';
+import 'package:KCC_Portal/constants.dart';
+import 'package:KCC_Portal/util/study_material_data.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class YearSelectionQuestionPaper extends StatefulWidget {
   final sem;

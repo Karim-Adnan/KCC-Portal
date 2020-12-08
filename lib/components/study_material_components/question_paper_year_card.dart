@@ -1,5 +1,6 @@
-import 'package:demo/constants.dart';
-import 'package:demo/screens/StudyMaterial/subject_selection_question_paper.dart';
+
+import 'package:KCC_Portal/constants.dart';
+import 'package:KCC_Portal/screens/StudyMaterial/subject_selection_question_paper.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';

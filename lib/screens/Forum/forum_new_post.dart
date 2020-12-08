@@ -1,9 +1,9 @@
 import 'dart:io';
+import 'package:KCC_Portal/constants.dart';
+import 'package:KCC_Portal/database.dart';
+import 'package:KCC_Portal/screens/Forum/forum_screen.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:demo/constants.dart';
-import 'package:demo/database.dart';
-import 'package:demo/screens/Forum/forum_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -172,10 +172,10 @@ class _ForumNewQuestionState extends State<ForumNewQuestion> {
     imageId = Uuid().v4();
 
     //store image
-    StorageUploadTask storage = attachments.child(imageId).putFile(attachment);
+    UploadTask storage = attachments.child(imageId).putFile(attachment);
 
     //complete image
-    StorageTaskSnapshot storageTaskSnapshot = await storage.onComplete;
+    TaskSnapshot storageTaskSnapshot = await storage;
 
     //download pic
     String downloadPic = await storageTaskSnapshot.ref.getDownloadURL();

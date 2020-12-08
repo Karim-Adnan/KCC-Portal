@@ -1,15 +1,9 @@
-
-import 'package:demo/components/auth_components/already_have_an_account_check.dart';
-import 'package:demo/components/auth_components/bottom_left_clipper.dart';
-import 'package:demo/components/auth_components/bottom_left_clipper_bottom.dart';
-import 'package:demo/components/auth_components/clip_shadow_path.dart';
-import 'package:demo/components/auth_components/rounded_input_field.dart';
-import 'package:demo/components/auth_components/rounded_password_field.dart';
-import 'package:demo/components/auth_components/top_right_clipper.dart';
-import 'package:demo/components/auth_components/top_right_clipper_bottom.dart';
-import 'package:demo/components/rounded_button.dart';
-import 'package:demo/constants.dart';
-import 'package:demo/screens/sign_up_screen.dart';
+import 'package:KCC_Portal/components/auth_components/already_have_an_account_check.dart';
+import 'package:KCC_Portal/components/auth_components/rounded_input_field.dart';
+import 'package:KCC_Portal/components/auth_components/rounded_password_field.dart';
+import 'package:KCC_Portal/components/rounded_button.dart';
+import 'package:KCC_Portal/constants.dart';
+import 'package:KCC_Portal/screens/Auth/sign_up_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -60,27 +54,26 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
+    Size size = MediaQuery.of(context).size;
 
-    final boxShadow = BoxShadow(
-      color: kPrimaryDarkColor,
-      offset: Offset(0, 0),
-      blurRadius: 5,
-      spreadRadius: 10,
-    );
-
-    // Neumorphic colored container with 99% app width
-    final widthNeuContainer = Container(
-      width: width * 0.99,
-      color: kSecondaryColor,
-    );
-
-    // Neumorphic colored container with 99% app height
-    final heightNeuContainer = Container(
-      height: height * 0.99,
-      color: kSecondaryColor,
-    );
+    // final boxShadow = BoxShadow(
+    //   color: kPrimaryDarkColor,
+    //   offset: Offset(0, 0),
+    //   blurRadius: 5,
+    //   spreadRadius: 10,
+    // );
+    //
+    // // Neumorphic colored container with 99% app width
+    // final widthNeuContainer = Container(
+    //   width: size.width * 0.99,
+    //   color: kSecondaryColor,
+    // );
+    //
+    // // Neumorphic colored container with 99% app height
+    // final heightNeuContainer = Container(
+    //   height: size.height * 0.99,
+    //   color: kSecondaryColor,
+    // );
 
     return GestureDetector(
       onTap: () {
@@ -90,146 +83,121 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       },
       child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          key: scaffoldKey,
-          body: ModalProgressHUD(
-            inAsyncCall: showSpinner,
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    kSecondaryColor,
-                    kPrimaryLightColor,
-                    kPrimaryColor,
-                  ],
-                ),
+        key: scaffoldKey,
+        body: ModalProgressHUD(
+          inAsyncCall: showSpinner,
+          child: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/AuthBG.png'),
+                fit: BoxFit.cover,
               ),
-              child: Stack(
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment(75, -45),
-                    child: SizedBox(
-                      width: width * 0.99,
-                      height: height * 0.99,
-                      child: ClipShadowPath(
-                        shadow: boxShadow,
-                        clipper: TopRightNeuClipperBtm(),
-                        child: widthNeuContainer,
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment(110, -75),
-                    child: SizedBox(
-                      width: width * 0.99,
-                      height: height * 0.99,
-                      child: ClipShadowPath(
-                        shadow: boxShadow,
-                        clipper: TopRightNeuClipper(),
-                        child: widthNeuContainer,
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment(0, 30.5),
-                    child: ClipShadowPath(
-                      shadow: boxShadow,
-                      clipper: BottomLeftNeuClipperBtm(),
-                      child: heightNeuContainer,
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment(0, -1.5),
-                    child: SizedBox(
-                      width: width * 0.8,
-                      height: height * 0.8,
-                      child: Lottie.asset('assets/lottie/loginScreenAnim.json'),
-                      // Image.asset('assets/illustrations/welcomeImage.png')
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment(-60, 110),
-                    child: SizedBox(
-                      width: width * 0.99,
-                      height: height * 0.99,
-                      child: ClipShadowPath(
-                        shadow: boxShadow,
-                        clipper: BottomLeftNeuClipper(),
-                        child: heightNeuContainer,
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Padding(
-                      padding: EdgeInsets.only(top: height * 0.1),
-                      child: Text(
-                        'Login',
-                        style: GoogleFonts.nunito(
-                          color: kPrimaryDarkColor,
-                          fontSize: width * 0.09,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 1.5,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        RoundedInputField(
-                          controller: usernameController,
-                          hintText: "Email",
-                          inputType: TextInputType.emailAddress,
-                          onChanged: (value) {},
-                        ),
-                        RoundedPasswordField(
-                          hintText: "Password",
-                          controller: passwordController,
-                          onChanged: (value) {},
-                        ),
-                        RoundedButton(
-                          text: "LOGIN",
-                          press: () {
-                            if (usernameController.text.isEmpty) {
-                              SnackBar snackbar = SnackBar(
-                                  content: Text("The username cannot be null"));
-                              scaffoldKey.currentState.showSnackBar(snackbar);
-                            } else if (passwordController.text.isEmpty) {
-                              SnackBar snackbar = SnackBar(
-                                  content: Text("The password cannot be null"));
-                              scaffoldKey.currentState.showSnackBar(snackbar);
-                            } else {
-                              signIn();
-                            }
-                          },
-                        ),
-                        SizedBox(height: height * 0.03),
-                        AlreadyHaveAnAccountCheck(
-                          press: () {
-                            Navigator.pushReplacement(
-                              context,
-                              PageTransition(
-                                type: PageTransitionType.fade,
-                                child: SignUpScreen(),
-                              ),
-                            );
-                          },
-                        ),
-                        SizedBox(
-                          height: height * 0.03,
-                        )
-                      ],
-                    ),
-                  )
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  kSecondaryLightColor,
+                  kSecondaryColor,
+                  kPrimaryLightColor,
+                  kPrimaryColor,
                 ],
               ),
             ),
-          )),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Container(
+                    height: size.height,
+                    width: size.width,
+                    child: Stack(
+                      children: [
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: Padding(
+                            padding: EdgeInsets.only(top: size.height * 0.15),
+                            child: Text(
+                              'Login',
+                              style: GoogleFonts.nunito(
+                                color: kPrimaryDarkColor,
+                                fontSize: size.width * 0.09,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 1.5,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment(0, -0.3),
+                          child: Container(
+                            height: size.width * 0.8,
+                            width: size.width,
+                            child: Lottie.asset(
+                                'assets/lottie/loginScreenAnim.json'),
+                          ),
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            RoundedInputField(
+                              controller: usernameController,
+                              hintText: "Email",
+                              inputType: TextInputType.emailAddress,
+                              onChanged: (value) {},
+                            ),
+                            RoundedPasswordField(
+                              hintText: "Password",
+                              controller: passwordController,
+                              onChanged: (value) {},
+                            ),
+                            Hero(
+                              tag: 1,
+                              child: RoundedButton(
+                                text: "LOGIN",
+                                press: () {
+                                  if (usernameController.text.isEmpty) {
+                                    SnackBar snackbar = SnackBar(
+                                        content: Text(
+                                            "The username cannot be null"));
+                                    scaffoldKey.currentState
+                                        .showSnackBar(snackbar);
+                                  } else if (passwordController.text.isEmpty) {
+                                    SnackBar snackbar = SnackBar(
+                                        content: Text(
+                                            "The password cannot be null"));
+                                    scaffoldKey.currentState
+                                        .showSnackBar(snackbar);
+                                  } else {
+                                    signIn();
+                                  }
+                                },
+                              ),
+                            ),
+                            AlreadyHaveAnAccountCheck(
+                              press: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  PageTransition(
+                                    type: PageTransitionType.fade,
+                                    child: SignUpScreen(),
+                                  ),
+                                );
+                              },
+                            ),
+                            SizedBox(
+                              height: size.height * 0.03,
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

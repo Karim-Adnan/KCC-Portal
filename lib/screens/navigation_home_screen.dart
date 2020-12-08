@@ -1,9 +1,8 @@
-import 'package:demo/custom_drawer/drawer_user_controller.dart';
-import 'package:demo/custom_drawer/home_drawer.dart';
-import 'package:demo/screens/Feedback/feedback_screen.dart';
-import 'package:demo/screens/about_screen.dart';
-
-import 'package:demo/screens/homepage.dart';
+import 'package:KCC_Portal/custom_drawer/drawer_user_controller.dart';
+import 'package:KCC_Portal/custom_drawer/home_drawer.dart';
+import 'package:KCC_Portal/screens/Feedback/feedback_screen.dart';
+import 'package:KCC_Portal/screens/about_screen.dart';
+import 'package:KCC_Portal/screens/homepage.dart';
 import 'package:flutter/material.dart';
 
 class NavigationHomeScreen extends StatefulWidget {

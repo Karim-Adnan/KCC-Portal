@@ -1,6 +1,7 @@
-import 'package:demo/constants.dart';
-import 'package:demo/database.dart';
-import 'package:demo/screens/user_profile.dart';
+
+import 'package:KCC_Portal/constants.dart';
+import 'package:KCC_Portal/database.dart';
+import 'package:KCC_Portal/screens/user_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

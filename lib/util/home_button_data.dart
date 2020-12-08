@@ -1,6 +1,6 @@
-import 'package:demo/screens/Forum/forum_screen.dart';
-import 'package:demo/screens/StudyMaterial/study_material.dart';
-import 'package:demo/screens/time_table.dart';
+import 'package:KCC_Portal/screens/Forum/forum_screen.dart';
+import 'package:KCC_Portal/screens/StudyMaterial/study_material.dart';
+import 'package:KCC_Portal/screens/time_table.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 List<dynamic> homeButtonData = [

@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'dart:ui';
+import 'package:KCC_Portal/constants.dart';
+import 'package:KCC_Portal/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:demo/constants.dart';
-import 'package:demo/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flare_flutter/flare_actor.dart';
@@ -88,10 +88,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
   uploadImage() async{
     var firebaseUser = await FirebaseAuth.instance.currentUser;
     //store image
-    StorageUploadTask storage = profilePics.child(firebaseUser.email).putFile(imagePath);
+    UploadTask storage = profilePics.child(firebaseUser.email).putFile(imagePath);
 
     //complete image
-    StorageTaskSnapshot storageTaskSnapshot = await storage.onComplete;
+    TaskSnapshot storageTaskSnapshot = await storage;
 
     //download pic
     String downloadPic = await storageTaskSnapshot.ref.getDownloadURL();

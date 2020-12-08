@@ -1,12 +1,11 @@
-
-import 'package:demo/screens/view_pdf_screen.dart';
+import 'package:KCC_Portal/constants.dart';
+import 'package:KCC_Portal/screens/view_pdf_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../constants.dart';
 
 class QuestionPaperSubjectCard extends StatefulWidget {
   final subject;

@@ -1,7 +1,6 @@
-
-import 'package:demo/components/time_table_components/date_widget.dart';
-import 'package:demo/components/time_table_components/subject_card.dart';
-import 'package:demo/components/time_table_components/time_table_header.dart';
+import 'package:KCC_Portal/components/time_table_components/date_widget.dart';
+import 'package:KCC_Portal/components/time_table_components/subject_card.dart';
+import 'package:KCC_Portal/components/time_table_components/time_table_header.dart';
 import 'package:flutter/material.dart';
 
 class TimeTable extends StatefulWidget {

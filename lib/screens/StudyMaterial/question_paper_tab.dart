@@ -1,7 +1,6 @@
-
-import 'package:demo/components/study_material_components/semester_card.dart';
-import 'package:demo/constants.dart';
-import 'package:demo/util/study_material_data.dart';
+import 'package:KCC_Portal/components/study_material_components/semester_card.dart';
+import 'package:KCC_Portal/constants.dart';
+import 'package:KCC_Portal/util/study_material_data.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';

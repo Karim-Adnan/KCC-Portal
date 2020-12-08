@@ -1,5 +1,6 @@
-import 'package:demo/components/study_material_components/notes_card.dart';
-import 'package:demo/constants.dart';
+
+import 'package:KCC_Portal/components/study_material_components/notes_card.dart';
+import 'package:KCC_Portal/constants.dart';
 import 'package:flutter/material.dart';
 
 class ClassNotesTab extends StatelessWidget {

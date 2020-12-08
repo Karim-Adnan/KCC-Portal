@@ -1,6 +1,5 @@
-
-import 'package:demo/components/auth_components/role_selection_card.dart';
-import 'package:demo/screens/complete_profile_screen.dart';
+import 'package:KCC_Portal/components/auth_components/role_selection_card.dart';
+import 'package:KCC_Portal/screens/complete_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

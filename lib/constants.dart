@@ -32,3 +32,10 @@ const kTextFieldDecoration = InputDecoration(
     borderRadius: BorderRadius.all(Radius.circular(10.0)),
   ),
 );
+
+class Global {
+  static const List<Color> palette = [Colors.white,Colors.blue];
+  static const double scale = 1;
+  static const double radius = 88.0;
+  static const double bottomPadding = 75.0;
+}

@@ -1,7 +1,8 @@
-import 'package:demo/constants.dart';
-import 'package:demo/database.dart';
-import 'package:demo/screens/Forum/forum_answer.dart';
-import 'package:demo/screens/user_profile.dart';
+
+import 'package:KCC_Portal/constants.dart';
+import 'package:KCC_Portal/database.dart';
+import 'package:KCC_Portal/screens/Forum/forum_answer.dart';
+import 'package:KCC_Portal/screens/user_profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -228,7 +229,6 @@ class _ForumCardState extends State<ForumCard> {
 
   _showPopupMenu(BuildContext context) {
     final RenderBox overlay = Overlay.of(context).context.findRenderObject();
-    Size size = MediaQuery.of(context).size;
     showMenu<String>(
       context: context,
       position: RelativeRect.fromRect(
@@ -326,6 +326,7 @@ class _ForumCardState extends State<ForumCard> {
         child: Column(
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 GestureDetector(
                   onTap: () => Navigator.push(
@@ -362,105 +363,111 @@ class _ForumCardState extends State<ForumCard> {
                 // Spacer(
                 //   flex: 1,
                 // ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: size.height * 0.005,
-                    ),
-                    Text(
-                      widget.name,
-                      maxLines: 2,
-                      style: GoogleFonts.roboto(
-                        // fontSize: size.width * 0.05,
-                        fontSize: size.width * 0.03,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: size.width * 0.003,
-                      ),
-                    ),
-                    SizedBox(
-                      height: size.height * 0.005,
-                    ),
-                    Row(
-                      children: [
-                        Image.asset(
-                          'assets/icons/SemesterIcons/${widget.sem}.png',
-                          height: 20,
-                          width: 20,
-                        ),
-                        SizedBox(
-                          width: size.width * 0.015,
-                        ),
-                        Text(
-                          "Sem",
-                          style: GoogleFonts.roboto(
-                            color: Colors.grey.shade500,
-                            fontSize: size.width * 0.03,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: size.height * 0.005,
-                    ),
-                    Text(
-                      timeAgo,
-                      style: GoogleFonts.roboto(
-                        color: Colors.grey.shade500,
-                        fontSize: size.width * 0.03,
-                      ),
-                    ),
-                  ],
-                ),
-                Spacer(
-                  flex: 8,
-                ),
                 Padding(
-                  padding: EdgeInsets.all(
-                    size.width * 0.03,
-                  ),
+                  padding: EdgeInsets.symmetric(vertical: size.width * 0.03),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      IconButton(
-                        icon: Icon(
-                          liked
-                              ? FontAwesomeIcons.solidHeart
-                              : FontAwesomeIcons.heart,
-                          color: liked ? Colors.red : Colors.grey[400],
-                        ),
-                        onPressed: () {
-                          _pressed();
-                        },
-                      ),
                       SizedBox(
-                        height: size.height * 0.015,
+                        height: size.height * 0.005,
                       ),
                       Text(
-                        widget.date,
+                        widget.name,
+                        maxLines: 2,
+                        style: GoogleFonts.roboto(
+                          // fontSize: size.width * 0.05,
+                          fontSize: size.width * 0.03,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: size.width * 0.003,
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.005,
+                      ),
+                      Row(
+                        children: [
+                          Image.asset(
+                            'assets/icons/SemesterIcons/${widget.sem}.png',
+                            height: 20,
+                            width: 20,
+                          ),
+                          SizedBox(
+                            width: size.width * 0.015,
+                          ),
+                          Text(
+                            "Sem",
+                            style: GoogleFonts.roboto(
+                              color: Colors.grey.shade500,
+                              fontSize: size.width * 0.03,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: size.height * 0.005,
+                      ),
+                      Text(
+                        timeAgo,
                         style: GoogleFonts.roboto(
                           color: Colors.grey.shade500,
                           fontSize: size.width * 0.03,
-                          letterSpacing: size.width * 0.0015,
                         ),
                       ),
                     ],
                   ),
                 ),
-                InkWell(
-                  key: keyBtn,
-                  enableFeedback: true,
-                  onTap: () {
-                    menu.show(widgetKey: keyBtn);
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.all(size.width * 0.025),
-                    child: GestureDetector(
-                        onTapDown: _storePosition,
-                        onTap: () => _showPopupMenu(context),
-                        child: Icon(FontAwesomeIcons.ellipsisV)),
-                  ),
+                Spacer(
+                  flex: 8,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            liked
+                                ? FontAwesomeIcons.solidHeart
+                                : FontAwesomeIcons.heart,
+                            color: liked ? Colors.red : Colors.grey[400],
+                          ),
+                          onPressed: () {
+                            _pressed();
+                          },
+                        ),
+                        GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTapDown: _storePosition,
+                          onTap: () {
+                            _showPopupMenu(context);
+                            menu.show(widgetKey: keyBtn);
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.all(size.width * 0.03),
+                            child: GestureDetector(
+
+                              child: Icon(
+                                FontAwesomeIcons.ellipsisV,
+                                color: kPrimaryDarkColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: size.height * 0.015,
+                    ),
+                    Text(
+                      widget.date,
+                      style: GoogleFonts.roboto(
+                        color: Colors.grey.shade500,
+                        fontSize: size.width * 0.03,
+                        letterSpacing: size.width * 0.0015,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -518,8 +525,8 @@ class _ForumCardState extends State<ForumCard> {
                         direction: Axis.horizontal,
                         children: widget.tags.map<Widget>((e) {
                           return Padding(
-                            padding:
-                                EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 5, vertical: 2),
                             child: Chip(
                               backgroundColor: Colors.blue[100],
                               shape: RoundedRectangleBorder(

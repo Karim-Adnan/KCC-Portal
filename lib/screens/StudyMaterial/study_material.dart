@@ -1,6 +1,5 @@
-import 'package:demo/constants.dart';
-import 'package:demo/screens/StudyMaterial/question_paper_tab.dart';
-
+import 'package:KCC_Portal/constants.dart';
+import 'package:KCC_Portal/screens/StudyMaterial/question_paper_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'class_notes_tab.dart';

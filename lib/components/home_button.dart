@@ -1,5 +1,6 @@
-import 'package:demo/components/round_icon.dart';
-import 'package:demo/constants.dart';
+
+import 'package:KCC_Portal/components/round_icon.dart';
+import 'package:KCC_Portal/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:google_fonts/google_fonts.dart';

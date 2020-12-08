@@ -1,13 +1,8 @@
-import 'package:demo/components/auth_components/bottom_left_clipper.dart';
-import 'package:demo/components/auth_components/bottom_left_clipper_bottom.dart';
-import 'package:demo/components/auth_components/clip_shadow_path.dart';
-import 'package:demo/components/auth_components/top_right_clipper.dart';
-import 'package:demo/components/auth_components/top_right_clipper_bottom.dart';
-import 'package:demo/components/rounded_button.dart';
-import 'package:demo/constants.dart';
-import 'package:demo/screens/sign_up_screen.dart';
-import 'file:///D:/apps/KCC-Portal/lib/screens/login_screen.dart';
 
+import 'package:KCC_Portal/components/rounded_button.dart';
+import 'package:KCC_Portal/constants.dart';
+import 'package:KCC_Portal/screens/Auth/login_screen.dart';
+import 'package:KCC_Portal/screens/Auth/sign_up_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
@@ -18,31 +13,36 @@ final kHomeImage =
 class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
+    Size size = MediaQuery.of(context).size;
 
-    final boxShadow = BoxShadow(
-      color: kPrimaryDarkColor,
-      offset: Offset(0, 0),
-      blurRadius: 5,
-      spreadRadius: 10,
-    );
-
-    // Neumorphic colored container with 99% app width
-    final widthNeuContainer = Container(
-      width: width * 0.99,
-      color: kSecondaryColor,
-    );
-
-    // Neumorphic colored container with 99% app height
-    final heightNeuContainer = Container(
-      height: height * 0.99,
-      color: kSecondaryColor,
-    );
+    // final boxShadow = BoxShadow(
+    //   color: kPrimaryDarkColor,
+    //   offset: Offset(0, 0),
+    //   blurRadius: 5,
+    //   spreadRadius: 10,
+    // );
+    //
+    // // Neumorphic colored container with 99% app width
+    // final widthNeuContainer = Container(
+    //   width: size.width * 0.99,
+    //   color: kSecondaryColor,
+    // );
+    //
+    // // Neumorphic colored container with 99% app height
+    // final heightNeuContainer = Container(
+    //   height: size.height * 0.99,
+    //   color: kSecondaryColor,
+    // );
 
     return Scaffold(
       body: Container(
+        height: size.height,
+        width: size.width,
         decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/AuthBG.png'),
+            fit: BoxFit.cover,
+          ),
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -53,74 +53,29 @@ class WelcomeScreen extends StatelessWidget {
             ],
           ),
         ),
-        child: Stack(
-          children: <Widget>[
-            Align(
-              alignment: Alignment(75, -45),
-              child: SizedBox(
-                width: width * 0.99,
-                height: height * 0.99,
-                child: ClipShadowPath(
-                  shadow: boxShadow,
-                  clipper: TopRightNeuClipperBtm(),
-                  child: widthNeuContainer,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: size.height * 0.24),
+              child: Text(
+                'Welcome User',
+                style: GoogleFonts.nunito(
+                  color: kPrimaryDarkColor,
+                  fontSize: size.width * 0.1,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 1.5,
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment(110, -75),
-              child: SizedBox(
-                width: width * 0.99,
-                height: height * 0.99,
-                child: ClipShadowPath(
-                  shadow: boxShadow,
-                  clipper: TopRightNeuClipper(),
-                  child: widthNeuContainer,
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment(0, 30.5),
-              child: ClipShadowPath(
-                shadow: boxShadow,
-                clipper: BottomLeftNeuClipperBtm(),
-                child: heightNeuContainer,
-              ),
-            ),
-            Align(
-              alignment: Alignment(-60, 110),
-              child: SizedBox(
-                width: width * 0.99,
-                height: height * 0.99,
-                child: ClipShadowPath(
-                  shadow: boxShadow,
-                  clipper: BottomLeftNeuClipper(),
-                  child: heightNeuContainer,
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.topCenter,
-              child: Padding(
-                padding: EdgeInsets.only(top: height * 0.24),
-                child: Text(
-                  'Welcome User',
-                  style: GoogleFonts.nunito(
-                    color: kPrimaryDarkColor,
-                    fontSize: width * 0.1,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 1.5,
-                  ),
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment(0, 0),
-              child: Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    RoundedButton(
+            Spacer(),
+            Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Hero(
+                    tag: 1,
+                    child: RoundedButton(
                       text: "LOGIN",
                       color: kPrimaryDarkColor,
                       press: () {
@@ -133,7 +88,10 @@ class WelcomeScreen extends StatelessWidget {
                         );
                       },
                     ),
-                    RoundedButton(
+                  ),
+                  Hero(
+                    tag: 2,
+                    child: RoundedButton(
                       text: "SIGN UP",
                       color: kPrimaryLightColor,
                       textColor: Colors.white,
@@ -147,15 +105,64 @@ class WelcomeScreen extends StatelessWidget {
                         );
                       },
                     ),
-                    SizedBox(
-                      height: height * 0.1,
-                    )
-                  ],
-                ),
+                  ),
+                  SizedBox(
+                    height: size.height * 0.1,
+                  )
+                ],
               ),
             ),
           ],
         ),
+        // Stack(
+        //   children: <Widget>[
+        //     // Align(
+        //     //   alignment: Alignment(75, -45),
+        //     //   child: SizedBox(
+        //     //     width: width * 0.99,
+        //     //     height: height * 0.99,
+        //     //     child: ClipShadowPath(
+        //     //       shadow: boxShadow,
+        //     //       clipper: TopRightNeuClipperBtm(),
+        //     //       child: widthNeuContainer,
+        //     //     ),
+        //     //   ),
+        //     // ),
+        //     // Align(
+        //     //   alignment: Alignment(110, -75),
+        //     //   child: SizedBox(
+        //     //     width: width * 0.99,
+        //     //     height: height * 0.99,
+        //     //     child: ClipShadowPath(
+        //     //       shadow: boxShadow,
+        //     //       clipper: TopRightNeuClipper(),
+        //     //       child: widthNeuContainer,
+        //     //     ),
+        //     //   ),
+        //     // ),
+        //     // Align(
+        //     //   alignment: Alignment(0, 30.5),
+        //     //   child: ClipShadowPath(
+        //     //     shadow: boxShadow,
+        //     //     clipper: BottomLeftNeuClipperBtm(),
+        //     //     child: heightNeuContainer,
+        //     //   ),
+        //     // ),
+        //     // Align(
+        //     //   alignment: Alignment(-60, 110),
+        //     //   child: SizedBox(
+        //     //     width: width * 0.99,
+        //     //     height: height * 0.99,
+        //     //     child: ClipShadowPath(
+        //     //       shadow: boxShadow,
+        //     //       clipper: BottomLeftNeuClipper(),
+        //     //       child: heightNeuContainer,
+        //     //     ),
+        //     //   ),
+        //     // ),
+        //
+        //   ],
+        // ),
       ),
     );
   }

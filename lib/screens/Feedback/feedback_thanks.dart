@@ -1,8 +1,7 @@
-import 'package:demo/screens/navigation_home_screen.dart';
+import 'package:KCC_Portal/screens/navigation_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
 import 'package:page_transition/page_transition.dart';
 
 class FeedbackThanks extends StatelessWidget {

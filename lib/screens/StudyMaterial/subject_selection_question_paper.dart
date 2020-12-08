@@ -1,17 +1,15 @@
+import 'package:KCC_Portal/components/study_material_components/question_paper_subject_card.dart';
+import 'package:KCC_Portal/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:demo/components/study_material_components/question_paper_subject_card.dart';
-import 'package:demo/constants.dart';
-import 'package:demo/screens/view_pdf_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SubjectSelectionQuestionPaper extends StatefulWidget {
   final year;
 
-  const SubjectSelectionQuestionPaper({Key key, this.year}) : super(key: key);
+  const SubjectSelectionQuestionPaper({this.year});
 
   @override
   _SubjectSelectionQuestionPaperState createState() =>
@@ -37,7 +35,6 @@ class _SubjectSelectionQuestionPaperState
       for (var document in documents) {
         subjects.add(document.reference.id);
       }
-      // print("length=${subjects.length}");
     });
   }
 

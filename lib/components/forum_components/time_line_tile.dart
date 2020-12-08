@@ -1,6 +1,7 @@
+import 'package:KCC_Portal/constants.dart';
+import 'package:KCC_Portal/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:demo/constants.dart';
-import 'package:demo/database.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

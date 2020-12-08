@@ -1,7 +1,7 @@
+import 'package:KCC_Portal/components/forum_components/forum_card.dart';
+import 'package:KCC_Portal/database.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:demo/components/forum_components/forum_card.dart';
-import 'package:demo/database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';

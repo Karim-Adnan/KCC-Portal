@@ -1,4 +1,4 @@
-import 'package:demo/util/time_table_data.dart';
+import 'package:KCC_Portal/util/time_table_data.dart';
 import 'package:flutter/material.dart';
 import 'line_gen.dart';
 

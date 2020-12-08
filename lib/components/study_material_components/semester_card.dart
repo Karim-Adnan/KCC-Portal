@@ -1,8 +1,8 @@
-import 'package:demo/screens/StudyMaterial/YearSelectionQuestionPaper.dart';
-import 'package:demo/util/study_material_data.dart';
+import 'package:KCC_Portal/constants.dart';
+import 'package:KCC_Portal/screens/StudyMaterial/YearSelectionQuestionPaper.dart';
+import 'package:KCC_Portal/util/study_material_data.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:demo/constants.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

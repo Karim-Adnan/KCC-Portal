@@ -1,9 +1,8 @@
-import 'package:demo/components/auth_components/rounded_input_field.dart';
-import 'package:demo/components/drop_down_menu.dart';
-import 'package:demo/components/rounded_button.dart';
-
-import 'package:demo/models/list_item.dart';
-import 'package:demo/models/user_details.dart';
+import 'package:KCC_Portal/components/auth_components/rounded_input_field.dart';
+import 'package:KCC_Portal/components/drop_down_menu.dart';
+import 'package:KCC_Portal/components/rounded_button.dart';
+import 'package:KCC_Portal/models/list_item.dart';
+import 'package:KCC_Portal/models/user_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';

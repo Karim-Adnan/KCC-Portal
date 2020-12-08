@@ -1,12 +1,11 @@
-import 'package:demo/constants.dart';
-import 'package:demo/util/study_material_data.dart';
+import 'package:KCC_Portal/constants.dart';
+import 'package:KCC_Portal/util/study_material_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class NotesCard extends StatefulWidget {
   final index;
-
   const NotesCard({this.index});
 
   @override

@@ -1,8 +1,8 @@
+import 'package:KCC_Portal/components/forum_components/forum_card.dart';
+import 'package:KCC_Portal/constants.dart';
+import 'package:KCC_Portal/database.dart';
+import 'package:KCC_Portal/screens/Forum/forum_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:demo/components/forum_components/forum_card.dart';
-import 'package:demo/constants.dart';
-import 'package:demo/database.dart';
-import 'package:demo/screens/Forum/forum_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
