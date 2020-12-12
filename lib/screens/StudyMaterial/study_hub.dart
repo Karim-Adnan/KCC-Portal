@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'class_notes_tab.dart';
 
-class StudyMaterial extends StatefulWidget {
+class StudyHub extends StatefulWidget {
   @override
-  _StudyMaterialState createState() => _StudyMaterialState();
+  _StudyHubState createState() => _StudyHubState();
 }
 
-class _StudyMaterialState extends State<StudyMaterial>
+class _StudyHubState extends State<StudyHub>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
   ScrollController _scrollViewController;

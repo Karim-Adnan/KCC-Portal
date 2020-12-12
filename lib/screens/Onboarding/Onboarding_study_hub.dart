@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
 
-class OnboardingKYC extends StatelessWidget {
+class OnboardingStudyHub extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -21,8 +21,14 @@ class OnboardingKYC extends StatelessWidget {
             children: [
               Consumer<OffsetNotifier>(
                 builder: (context, notifier, child) {
+                  double multipier;
+                  if (notifier.page <= 1.0) {
+                    multipier = math.max(0, 4 * notifier.page - 3);
+                  } else {
+                    multipier = math.max(0, 1 - (4 * notifier.page - 4));
+                  }
                   return Transform.scale(
-                    scale: math.max(0, 1 - (1 - (4 * notifier.page - 7))),
+                    scale: multipier,
                     child: child,
                   );
                 },
@@ -45,34 +51,49 @@ class OnboardingKYC extends StatelessWidget {
               ),
               Consumer<OffsetNotifier>(
                 builder: (context, notifier, child) {
-                  return Transform(
-                    alignment: FractionalOffset.center,
-                    transform: Matrix4.translationValues(
-                        0, 100 * (1 - (4 * notifier.page - 7)), 0)
-                      ..rotateZ((-math.pi / 2) * 2 * notifier.page),
-                    child: child,
+                  double multiplier;
+                  if (notifier.page <= 1.0) {
+                    multiplier = math.max(0, 4 * notifier.page - 3);
+                  } else {
+                    multiplier = math.max(0, 1 - (4 * notifier.page - 4));
+                  }
+                  return Transform.translate(
+                    offset: Offset(0, -50 * (1 - multiplier)),
+                    child: Opacity(
+                      opacity: multiplier,
+                      child: child,
+                    ),
                   );
                 },
-                child: Image.asset("assets/images/onboarding_image3.png"),
+                child: Image.asset("assets/illustrations/onboarding/onboardingStudyHub.png"),
               ),
             ],
           ),
         ),
         SizedBox(
-          height: size.width * 0.075,
+          height: 16,
         ),
         Consumer<OffsetNotifier>(
           builder: (context, notifier, child) {
+            double multiplier;
+            if (notifier.page <= 1.0) {
+              multiplier = math.max(0, 4 * notifier.page - 3);
+            } else {
+              multiplier = math.max(0, 1 - (4 * notifier.page - 4));
+            }
             return Transform.translate(
-              offset: Offset(0, 50 * (1 - (4 * notifier.page - 7))),
-              child: child,
+              offset: Offset(0, 50 * (1 - multiplier)),
+              child: Opacity(
+                opacity: multiplier,
+                child: child,
+              ),
             );
           },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "Know Your College",
+                "Study Hub",
                 style: GoogleFonts.robotoSlab(
                   fontSize: size.width * 0.06,
                   fontWeight: FontWeight.w900,

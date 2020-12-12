@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
 
-class OnboardingStudyHub extends StatelessWidget {
+class OnboardingForumPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -21,15 +21,12 @@ class OnboardingStudyHub extends StatelessWidget {
             children: [
               Consumer<OffsetNotifier>(
                 builder: (context, notifier, child) {
-                  double multipier;
-                  if (notifier.page <= 1.0) {
-                    multipier = math.max(0, 4 * notifier.page - 3);
-                  } else {
-                    multipier = math.max(0, 1 - (4 * notifier.page - 4));
-                  }
                   return Transform.scale(
-                    scale: multipier,
-                    child: child,
+                    scale: math.max(0, 1 - notifier.page),
+                    child: Opacity(
+                      opacity: math.max(0, math.max(0, 1 - notifier.page)),
+                      child: child,
+                    ),
                   );
                 },
                 child: Container(
@@ -51,49 +48,31 @@ class OnboardingStudyHub extends StatelessWidget {
               ),
               Consumer<OffsetNotifier>(
                 builder: (context, notifier, child) {
-                  double multiplier;
-                  if (notifier.page <= 1.0) {
-                    multiplier = math.max(0, 4 * notifier.page - 3);
-                  } else {
-                    multiplier = math.max(0, 1 - (4 * notifier.page - 4));
-                  }
-                  return Transform.translate(
-                    offset: Offset(0, -50 * (1 - multiplier)),
-                    child: Opacity(
-                      opacity: multiplier,
-                      child: child,
-                    ),
+                  return Transform.rotate(
+                    angle: math.max(0, (math.pi / 3) * 4 * notifier.page),
+                    child: child,
                   );
                 },
-                child: Image.asset("assets/images/onboarding_image2.png"),
+                child: Image.asset(
+                    "assets/illustrations/onboarding/onboardingForum.png"),
               ),
             ],
           ),
         ),
         SizedBox(
-          height: 16,
+          height: size.width * 0.075,
         ),
         Consumer<OffsetNotifier>(
           builder: (context, notifier, child) {
-            double multiplier;
-            if (notifier.page <= 1.0) {
-              multiplier = math.max(0, 4 * notifier.page - 3);
-            } else {
-              multiplier = math.max(0, 1 - (4 * notifier.page - 4));
-            }
-            return Transform.translate(
-              offset: Offset(0, 50 * (1 - multiplier)),
-              child: Opacity(
-                opacity: multiplier,
-                child: child,
-              ),
+            return Opacity(
+              opacity: math.max(0, 1 - 4 * notifier.page),
+              child: child,
             );
           },
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "Study Hub",
+                "Forum",
                 style: GoogleFonts.robotoSlab(
                   fontSize: size.width * 0.06,
                   fontWeight: FontWeight.w900,

@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
 
-class OnboardingForumPage extends StatelessWidget {
+class OnboardingKYC extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -22,11 +22,8 @@ class OnboardingForumPage extends StatelessWidget {
               Consumer<OffsetNotifier>(
                 builder: (context, notifier, child) {
                   return Transform.scale(
-                    scale: math.max(0, 1 - notifier.page),
-                    child: Opacity(
-                      opacity: math.max(0, math.max(0, 1 - notifier.page)),
-                      child: child,
-                    ),
+                    scale: math.max(0, 1 - (1 - (4 * notifier.page - 7))),
+                    child: child,
                   );
                 },
                 child: Container(
@@ -48,13 +45,15 @@ class OnboardingForumPage extends StatelessWidget {
               ),
               Consumer<OffsetNotifier>(
                 builder: (context, notifier, child) {
-                  return Transform.rotate(
-                    angle: math.max(0, (math.pi / 3) * 4 * notifier.page),
+                  return Transform(
+                    alignment: FractionalOffset.center,
+                    transform: Matrix4.translationValues(
+                        0, 100 * (1 - (4 * notifier.page - 7)), 0)
+                      ..rotateZ((-math.pi / 2) * 2 * notifier.page),
                     child: child,
                   );
                 },
-                child: Image.asset(
-                    "assets/images/onboarding_image1.png"), //TODO - IMAGE HERE
+                child: Image.asset("assets/illustrations/onboarding/onboardingKYC.png"),
               ),
             ],
           ),
@@ -64,15 +63,16 @@ class OnboardingForumPage extends StatelessWidget {
         ),
         Consumer<OffsetNotifier>(
           builder: (context, notifier, child) {
-            return Opacity(
-              opacity: math.max(0, 1 - 4 * notifier.page),
+            return Transform.translate(
+              offset: Offset(0, 50 * (1 - (4 * notifier.page - 7))),
               child: child,
             );
           },
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "Forum",
+                "Know Your College",
                 style: GoogleFonts.robotoSlab(
                   fontSize: size.width * 0.06,
                   fontWeight: FontWeight.w900,
