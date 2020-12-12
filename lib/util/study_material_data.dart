@@ -1,4 +1,3 @@
-
 var subjectsData = [
   "DBMS",
   "CD",

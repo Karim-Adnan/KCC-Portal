@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 
 class RoundIcon extends StatelessWidget {
   final Color colour;
-  final IconData iconData;
+  final String imageData;
   final Function onPressed;
-  RoundIcon({this.colour, this.iconData, this.onPressed});
+  RoundIcon({this.colour, this.imageData, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +15,11 @@ class RoundIcon extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
+        height: size.width * 0.14,
+        width: size.width * 0.14,
         decoration: BoxDecoration(
           color: kSecondaryLightColor.withOpacity(0.4),
-          borderRadius: BorderRadius.circular(size.width * 0.055),
+          borderRadius: BorderRadius.circular(size.width * 0.065),
           boxShadow: [
             BoxShadow(
               color: kPrimaryDarkColor,
@@ -39,9 +41,8 @@ class RoundIcon extends StatelessWidget {
             ),
           ]
       ),
-        child: Icon(
-          iconData,
-          size: 30.0,
+        child: Image.asset(
+          imageData,
           color: colour,
         ),
         padding: EdgeInsets.all(10.0),

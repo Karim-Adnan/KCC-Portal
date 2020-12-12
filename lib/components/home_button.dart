@@ -1,4 +1,3 @@
-
 import 'package:KCC_Portal/components/round_icon.dart';
 import 'package:KCC_Portal/constants.dart';
 import 'package:flutter/material.dart';
@@ -8,10 +7,10 @@ import 'package:google_fonts/google_fonts.dart';
 class HomeButton extends StatelessWidget {
   final String title;
   final Function onPressed;
-  final IconData icon;
+  final String image;
 
   const HomeButton(
-      {@required this.title, @required this.onPressed, @required this.icon});
+      {@required this.title, @required this.onPressed, @required this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -22,17 +21,26 @@ class HomeButton extends StatelessWidget {
           height: size.height * 0.025,
         ),
         RoundIcon(
-          colour: kPrimaryDarkColor.withOpacity(0.89),
-          iconData: icon,
+          colour: kPrimaryDarkColor.withOpacity(0.9),
+          imageData: image,
           onPressed: onPressed,
         ),
-        SizedBox(height: MediaQuery.of(context).size.height * 0.015),
+        SizedBox(
+          height: size.height * 0.015,
+        ),
         Text(
           title,
           style: GoogleFonts.nunito(
-            fontSize: MediaQuery.of(context).size.width * 0.037,
+            fontSize: size.width * 0.037,
             fontWeight: FontWeight.w500,
             color: Colors.white,
+            shadows: [
+              Shadow(
+                color: Colors.white.withOpacity(0.3),
+                offset: Offset(1,1),
+                blurRadius: size.width * 0.03,
+              ),
+            ]
           ),
         ),
       ],

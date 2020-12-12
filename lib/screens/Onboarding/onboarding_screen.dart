@@ -1,15 +1,14 @@
-import 'package:KCC_Portal/components/onboarding_components/Onboarding_KYC.dart';
-import 'package:KCC_Portal/components/onboarding_components/Onboarding_forum.dart';
-import 'package:KCC_Portal/components/onboarding_components/Onboarding_study_hub.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:KCC_Portal/components/onboarding_components/provider/offset_notifier.dart';
 import 'package:KCC_Portal/components/onboarding_components/widgets/page_indicator.dart';
+import 'package:KCC_Portal/screens/Onboarding/Onboarding_forum.dart';
+import 'package:KCC_Portal/screens/Onboarding/Onboarding_study_hub.dart';
+import 'package:KCC_Portal/screens/Onboarding/Onboarding_KYC.dart';
 import 'package:KCC_Portal/screens/navigation_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:KCC_Portal/components/onboarding_components/provider/index_notifier.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   @override

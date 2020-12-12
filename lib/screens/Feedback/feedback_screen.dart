@@ -1,4 +1,3 @@
-
 import 'package:KCC_Portal/components/drop_down_menu.dart';
 import 'package:KCC_Portal/constants.dart';
 import 'package:KCC_Portal/database.dart';
@@ -61,6 +60,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -73,7 +73,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
         child: SafeArea(
           child: Scaffold(
             key: scaffoldKey,
-            backgroundColor: Colors.white,
+            backgroundColor: Color(0xFCFFFFF2),
             body: Container(
               width: double.infinity,
               height: size.height,
@@ -103,7 +103,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                                 },
                                 starCount: 5,
                                 rating: rating,
-                                size: 40.0,
+                                size: size.width * 0.12,
                                 color: Colors.teal,
                                 borderColor: Colors.teal,
                                 spacing: 0.0),
@@ -179,7 +179,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 30.0),
+                      padding: EdgeInsets.symmetric(vertical: size.width * 0.085),
                       child: SizedBox(
                         height: MediaQuery.of(context).size.width * 0.1,
                         width: MediaQuery.of(context).size.width * 0.5,

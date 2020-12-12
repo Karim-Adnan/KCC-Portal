@@ -39,3 +39,7 @@ class Global {
   static const double radius = 88.0;
   static const double bottomPadding = 75.0;
 }
+
+const kProfileBarColor = Color(0xFF74849E);
+const kProfileCardColor = Color(0xFFF2F5FA);
+const kProfileSubtextColor = Color(0x95A2AE);

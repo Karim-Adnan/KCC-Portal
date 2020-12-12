@@ -16,7 +16,6 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -94,165 +93,161 @@ class _HomeState extends State<Home> {
                   return <Widget>[
                     SliverAppBar(
                       backgroundColor: Colors.transparent,
-                      expandedHeight: 200.0,
+                      expandedHeight: size.width * 0.6,
                       floating: true,
                       pinned: false,
                       flexibleSpace: FlexibleSpaceBar(
-                          centerTitle: true,
-                          background: ClipPath(
-                            clipper: MyClipper(),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                // color: kPrimaryDarkColor,
-
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: <Color>[
-                                    kSecondaryColor,
-                                    kPrimaryColor,
-                                  ],
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "Welcome,",
-                                        style: GoogleFonts.openSans(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              .08,
-                                        ),
-                                      ),
-                                      TypewriterAnimatedTextKit(
-                                        speed: Duration(milliseconds: 500),
-                                        totalRepeatCount: 1,
-                                        text: [userName],
-                                        textStyle: GoogleFonts.openSans(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.05),
-                                      ),
-                                    ],
-                                  ),
-                                  GestureDetector(
-                                    onTap: () => Navigator.push(
-                                      context,
-                                      PageTransition(
-                                        type: PageTransitionType.fade,
-                                        child: UserProfilePage(),
-                                      ),
-                                    ),
-                                    child: CircleAvatar(
-                                      backgroundImage: NetworkImage(profilePic),
-                                      radius: 38.0,
-                                    ),
-                                  ),
+                        centerTitle: true,
+                        background: ClipPath(
+                          clipper: MyClipper(),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              // color: kPrimaryDarkColor,
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: <Color>[
+                                  kSecondaryColor,
+                                  kPrimaryColor,
                                 ],
                               ),
                             ),
-                          )),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Welcome,",
+                                      style: GoogleFonts.openSans(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: size.width * 0.08,
+                                      ),
+                                    ),
+                                    TypewriterAnimatedTextKit(
+                                      speed: Duration(milliseconds: 500),
+                                      totalRepeatCount: 1,
+                                      text: [userName],
+                                      textStyle: GoogleFonts.openSans(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: size.width * 0.05,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                GestureDetector(
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    PageTransition(
+                                      type: PageTransitionType.fade,
+                                      child: UserProfilePage(),
+                                    ),
+                                  ),
+                                  child: CircleAvatar(
+                                    backgroundImage: NetworkImage(profilePic),
+                                    radius: size.width * 0.1,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ];
                 },
                 body: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      SizedBox(
-                        height: 15.0,
-                      ),
-                      Expanded(
-                        child: ListView(
-                          physics:
-                              ScrollPhysics(parent: BouncingScrollPhysics()),
-                          children: [
-                            CarouselSlider(
-                              options: CarouselOptions(
-                                height: 170.0,
-                                enlargeCenterPage: true,
-                              ),
-                              items: [
-                                SliderItem(
-                                  url:
-                                      'https://organize.mlh.io/participants/events/3989-the-open-source-roadshow-kccitm',
-                                  linkTitle: 'HacktoberFest 2k20',
-                                  image: 'hacktoberfest2020.jpeg',
-                                ),
-                                SliderItem(
-                                  url:
-                                      'https://dsc.community.dev/kcc-institute-of-technology-management/',
-                                  linkTitle: 'DSC-KCCITM',
-                                  image: 'DSC.png',
-                                ),
-                                SliderItem(
-                                  url: 'http://kccitm.acm.org',
-                                  linkTitle: 'ACM-KCCITM',
-                                  image: 'ACM.png',
-                                ),
-                              ],
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // SizedBox(
+                    //   height: size.width * 0.04,
+                    // ),
+                    Expanded(
+                      child: ListView(
+                        physics: ScrollPhysics(parent: BouncingScrollPhysics()),
+                        children: [
+                          CarouselSlider(
+                            options: CarouselOptions(
+                              height: size.width * 0.41,
+                              enlargeCenterPage: true,
                             ),
-
-                            // Navigation Buttons
-                            Container(
-                              margin: EdgeInsets.all(10.0),
-                              padding: EdgeInsets.all(size.width * 0.025),
-                              decoration: BoxDecoration(
-                                color: Colors.transparent,
-                                borderRadius: BorderRadius.circular(20.0),
+                            items: [
+                              SliderItem(
+                                url:
+                                    'https://organize.mlh.io/participants/events/3989-the-open-source-roadshow-kccitm',
+                                linkTitle: 'HacktoberFest 2k20',
+                                image: 'hacktoberfest2020.jpeg',
                               ),
-                              child: GridView.count(
-                                crossAxisCount: 3,
-                                crossAxisSpacing: 10.0,
-                                mainAxisSpacing: 10.0,
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                children: List.generate(
-                                  6,
-                                  (index) => HomeButton(
-                                    title: homeButtonData[index][0].toString(),
-                                    onPressed: () => Navigator.push(
-                                      context,
-                                      PageTransition(
-                                          type: PageTransitionType.fade,
-                                          child: homeButtonData[index][1]),
+                              SliderItem(
+                                url:
+                                    'https://dsc.community.dev/kcc-institute-of-technology-management/',
+                                linkTitle: 'DSC-KCCITM',
+                                image: 'DSC.png',
+                              ),
+                              SliderItem(
+                                url: 'http://kccitm.acm.org',
+                                linkTitle: 'ACM-KCCITM',
+                                image: 'ACM.png',
+                              ),
+                            ],
+                          ),
+
+                          // Navigation Buttons
+                          Container(
+                            margin: EdgeInsets.all(size.width * 0.025),
+                            padding: EdgeInsets.all(size.width * 0.025),
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius:
+                                  BorderRadius.circular(size.width * 0.05),
+                            ),
+                            child: GridView.count(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: size.width * 0.025,
+                              mainAxisSpacing: size.width * 0.025,
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              children: List.generate(
+                                6,
+                                (index) => HomeButton(
+                                  title: homeButtonData[index][0].toString(),
+                                  onPressed: () => Navigator.push(
+                                    context,
+                                    PageTransition(
+                                      type: PageTransitionType.fade,
+                                      child: homeButtonData[index][1],
                                     ),
-                                    icon: homeButtonData[index][2],
                                   ),
+                                  image: homeButtonData[index][2],
                                 ),
                               ),
                             ),
+                          ),
 
-                            // Cards
-                            ReusableCard(
-                              cardChild: Card(),
-                              colour: Colors.white,
-                              height: 150.0,
-                            ),
-                            ReusableCard(
-                              cardChild: Card(),
-                              colour: Colors.white,
-                              height: 150.0,
-                            ),
-                            ReusableCard(
-                              cardChild: Card(),
-                              colour: Colors.white,
-                              height: 150.0,
-                            ),
-                          ],
-                        ),
-                      )
-                    ]),
+                          // Cards
+                          ReusableCard(
+                            cardChild: Card(),
+                            colour: Colors.white,
+                            height: size.width * 0.375,
+                          ),
+                          ReusableCard(
+                            cardChild: Card(),
+                            colour: Colors.white,
+                            height: size.width * 0.375,
+                          ),
+                          ReusableCard(
+                            cardChild: Card(),
+                            colour: Colors.white,
+                            height: size.width * 0.375,
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           );

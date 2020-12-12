@@ -1,4 +1,4 @@
-import 'package:KCC_Portal/components/study_material_components/semester_card.dart';
+import 'package:KCC_Portal/components/study_hub_components/semester_card.dart';
 import 'package:KCC_Portal/constants.dart';
 import 'package:KCC_Portal/util/study_material_data.dart';
 import 'package:flutter/material.dart';

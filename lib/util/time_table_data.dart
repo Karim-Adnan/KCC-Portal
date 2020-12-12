@@ -1,4 +1,3 @@
-
 var mondaySubject=[
   "Compiler Design",
   "Database Management System",

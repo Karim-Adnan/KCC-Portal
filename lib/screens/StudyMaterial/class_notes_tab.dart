@@ -1,5 +1,4 @@
-
-import 'package:KCC_Portal/components/study_material_components/notes_card.dart';
+import 'package:KCC_Portal/components/study_hub_components/notes_card.dart';
 import 'package:KCC_Portal/constants.dart';
 import 'package:flutter/material.dart';
 
