@@ -1,8 +1,10 @@
 import 'dart:ui';
+import 'package:KCC_Portal/screens/KYC/know_your_college_details.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:KCC_Portal/constants.dart';
 import 'package:KCC_Portal/util/kyc_data.dart';
+import 'package:page_transition/page_transition.dart';
 
 class KYCImageCard extends StatelessWidget {
   final ImageData imageData;
@@ -15,7 +17,17 @@ class KYCImageCard extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
 
     return InkWell(
-      onTap: () {},
+      onTap: () => Navigator.push(
+        context,
+        PageTransition(
+          child: KYCDetailPage(
+            title: imageData.imageTitle,
+            image: imageData.imageAddress,
+            description: imageData.imageDescription,
+          ),
+          type: PageTransitionType.fade,
+        ),
+      ),
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(

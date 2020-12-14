@@ -19,7 +19,8 @@ const imageList = [
     id: 'id-001',
     imageTitle: 'Conference Rooms',
     imageAddress: 'assets/images/kyc/conferenceRooms.jpg',
-    imageDescription: '',
+    imageDescription:
+        'As an adjunct to the learning infrastructure at the KCC Institutes, several air conditioned conference rooms located on different floors and blocks at the Institute provide a venue for small groups of students to interact with each other, prepare for mock interviews and group discussions (GDs) organized by the KCC Placement Cell, and attend presentations made by guest speakers from industry and business. Our air conditioned conference rooms are fully equipped with the latest audio video technologies which can connect to the Internet on demand. Conference rooms are also used to conduct seminars as well as to screen learning videos under faculty supervision.',
   ),
   ImageData(
     id: 'id-002',

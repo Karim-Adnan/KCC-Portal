@@ -1,3 +1,4 @@
+import 'package:KCC_Portal/components/scroll_behaviour.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -12,27 +13,49 @@ import 'package:shared_preferences/shared_preferences.dart';
 int initScreen;
 
 void main() async {
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp,DeviceOrientation.portraitDown]);
+  SystemChrome.setPreferredOrientations(
+    [
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ],
+  );
+
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp();
+
   SharedPreferences prefs = await SharedPreferences.getInstance();
+
   initScreen = await prefs.getInt("initScreen");
+
   await prefs.setInt("initScreen", 1);
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-  ));
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: initScreen == 0 || initScreen == null
-        ? ChangeNotifierProvider(
-            create: (context) => IndexNotifier(),
-            child: OnBoardingScreen(),
-          )
-        : initScreen == 2
-            ? RoleSelection()
-            : NavigationScreen(),
-    theme: ThemeData(
-      scaffoldBackgroundColor: kPrimaryColor,
+
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
     ),
-  ));
+  );
+
+  runApp(
+    MaterialApp(
+      builder: (context, child) {
+        return ScrollConfiguration(
+          behavior: MyScrollBehaviour(),
+          child: child,
+        );
+      },
+      debugShowCheckedModeBanner: false,
+      home: initScreen == 0 || initScreen == null
+          ? ChangeNotifierProvider(
+              create: (context) => IndexNotifier(),
+              child: OnBoardingScreen(),
+            )
+          : initScreen == 2
+              ? RoleSelection()
+              : NavigationScreen(),
+      theme: ThemeData(
+        scaffoldBackgroundColor: kPrimaryColor,
+      ),
+    ),
+  );
 }
