@@ -4,6 +4,7 @@ import 'package:KCC_Portal/screens/Feedback/feedback_screen.dart';
 import 'package:KCC_Portal/screens/about_screen.dart';
 import 'package:KCC_Portal/screens/homepage.dart';
 import 'package:flutter/material.dart';
+import 'package:share/share.dart';
 
 class NavigationHomeScreen extends StatefulWidget {
   @override
@@ -51,18 +52,12 @@ class _NavigationHomeScreenState extends State<NavigationHomeScreen> {
         setState(() {
           screenView = Home();
         });
-      } else if (drawerIndex == DrawerIndex.Help) {
-        setState(() {
-          // screenView = HelpScreen();
-        });
       } else if (drawerIndex == DrawerIndex.FeedBack) {
         setState(() {
           screenView = FeedbackScreen();
         });
       } else if (drawerIndex == DrawerIndex.Invite) {
-        setState(() {
-          // screenView = InviteFriend();
-        });
+         Share.share('Hi, check out this amazing KCC Portal App https://example.com');
       } else if (drawerIndex == DrawerIndex.About) {
         setState(() {
           screenView = AboutScreen();

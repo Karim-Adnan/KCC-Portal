@@ -30,6 +30,8 @@ class HomeButton extends StatelessWidget {
         ),
         Text(
           title,
+          softWrap: true,
+          maxLines: 2,
           style: GoogleFonts.nunito(
             fontSize: size.width * 0.037,
             fontWeight: FontWeight.w500,

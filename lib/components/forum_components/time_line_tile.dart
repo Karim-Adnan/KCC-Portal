@@ -18,26 +18,32 @@ class TimeLineTile extends StatefulWidget {
   final email;
   final String userName, date;
   final grandParentReplyId;
+  final grandParentEmail;
+  final grandParentPostId;
+  final grandParentUserName;
   final parentReplyId;
   final id;
   final isTaggingReply;
   final taggingUsername;
   final taggingReply;
-  const TimeLineTile({
-    Key key,
-    this.reply,
-    this.profilePic,
-    this.sem,
-    this.userName,
-    this.date,
-    this.id,
-    this.parentReplyId,
-    this.grandParentReplyId,
-    this.isTaggingReply,
-    this.taggingUsername,
-    this.taggingReply,
-    this.email,
-  }) : super(key: key);
+  const TimeLineTile(
+      {Key key,
+      this.reply,
+      this.profilePic,
+      this.sem,
+      this.userName,
+      this.date,
+      this.id,
+      this.parentReplyId,
+      this.grandParentReplyId,
+      this.isTaggingReply,
+      this.taggingUsername,
+      this.taggingReply,
+      this.email,
+      this.grandParentEmail,
+      this.grandParentPostId,
+      this.grandParentUserName})
+      : super(key: key);
 
   @override
   _TimeLineTileState createState() => _TimeLineTileState();
@@ -53,18 +59,18 @@ class _TimeLineTileState extends State<TimeLineTile> {
   Stream myStream;
   List<String> upvotedUsers = [];
   List<String> downvotedUsers = [];
-  var userName, profilePic, sem, email;
+  var currentUserName, currentUserProfilePic, currentUserSem, currentUserEmail;
   var replyController = TextEditingController();
 
   void getData() async {
     var firebaseUser = await FirebaseAuth.instance.currentUser;
     DocumentSnapshot userDocument =
         await userCollection.doc(firebaseUser.email).get();
-    userName =
+    currentUserName =
         userDocument.get('first name') + " " + userDocument.get('last name');
-    profilePic = userDocument.get('profilePic');
-    sem = userDocument.get('semester');
-    email = firebaseUser.email;
+    currentUserProfilePic = userDocument.get('profilePic');
+    currentUserSem = userDocument.get('semester');
+    currentUserEmail = firebaseUser.email;
   }
 
   String getDate() {
@@ -100,10 +106,10 @@ class _TimeLineTileState extends State<TimeLineTile> {
           .collection('replies')
           .doc(id)
           .set({
-        'name': userName,
-        'profilePic': profilePic,
-        'email': email,
-        'sem': sem,
+        'name': currentUserName,
+        'profilePic': currentUserProfilePic,
+        'email': currentUserEmail,
+        'sem': currentUserSem,
         'id': id,
         'reply': replyController.text,
         'time': now.toString(),
@@ -112,7 +118,127 @@ class _TimeLineTileState extends State<TimeLineTile> {
         'taggingUserName': widget.userName,
         'taggingReply': widget.reply
       });
+      if (currentUserEmail != widget.grandParentEmail &&
+          widget.email == widget.grandParentEmail) {
+        notifyParentUser(
+            postId: widget.grandParentReplyId, reply: replyController.text);
+      }
+      if (currentUserEmail != widget.email) {
+        if (widget.grandParentEmail == widget.email) {
+          notifyUser(
+              postId: widget.grandParentReplyId,
+              reply: replyController.text,
+              isParentEqualsChild: true);
+        } else {
+          notifyUser(
+              postId: widget.grandParentReplyId,
+              reply: replyController.text,
+              isParentEqualsChild: false);
+        }
+      }
       replyController.clear();
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      print("Error=$e");
+    }
+  }
+
+  void notifyParentUser({String postId, String reply}) async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      DateTime now = DateTime.now();
+      final id = userCollection
+          .doc(widget.grandParentEmail)
+          .collection('forumNotifications')
+          .doc()
+          .id;
+      userCollection
+          .doc(widget.grandParentEmail)
+          .collection('forumNotifications')
+          .doc(id)
+          .set({
+        'id': id,
+        'title': currentUserName.toString() +
+            ' replied to ' +
+            widget.userName +
+            '\'s comment on your post',
+        'reply': reply,
+        'profilePic': currentUserProfilePic,
+        'email': currentUserEmail,
+        'postId': postId,
+        'time': now.toString(),
+        'viewed': false
+      });
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      print("Error=$e");
+    }
+  }
+
+  void notifyUser(
+      {String postId, String reply, bool isParentEqualsChild}) async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      DateTime now = DateTime.now();
+      final id = isParentEqualsChild
+          ? userCollection
+              .doc(widget.grandParentEmail)
+              .collection('forumNotifications')
+              .doc()
+              .id
+          : userCollection
+              .doc(widget.email)
+              .collection('forumNotifications')
+              .doc()
+              .id;
+
+      isParentEqualsChild
+          ? userCollection
+              .doc(widget.grandParentEmail)
+              .collection('forumNotifications')
+              .doc(id)
+              .set({
+              'id': id,
+              'title': currentUserName.toString() +
+                  ' replied to your comment on your post',
+              'reply': reply,
+              'profilePic': currentUserProfilePic,
+              'email': currentUserEmail,
+              'postId': postId,
+              'time': now.toString(),
+              'viewed': false
+            })
+          : userCollection
+              .doc(widget.email)
+              .collection('forumNotifications')
+              .doc(id)
+              .set({
+              'id': id,
+              'title': currentUserName.toString() +
+                  ' replied to your comment on ' +
+                  widget.grandParentUserName +
+                  '\'s post',
+              'reply': reply,
+              'profilePic': currentUserProfilePic,
+              'email': currentUserEmail,
+              'postId': postId,
+              'time': now.toString(),
+              'viewed': false
+            });
       setState(() {
         isLoading = false;
       });
@@ -364,7 +490,7 @@ class _TimeLineTileState extends State<TimeLineTile> {
         backgroundColor: Colors.grey[400].withOpacity(0.5),
         lineColor: Colors.black,
         maxColumn: 1,
-        items: email == widget.email
+        items: currentUserEmail == widget.email
             ? [
                 MenuItem(
                   title: 'Delete',
@@ -502,7 +628,7 @@ class _TimeLineTileState extends State<TimeLineTile> {
                                 width: size.width * 0.01,
                               ),
                               Image.asset(
-                                'assets/icons/SemesterIcons/${widget.sem}.png',
+                                'assets/icons/SemesterIcons/${widget.sem.replaceAll(' ', '-')}.png',
                                 height: 20,
                                 width: 20,
                               ),

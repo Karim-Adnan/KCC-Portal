@@ -48,54 +48,113 @@ class _ProfileInfoState extends State<ProfileInfo> {
     });
   }
 
-  pickImage(ImageSource imageSource) async {
+  _imgFromGallery() async {
     final image = await ImagePicker()
-        .getImage(source: imageSource, maxHeight: 670, maxWidth: 800);
-    setState(() => imagePath = File(image.path));
-    storeProfilePic();
-    Navigator.pop(context);
+        .getImage(source: ImageSource.gallery, maxHeight: 670, maxWidth: 800);
+    if (image != null) {
+      setState(() => imagePath = File(image.path));
+      storeProfilePic();
+    }
+    Navigator.of(context).pop();
   }
 
-  pickImageDialog() {
-    return showDialog(
+  _imgFromCamera() async {
+    final image = await ImagePicker()
+        .getImage(source: ImageSource.camera, maxHeight: 670, maxWidth: 800);
+    if (image != null) {
+      setState(() => imagePath = File(image.path));
+      storeProfilePic();
+    }
+    Navigator.of(context).pop();
+  }
+
+  void _showPicker(context) {
+    showModalBottomSheet(
         context: context,
-        builder: (context) {
-          return SimpleDialog(
-            children: [
-              SimpleDialogOption(
-                onPressed: () => pickImage(ImageSource.gallery),
-                child: Text(
-                  "From Galley",
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: kPrimaryColor,
+        builder: (BuildContext bc) {
+          return SafeArea(
+            child: Container(
+              child: Wrap(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      "Choose Profile Pic",
+                      style: GoogleFonts.nunito(
+                        fontSize: 20,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              SimpleDialogOption(
-                onPressed: () => pickImage(ImageSource.camera),
-                child: Text(
-                  "From Camera",
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: kPrimaryColor,
+                  ListTile(
+                      leading: new Icon(Icons.photo_library),
+                      title: new Text('Gallery'),
+                      onTap: () {
+                        _imgFromGallery();
+                      }),
+                  ListTile(
+                    leading: new Icon(Icons.photo_camera),
+                    title: new Text('Camera'),
+                    onTap: () {
+                      _imgFromCamera();
+                    },
                   ),
-                ),
+                ],
               ),
-              SimpleDialogOption(
-                onPressed: () => Navigator.pop(context),
-                child: Text(
-                  "Cancel",
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: kPrimaryColor,
-                  ),
-                ),
-              ),
-            ],
+            ),
           );
         });
   }
+
+  // pickImage(ImageSource imageSource) async {
+  //   final image = await ImagePicker()
+  //       .getImage(source: imageSource, maxHeight: 670, maxWidth: 800);
+  //   setState(() => imagePath = File(image.path));
+  //   storeProfilePic();
+  //   Navigator.pop(context);
+  // }
+
+  // pickImageDialog() {
+  //   return showDialog(
+  //       context: context,
+  //       builder: (context) {
+  //         return SimpleDialog(
+  //           children: [
+  //             SimpleDialogOption(
+  //               onPressed: () => pickImage(ImageSource.gallery),
+  //               child: Text(
+  //                 "From Galley",
+  //                 style: TextStyle(
+  //                   fontSize: 20,
+  //                   color: kPrimaryColor,
+  //                 ),
+  //               ),
+  //             ),
+  //             SimpleDialogOption(
+  //               onPressed: () => pickImage(ImageSource.camera),
+  //               child: Text(
+  //                 "From Camera",
+  //                 style: TextStyle(
+  //                   fontSize: 20,
+  //                   color: kPrimaryColor,
+  //                 ),
+  //               ),
+  //             ),
+  //             SimpleDialogOption(
+  //               onPressed: () => Navigator.pop(context),
+  //               child: Text(
+  //                 "Cancel",
+  //                 style: TextStyle(
+  //                   fontSize: 20,
+  //                   color: kPrimaryColor,
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         );
+  //       });
+  // }
 
   uploadImage() async {
     var firebaseUser = await FirebaseAuth.instance.currentUser;
@@ -135,7 +194,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                 vertical: size.width * 0.02,
               ),
               child: GestureDetector(
-                onTap: () => pickImageDialog(),
+                onTap: () => _showPicker(context),
                 child: Container(
                   height: size.width * 0.25,
                   width: size.width * 0.25,

@@ -1,11 +1,11 @@
 import 'package:KCC_Portal/constants.dart';
 import 'package:KCC_Portal/screens/view_pdf_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 class QuestionPaperSubjectCard extends StatefulWidget {
   final subject;
@@ -18,12 +18,33 @@ class QuestionPaperSubjectCard extends StatefulWidget {
 }
 
 class _QuestionPaperSubjectCardState extends State<QuestionPaperSubjectCard> {
-
-
-
   void setPreference() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString("SelectedSubject", widget.subject);
+  }
+
+  loadDocument() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String selectedSem = await prefs.getString("SelectedSem");
+    String selectedYear = await prefs.getString("SelectedYear");
+    String selectedSubject = await prefs.getString("SelectedSubject");
+    final DocumentSnapshot result = await FirebaseFirestore.instance
+        .collection('questionPapers')
+        .doc(selectedSem)
+        .collection(selectedYear)
+        .doc(selectedSubject.trim())
+        .get();
+
+    var url = result.get('link');
+    var appBarTitle = selectedSubject.toString();
+
+    Navigator.push(
+      context,
+      PageTransition(
+        type: PageTransitionType.fade,
+        child: ViewPdfScreen(url: url, appBarTitle: appBarTitle),
+      ),
+    );
   }
 
   @override
@@ -59,13 +80,7 @@ class _QuestionPaperSubjectCardState extends State<QuestionPaperSubjectCard> {
       child: GestureDetector(
         onTap: () {
           setPreference();
-          Navigator.push(
-            context,
-            PageTransition(
-              type: PageTransitionType.fade,
-              child: ViewPdfScreen(),
-            ),
-          );
+          loadDocument();
         },
         child: Card(
           color: Colors.white.withOpacity(0.9),

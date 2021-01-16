@@ -1,4 +1,3 @@
-
 import 'package:KCC_Portal/components/forum_components/time_line_tile.dart';
 import 'package:KCC_Portal/constants.dart';
 import 'package:KCC_Portal/database.dart';
@@ -17,8 +16,10 @@ class ForumReplyTile extends StatefulWidget {
       profilePic,
       sem,
       email,
+      parentPostEmail,
       replyCount,
       userName,
+      parentPostName,
       date,
       id,
       parentReplyId,
@@ -35,7 +36,9 @@ class ForumReplyTile extends StatefulWidget {
       this.id,
       this.parentReplyId,
       this.votes,
-      this.email})
+      this.email,
+      this.parentPostEmail,
+      this.parentPostName})
       : super(key: key);
 
   @override
@@ -47,7 +50,7 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
   bool downVoted = false;
   bool isReplying = false;
   int upvoteCount = 0;
-  var userName, profilePic, sem, email;
+  var currentUserName, currentUserProfilePic, currentUserSem, currentUserEmail;
   GlobalKey keyBtn = GlobalKey();
   bool isLoading = false;
   var replyController = TextEditingController();
@@ -97,11 +100,11 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
     var firebaseUser = await FirebaseAuth.instance.currentUser;
     DocumentSnapshot userDocument =
         await userCollection.doc(firebaseUser.email).get();
-    userName =
+    currentUserName =
         userDocument.get('first name') + " " + userDocument.get('last name');
-    profilePic = userDocument.get('profilePic');
-    sem = userDocument.get('semester');
-    email = firebaseUser.email;
+    currentUserProfilePic = userDocument.get('profilePic');
+    currentUserSem = userDocument.get('semester');
+    currentUserEmail = firebaseUser.email;
   }
 
   String getDate() {
@@ -138,10 +141,10 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
           .collection('replies')
           .doc(id)
           .set({
-        'name': userName,
-        'profilePic': profilePic,
-        'sem': sem,
-        'email': email,
+        'name': currentUserName,
+        'profilePic': currentUserProfilePic,
+        'sem': currentUserSem,
+        'email': currentUserEmail,
         'id': id,
         'reply': replyController.text,
         'time': now.toString(),
@@ -151,8 +154,107 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
         'taggingUserName': " ",
         'taggingReply': " "
       });
+      if (currentUserEmail != widget.parentPostEmail) {
+        notifyParentUser(
+            postId: widget.parentReplyId, reply: replyController.text);
+      }
+      if (currentUserEmail != widget.email) {
+        if (widget.parentPostEmail == widget.email) {
+          notifyUser(
+              postId: widget.parentReplyId,
+              reply: replyController.text,
+              isParentEqualsChild: true);
+        } else {
+          notifyUser(
+              postId: widget.parentReplyId,
+              reply: replyController.text,
+              isParentEqualsChild: false);
+        }
+      }
       replyController.clear();
       // updateAnswerCount();
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      print("Error=$e");
+    }
+  }
+
+  void notifyParentUser({String postId, String reply}) async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      DateTime now = DateTime.now();
+      final id = userCollection
+          .doc(widget.parentPostEmail)
+          .collection('forumNotifications')
+          .doc()
+          .id;
+      userCollection
+          .doc(widget.parentPostEmail)
+          .collection('forumNotifications')
+          .doc(id)
+          .set({
+        'id': id,
+        'title': currentUserName.toString() +
+            ' replied to ' +
+            widget.userName +
+            '\'s comment on your post',
+        'reply': reply,
+        'profilePic': currentUserProfilePic,
+        'email': currentUserEmail,
+        'postId': postId,
+        'time': now.toString(),
+        'viewed': false
+      });
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      print("Error=$e");
+    }
+  }
+
+  void notifyUser(
+      {String postId, String reply, bool isParentEqualsChild}) async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      DateTime now = DateTime.now();
+      final id = userCollection
+          .doc(widget.email)
+          .collection('forumNotifications')
+          .doc()
+          .id;
+      userCollection
+          .doc(widget.email)
+          .collection('forumNotifications')
+          .doc(id)
+          .set({
+        'id': id,
+        'title': isParentEqualsChild
+            ? currentUserName.toString() +
+                ' replied to your comment on your post'
+            : currentUserName.toString() +
+                ' replied to your comment on ' +
+                widget.parentPostName +
+                '\'s post',
+        'reply': reply,
+        'profilePic': currentUserProfilePic,
+        'email': currentUserEmail,
+        'postId': postId,
+        'time': now.toString(),
+        'viewed': false
+      });
       setState(() {
         isLoading = false;
       });
@@ -336,10 +438,10 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
 
   deletePost() async {
     await postCollection
-      .doc(widget.parentReplyId)
-      .collection('replies')
-      .doc(widget.id)
-      .delete();
+        .doc(widget.parentReplyId)
+        .collection('replies')
+        .doc(widget.id)
+        .delete();
   }
 
   @override
@@ -359,7 +461,7 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
         backgroundColor: Colors.grey[400].withOpacity(0.5),
         lineColor: Colors.black,
         maxColumn: 1,
-        items: email == widget.email
+        items: currentUserEmail == widget.email
             ? [
                 MenuItem(
                   title: 'Delete',
@@ -465,7 +567,7 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
                           Row(
                             children: [
                               Image.asset(
-                                'assets/icons/SemesterIcons/${widget.sem}.png',
+                                'assets/icons/SemesterIcons/${widget.sem.replaceAll(' ', '-')}.png',
                                 height: size.width * 0.05,
                                 width: size.width * 0.05,
                               ),
@@ -732,6 +834,8 @@ class _ForumReplyTileState extends State<ForumReplyTile> {
                                 id: reply.data()['id'],
                                 parentReplyId: widget.id,
                                 grandParentReplyId: widget.parentReplyId,
+                                grandParentEmail: widget.parentPostEmail,
+                                grandParentUserName: widget.parentPostName,
                                 isTaggingReply: reply.data()['isTaggingReply'],
                                 taggingUsername:
                                     reply.data()['taggingUserName'],

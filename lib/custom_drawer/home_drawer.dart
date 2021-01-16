@@ -1,4 +1,3 @@
-
 import 'package:KCC_Portal/constants.dart';
 import 'package:KCC_Portal/database.dart';
 import 'package:KCC_Portal/screens/user_profile.dart';
@@ -43,11 +42,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
         icon: Icon(Icons.home),
       ),
       DrawerList(
-        index: DrawerIndex.Help,
-        labelName: 'Help',
-        icon: Icon(Icons.help),
-      ),
-      DrawerList(
         index: DrawerIndex.FeedBack,
         labelName: 'FeedBack',
         icon: Icon(Icons.help),
@@ -56,11 +50,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
         index: DrawerIndex.Invite,
         labelName: 'Invite Friend',
         icon: Icon(Icons.group),
-      ),
-      DrawerList(
-        index: DrawerIndex.Share,
-        labelName: 'Rate the app',
-        icon: Icon(Icons.share),
       ),
       DrawerList(
         index: DrawerIndex.About,
@@ -149,25 +138,25 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                 }
                                 return Padding(
                                   padding: EdgeInsets.only(top: 50.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      boxShadow: <BoxShadow>[
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.6),
-                                          offset: Offset(2.0, 4.0),
-                                          blurRadius: 15,
-                                          spreadRadius: 1,
+                                  child: ClipRRect(
+                                    child: Container(
+                                      height: 180,
+                                      width: 180,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(
+                                          image: NetworkImage(
+                                              snapshot.data['profilePic']),
+                                              fit: BoxFit.cover,
                                         ),
-                                      ],
-                                    ),
-                                    child: CircleAvatar(
-                                      radius: width * 0.15,
-                                      child: ClipOval(
-                                        child: Image.network(
-                                          snapshot.data['profilePic'],
-                                          fit: BoxFit.cover,
-                                        ),
+                                        boxShadow: <BoxShadow>[
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.6),
+                                            offset: Offset(2.0, 4.0),
+                                            blurRadius: 15,
+                                            spreadRadius: 1,
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
@@ -361,11 +350,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
 enum DrawerIndex {
   HOME,
   FeedBack,
-  Help,
-  Share,
   About,
   Invite,
-  Testing,
 }
 
 class DrawerList {

@@ -5,14 +5,15 @@ import 'package:KCC_Portal/components/slider_item.dart';
 import 'package:KCC_Portal/constants.dart';
 import 'package:KCC_Portal/database.dart';
 import 'package:KCC_Portal/screens/user_profile.dart';
+import 'package:KCC_Portal/screens/view_pdf_screen.dart';
 import 'package:KCC_Portal/util/home_button_data.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -22,36 +23,39 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  // Stream myStream;
+  Stream myStream;
   var isLoading = false;
-  var userName, profilePic;
+  List<Map<String, dynamic>> _notices = [];
 
-  // getStream() async {
-  //   setState(() {
-  //     isLoading = true;
-  //   });
-  //   var firebaseUser = await FirebaseAuth.instance.currentUser;
-  //   setState(() {
-  //     myStream = userCollection.doc(firebaseUser.email).snapshots();
-  //   });
+  getStream() async {
+    setState(() {
+      isLoading = true;
+    });
+    var firebaseUser = await FirebaseAuth.instance.currentUser;
+    setState(() {
+      myStream = userCollection.doc(firebaseUser.email).snapshots();
+    });
 
-  //   setState(() {
-  //     isLoading = false;
-  //   });
-  // }
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   void getData() async {
     setState(() {
       isLoading = true;
     });
-    var firebaseUser = await FirebaseAuth.instance.currentUser;
-    DocumentSnapshot userDocument =
-        await userCollection.doc(firebaseUser.email).get();
-    userName = userDocument.get('first name').toString();
-    profilePic = userDocument.get('profilePic').toString();
+    final DocumentSnapshot documents =
+        await noticeCollection.doc('UniversityNotices').get();
 
     setState(() {
-      isLoading = false;
+      documents.data().forEach((key, value) {
+        _notices.add({
+          'notice': key.toString(),
+          'link': value['link'].toString(),
+          'date': value['date'].toString()
+        });
+      });
     });
   }
 
@@ -59,6 +63,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     getData();
+    getStream();
   }
 
   @override
@@ -100,60 +105,67 @@ class _HomeState extends State<Home> {
                         centerTitle: true,
                         background: ClipPath(
                           clipper: MyClipper(),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              // color: kPrimaryDarkColor,
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: <Color>[
-                                  kSecondaryColor,
-                                  kPrimaryColor,
-                                ],
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Welcome,",
-                                      style: GoogleFonts.openSans(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: size.width * 0.08,
-                                      ),
-                                    ),
-                                    TypewriterAnimatedTextKit(
-                                      speed: Duration(milliseconds: 500),
-                                      totalRepeatCount: 1,
-                                      text: [userName],
-                                      textStyle: GoogleFonts.openSans(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: size.width * 0.05,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                GestureDetector(
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    PageTransition(
-                                      type: PageTransitionType.fade,
-                                      child: UserProfilePage(),
+                          child: StreamBuilder(
+                              stream: myStream,
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return CircularProgressIndicator();
+                                }
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: <Color>[
+                                        kSecondaryColor,
+                                        kPrimaryColor,
+                                      ],
                                     ),
                                   ),
-                                  child: CircleAvatar(
-                                    backgroundImage: NetworkImage(profilePic),
-                                    radius: size.width * 0.1,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Welcome,",
+                                            style: GoogleFonts.openSans(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: size.width * 0.08,
+                                            ),
+                                          ),
+                                          Text(
+                                            snapshot.data['first name'],
+                                            style: GoogleFonts.openSans(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: size.width * 0.05,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      GestureDetector(
+                                        onTap: () => Navigator.push(
+                                          context,
+                                          PageTransition(
+                                            type: PageTransitionType.fade,
+                                            child: UserProfilePage(),
+                                          ),
+                                        ),
+                                        child: CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                              snapshot.data['profilePic']),
+                                          radius: size.width * 0.1,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
+                                );
+                              }),
                         ),
                       ),
                     ),
@@ -162,9 +174,6 @@ class _HomeState extends State<Home> {
                 body: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // SizedBox(
-                    //   height: size.width * 0.04,
-                    // ),
                     Expanded(
                       child: ListView(
                         physics: ScrollPhysics(parent: BouncingScrollPhysics()),
@@ -204,45 +213,50 @@ class _HomeState extends State<Home> {
                               borderRadius:
                                   BorderRadius.circular(size.width * 0.05),
                             ),
-                            child: GridView.count(
+                            child: StaggeredGridView.countBuilder(
                               crossAxisCount: 3,
                               crossAxisSpacing: size.width * 0.025,
                               mainAxisSpacing: size.width * 0.025,
                               shrinkWrap: true,
+                              itemCount: 6,
                               physics: NeverScrollableScrollPhysics(),
-                              children: List.generate(
-                                6,
-                                (index) => HomeButton(
-                                  title: homeButtonData[index][0].toString(),
-                                  onPressed: () => Navigator.push(
-                                    context,
-                                    PageTransition(
-                                      type: PageTransitionType.fade,
-                                      child: homeButtonData[index][1],
-                                    ),
+                              itemBuilder: (ctx, index) => HomeButton(
+                                title: homeButtonData[index][0].toString(),
+                                onPressed: () => Navigator.push(
+                                  context,
+                                  PageTransition(
+                                    type: PageTransitionType.fade,
+                                    child: homeButtonData[index][1],
                                   ),
-                                  image: homeButtonData[index][2],
                                 ),
+                                image: homeButtonData[index][2],
                               ),
+                              staggeredTileBuilder: (int index) =>
+                                  new StaggeredTile.count(1, 1),
                             ),
                           ),
 
-                          // Cards
-                          ReusableCard(
-                            cardChild: Card(),
-                            colour: Colors.white,
-                            height: size.width * 0.375,
-                          ),
-                          ReusableCard(
-                            cardChild: Card(),
-                            colour: Colors.white,
-                            height: size.width * 0.375,
-                          ),
-                          ReusableCard(
-                            cardChild: Card(),
-                            colour: Colors.white,
-                            height: size.width * 0.375,
-                          ),
+                          //Notice Cards
+                          Container(
+                              child: ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) => ReusableCard(
+                              title: _notices[index]['notice'],
+                              trianglePainterTitle: _notices[index]['date'],
+                              onPress: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ViewPdfScreen(
+                                            appBarTitle: _notices[index]
+                                                ['notice'],
+                                            url: _notices[index]['link'],
+                                          ))),
+                              colour: Colors.grey[200],
+                              height: size.height * 0.18,
+                            ),
+                            itemCount: _notices.length,
+                          )),
                         ],
                       ),
                     )

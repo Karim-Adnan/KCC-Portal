@@ -1,12 +1,14 @@
 import 'package:KCC_Portal/constants.dart';
-import 'package:KCC_Portal/util/study_material_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class NotesCard extends StatefulWidget {
   final index;
-  const NotesCard({this.index});
+  final title;
+  final onPressed;
+  final isPDF;
+  const NotesCard({this.index, this.title, this.onPressed, this.isPDF = false});
 
   @override
   _NotesCardState createState() => _NotesCardState();
@@ -20,7 +22,7 @@ class _NotesCardState extends State<NotesCard> {
     return Container(
       margin: EdgeInsets.only(left: 25, right: 25, bottom: 20),
       height: size.height * 0.15,
-      width: size.width * 0.1,
+      width: size.width * 0.9,
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
@@ -38,9 +40,7 @@ class _NotesCardState extends State<NotesCard> {
         ],
       ),
       child: GestureDetector(
-        onTap: () {
-
-        },
+        onTap: widget.onPressed,
         child: Card(
           color: Colors.white.withOpacity(0.9),
           child: Padding(
@@ -59,9 +59,11 @@ class _NotesCardState extends State<NotesCard> {
                   flex: 2,
                   child: Center(
                     child: Text(
-                      subjectsData[widget.index],
+                      widget.title.toString(),
                       style: GoogleFonts.nunito(
-                        fontSize: size.width * 0.1,
+                        fontSize: widget.isPDF
+                            ? size.width * 0.038
+                            : size.width * 0.1,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 4,
                       ),

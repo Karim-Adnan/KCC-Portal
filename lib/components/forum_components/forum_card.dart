@@ -138,9 +138,10 @@ class _ForumCardState extends State<ForumCard> {
       }
     }
     updateVotes();
-    await postCollection
-        .doc(widget.id)
-        .set({'likedBy': postLikedUsers.toList()}, SetOptions(merge: true));
+    // await postCollection
+    //     .doc(widget.id)
+    //     .collection('likedBy')
+    //     .set({'likedBy': postLikedUsers.toList()}, SetOptions(merge: true));
   }
 
   void updateVotes() async {
@@ -209,6 +210,7 @@ class _ForumCardState extends State<ForumCard> {
             profilePic: widget.profilePic,
             sem: widget.sem,
             tags: widget.tags,
+            email: widget.email,
             date: widget.date,
             time: widget.time,
             title: widget.title,
@@ -388,7 +390,7 @@ class _ForumCardState extends State<ForumCard> {
                       Row(
                         children: [
                           Image.asset(
-                            'assets/icons/SemesterIcons/${widget.sem}.png',
+                            'assets/icons/SemesterIcons/${widget.sem.replaceAll(' ', '-')}.png',
                             height: 20,
                             width: 20,
                           ),

@@ -3,6 +3,7 @@ import 'package:KCC_Portal/constants.dart';
 import 'package:KCC_Portal/database.dart';
 import 'package:KCC_Portal/screens/Forum/forum_favourite_posts.dart';
 import 'package:KCC_Portal/screens/Forum/forum_new_post.dart';
+import 'package:KCC_Portal/screens/Forum/forum_notification.dart';
 import 'package:KCC_Portal/screens/Forum/forum_search.dart';
 import 'package:KCC_Portal/screens/Forum/forum_users_posts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -48,6 +49,7 @@ class _ForumPageState extends State<ForumPage> {
       items: [
         PopupMenuItem<String>(child: Text('My Posts'), value: 'My Posts'),
         PopupMenuItem<String>(child: Text('Favourite Posts'), value: 'Favourite Posts'),
+        PopupMenuItem<String>(child: Text('Notifications'), value: 'Notifications'),
       ],
       elevation: 8.0,
     ).then<void>((String itemSelected) {
@@ -63,6 +65,11 @@ class _ForumPageState extends State<ForumPage> {
             context,
             PageTransition(
                 child: ForumFavouritePosts(), type: PageTransitionType.fade));
+      } else if (itemSelected == "Notifications") {
+             Navigator.pushReplacement(
+            context,
+            PageTransition(
+                child: ForumNotification(), type: PageTransitionType.fade));
       } else {
         //code here
       }
