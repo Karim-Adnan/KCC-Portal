@@ -1,8 +1,8 @@
-import 'package:demo/components/drop_down_menu.dart';
-import 'package:demo/components/rounded_button.dart';
-import 'package:demo/components/rounded_input_field.dart';
-import 'package:demo/models/list_item.dart';
-import 'package:demo/models/user_details.dart';
+import 'package:KCC_Portal/components/auth_components/rounded_input_field.dart';
+import 'package:KCC_Portal/components/drop_down_menu.dart';
+import 'package:KCC_Portal/components/rounded_button.dart';
+import 'package:KCC_Portal/models/list_item.dart';
+import 'package:KCC_Portal/models/user_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CompleteProfile extends StatefulWidget {
   final String role;
   final String currentUserPassword;
-  CompleteProfile({Key key,@required this.role,@required this.currentUserPassword}) : super(key: key);
+  CompleteProfile({@required this.role,@required this.currentUserPassword});
 
   @override
   _CompleteProfileState createState() => _CompleteProfileState();
@@ -101,22 +101,6 @@ class _CompleteProfileState extends State<CompleteProfile> {
             child: Stack(
               alignment: Alignment.center,
               children: <Widget>[
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  child: Image.asset(
-                    "assets/images/signup_top.png",
-                    width: size.width * 0.35,
-                  ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  child: Image.asset(
-                    "assets/images/main_bottom.png",
-                    width: size.width * 0.25,
-                  ),
-                ),
                 SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

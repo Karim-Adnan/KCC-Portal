@@ -1,4 +1,4 @@
-import 'package:demo/app_theme.dart';
+
 import 'home_drawer.dart';
 import 'package:flutter/material.dart';
 
@@ -79,7 +79,7 @@ class _DrawerUserControllerState extends State<DrawerUserController> with Ticker
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.white,
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         controller: scrollController,
         scrollDirection: Axis.horizontal,
@@ -120,9 +120,9 @@ class _DrawerUserControllerState extends State<DrawerUserController> with Ticker
                 //full-screen Width with widget.screenView
                 child: Container(
                   decoration: BoxDecoration(
-                    color: AppTheme.white,
+                    color: Colors.white,
                     boxShadow: <BoxShadow>[
-                      BoxShadow(color: AppTheme.grey.withOpacity(0.6), blurRadius: 24),
+                      BoxShadow(color: Color(0xFF3A5160).withOpacity(0.6), blurRadius: 24),
                     ],
                   ),
                   child: Stack(

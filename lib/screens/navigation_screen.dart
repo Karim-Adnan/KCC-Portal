@@ -1,5 +1,5 @@
-import 'package:demo/screens/navigation_home_screen.dart';
-import 'package:demo/screens/welcome_screen.dart';
+import 'package:KCC_Portal/screens/Auth/welcome_screen.dart';
+import 'package:KCC_Portal/screens/navigation_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 

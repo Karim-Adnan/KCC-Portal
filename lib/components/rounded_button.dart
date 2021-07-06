@@ -1,12 +1,17 @@
+import 'package:KCC_Portal/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:demo/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class RoundedButton extends StatelessWidget {
   final String text;
   final Function press;
   final Color color, textColor;
-  RoundedButton({Key key, this.text, this.press, this.color = kPrimaryColor, this.textColor = Colors.white,}) : super(key: key);
+  RoundedButton({
+    this.text,
+    this.press,
+    this.color = kPrimaryColor,
+    this.textColor = Colors.white,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +27,10 @@ class RoundedButton extends StatelessWidget {
           onPressed: press,
           child: Text(
             text,
-            style: GoogleFonts.nunito(color: textColor,fontWeight: FontWeight.w700,letterSpacing: 1),
+            style: GoogleFonts.nunito(
+                color: textColor,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 1),
           ),
         ),
       ),

@@ -1,28 +1,50 @@
-import 'package:demo/components/round_icon.dart';
-import 'package:demo/constants.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:KCC_Portal/components/round_icon.dart';
+import 'package:KCC_Portal/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomeButton extends StatelessWidget {
-
   final String title;
   final Function onPressed;
-  final IconData icon;
+  final String image;
 
-  const HomeButton({Key key,@required this.title,@required this.onPressed,@required this.icon}) : super(key: key);
+  const HomeButton(
+      {@required this.title, @required this.onPressed, @required this.image});
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Column(
       children: [
-        RoundIcon(colour: kPrimaryColor,
-          iconData: icon,
+        SizedBox(
+          height: size.height * 0.025,
+        ),
+        RoundIcon(
+          colour: kPrimaryDarkColor.withOpacity(0.9),
+          imageData: image,
           onPressed: onPressed,
         ),
-        SizedBox(height: 10.0),
-        Text(title, style: GoogleFonts.openSans(fontWeight: FontWeight.w600),),
+        SizedBox(
+          height: size.height * 0.015,
+        ),
+        Text(
+          title,
+          softWrap: true,
+          maxLines: 2,
+          style: GoogleFonts.nunito(
+            fontSize: size.width * 0.037,
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+            shadows: [
+              Shadow(
+                color: Colors.white.withOpacity(0.3),
+                offset: Offset(1,1),
+                blurRadius: size.width * 0.03,
+              ),
+            ]
+          ),
+        ),
       ],
     );
   }

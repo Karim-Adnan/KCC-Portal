@@ -1,10 +1,10 @@
-import 'package:demo/custom_drawer/drawer_user_controller.dart';
-import 'package:demo/custom_drawer/home_drawer.dart';
-import 'package:demo/screens/about_screen.dart';
-import 'package:demo/screens/feedback_screen.dart';
-import 'package:demo/screens/homepage.dart';
+import 'package:KCC_Portal/custom_drawer/drawer_user_controller.dart';
+import 'package:KCC_Portal/custom_drawer/home_drawer.dart';
+import 'package:KCC_Portal/screens/Feedback/feedback_screen.dart';
+import 'package:KCC_Portal/screens/about_screen.dart';
+import 'package:KCC_Portal/screens/homepage.dart';
 import 'package:flutter/material.dart';
-import 'package:demo/app_theme.dart';
+import 'package:share/share.dart';
 
 class NavigationHomeScreen extends StatefulWidget {
   @override
@@ -25,12 +25,12 @@ class _NavigationHomeScreenState extends State<NavigationHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppTheme.nearlyWhite,
+      color: Color(0xFFFEFEFE),
       child: SafeArea(
         top: false,
         bottom: false,
         child: Scaffold(
-          backgroundColor: AppTheme.nearlyWhite,
+          backgroundColor: Color(0xFFFEFEFE),
           body: DrawerUserController(
             screenIndex: drawerIndex,
             drawerWidth: MediaQuery.of(context).size.width * 0.75,
@@ -52,18 +52,12 @@ class _NavigationHomeScreenState extends State<NavigationHomeScreen> {
         setState(() {
           screenView = Home();
         });
-      } else if (drawerIndex == DrawerIndex.Help) {
-        setState(() {
-          // screenView = HelpScreen();
-        });
       } else if (drawerIndex == DrawerIndex.FeedBack) {
         setState(() {
           screenView = FeedbackScreen();
         });
       } else if (drawerIndex == DrawerIndex.Invite) {
-        setState(() {
-          // screenView = InviteFriend();
-        });
+         Share.share('Hi, check out this amazing KCC Portal App https://example.com');
       } else if (drawerIndex == DrawerIndex.About) {
         setState(() {
           screenView = AboutScreen();
