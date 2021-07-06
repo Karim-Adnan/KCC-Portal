@@ -1,3 +1,3 @@
 # KCC-Portal
 
-Flutter mini project for 3rd year - KCC Institute of Technology and Management
+Flutter project for 3rd-4th year - KCC Institute of Technlogy and Management
